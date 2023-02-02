@@ -539,14 +539,13 @@ h5 {
 	}
 }
 
-<style>
- 
-button{
-    background-color:  #ff7675;
-    color:#2d3436;
-    padding:20px;
-    border:2px #d63031 solid;
-    font-size:1.5em;
-    border-radius: 5px;
+.parallax {
+    height: 100%; 
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
-</style>
+
+
+ 
