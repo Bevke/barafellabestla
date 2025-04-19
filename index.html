@@ -1,1173 +1,171 @@
-
-
-
-
-
-
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	
-		<title>FELLA STREAM | Türkiye ve Avrupanın En Büyük iPTV Server Sistemleri.</title>
-		<meta name="description" content="">
-  		<meta name="keywords" content="iptv test,iptv deneme,iptv paketleri,iptv satış,iptv,iptv server,iptv hd server,iptv android,android iptv,iphone iptv,iptv satış,iptv fiyatları,iptv abonelik
-">
-  		<meta name="author" content="FELLA STREAM | Türkiye ve Avrupanın En Büyük iPTV Server Sistemleri.">
-
-</head>
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
+    <meta charset="UTF-8">
+    <title>Fella Stream</title>  
 
+    <!-- Open Graph Etiketleri -->
+    <meta property="og:title" content="Fella Stream - Canlı Yayın" />
+    <meta property="og:description" content="Fella Stream ile canlı yayın izleyin!" />
+    <meta property="og:image" content="https://i.hizliresim.com/3ux3yd7.png" />
+    <meta property="og:url" content="https://bevke.github.io/Barafella/" />
+    <meta property="og:type" content="website" />
+    
+    <script src="https://cdn.tutorialjinni.com/hls.js/1.2.1/hls.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #cccccc;
+        }
 
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/animate.css">
-    <link rel="stylesheet" href="./assets/css/nice-select.css">
-    <link rel="stylesheet" href="./assets/css/owl.min.css">
-    <link rel="stylesheet" href="./assets/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="./assets/css/magnific-popup.css">
-    <link rel="stylesheet" href="./assets/css/flaticon.css">
-    <link rel="stylesheet" href="./assets/css/main.css">
-	<script src="sweetalert2.min.js"></script>
-  <link rel="stylesheet" href="sweetalert2.min.css">
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+        #header {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            background-color: #333;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+        }
+
+        #nav {
+            margin-top: 10px;
+        }
+
+        #nav button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #nav button:hover {
+            background-color: #777;
+        }
+
+        #video-container {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            margin-top: 120px;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #loading-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-logo img {
+            width: 180px;
+            height: auto;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+    </style>
 </head>
-
-<body >
-
 <body>
-    <!--============= ScrollToTop Section Starts Here =============-->
-    <div class="preloader">
-        <div class="preloader-inner">
-            <div class="preloader-icon">
-                <span></span>
-                <span></span>
-            </div>
+    <div id="header">
+        Fella Stream
+        <div id="nav">
+            <button onclick="switchStream('bein')">#bein</button>
+            <button onclick="switchStream('fella')">#fella stream</button>
         </div>
     </div>
-    <a href="#0" class="scrollToTop"><i class="fas fa-angle-up"></i></a>
-    <div class="overlay"></div>
-    <!--============= ScrollToTop Section Ends Here =============-->
 
+    <!-- Loading ekranı -->
+    <div id="loading-logo">
+        <img src="https://i.hizliresim.com/3ux3yd7.png" alt="Loading..." />
+    </div>
 
-    <!--============= Header Section Starts Here =============-->
-    <header class="header-section">
-        <div class="container">
-            <div class="header-wrapper">
-                <div class="logo">
-                    <a href="index.php">
-                        <img src="logo.png" alt="logo">
-                    </a>
-                </div>
-                <ul class="menu">
-                    <li>
-                        <a href="index.php">Ana Sayfa</a>
-                        
-                    </li>
-                     <li>
-                        <a href="#0">İPTV</a>
-                               <ul class="submenu">
-                            <li>
-                                <a href="iptv-kurulum.php">İPTV Kurulumları</a>
-                            </li>
-                            <li>
-                                <a href="iptv-web-tv.php">İPTV WEB TV</a>
-                            </li>
-                            <li>
-                                <a href="iptv-kanal-editor.php">İPTV Kaynak Link Satışı</a>
-                            </li>
-							                            <li>
-                                <a href="iptv-test.php">Canlı Destek Hattı</a>
-                            </li>
-														                            <li>
-                                <a href="iptv-sss.php">Sıkça Sorulan Sorular</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="iptv-paketleri.php">Paketler</a>
-                    </li>
-                    <li>
-                        <a href="iptv-kanal-listesi.php">Kanallar</a>
-                    </li>
-                    <li>
-                        <a href="iptv-bayilik.php">Bayilik</a>
-                    </li>
+    <div id="video-container">
+        <video id="video" controls autoplay></video>
+    </div>
 
-                    <li>
-                        <a href="iptv-odeme-bildirimi.php">Destek Sistemi</a>
-                    </li>
-                     <li>
-                        <a href="iptv-iletisim.php">İletişim</a>
-                    </li>
-                    <li class="d-sm-none">
-                   
-                    </li>
-                </ul>
-                <div class="header-bar d-lg-none">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <div class="header-right">
-                                   
-                   
-                    <a href="iptv-test.php" class="header-button d-none d-sm-inline-block">IPTV TEST</a>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!--============= Header Section Ends Here =============-->
-    
-    
-
-
-<!-- GetButton.io widget -->
-<script type="text/javascript">
-    (function () {
-        var options = {
-            whatsapp: "+447398070327", // WhatsApp number
-            call_to_action: "Satış Temsilcisi", // Call to action
-            position: "left", // Position may be 'right' or 'left'
+    <script>
+        const streams = {
+            bein: 'https://dt-live-bc-beinsports01.akamaized.net/ppv/beinsports01/beinsports01.isml/hdntl=exp=1745145813~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1745070213477~data=hdntl~hmac=6052f24e00484998849ae40d4738c0a6f4eaa18e262cead95011e0afff8edc39/beinsports01dp-audio_tur=128000-video=6000000.m3u8',
+            fella: 'http://2.59.119.32/tmp_hls/stream95/index.m3u8'
         };
-        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
-        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
-        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-    })();
-</script>
-<!-- /GetButton.io widget -->
 
-<!-- GetButton.io widget -->
-<script type="text/javascript">
-    (function () {
-        var options = {
-            whatsapp: "+447495006477", // WhatsApp number
-            call_to_action: "Teknik Destek", // Call to action
-            position: "right", // Position may be 'right' or 'left'
+        let hls;
+
+        function setVideoSize() {
+            var video = document.getElementById('video');
+            video.width = window.innerWidth;
+            video.height = window.innerHeight;
+        }
+
+        window.onresize = setVideoSize;
+
+        function switchStream(channel) {
+            const video = document.getElementById('video');
+            const loading = document.getElementById('loading-logo');
+
+            loading.style.display = 'block';
+            loading.style.opacity = 1;
+
+            if (Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy();
+                }
+                hls = new Hls();
+                hls.loadSource(streams[channel]);
+                hls.attachMedia(video);
+                video.oncanplay = function () {
+                    loading.style.opacity = 0;
+                    setTimeout(() => loading.style.display = 'none', 500);
+                };
+            } else {
+                video.src = streams[channel];
+                video.oncanplay = function () {
+                    loading.style.opacity = 0;
+                    setTimeout(() => loading.style.display = 'none', 500);
+                };
+            }
+        }
+
+        window.onload = function () {
+            setVideoSize();
+            switchStream('bein');
         };
-        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
-        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
-        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-    })();
-</script>
-<!-- /GetButton.io widget -->
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-228778532-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-228778532-1');
-</script>
-
-<a href="//www.dmca.com/Protection/Status.aspx?ID=4802ed5d-363f-49a5-bc03-edf9f5466e76" title="DMCA.com Protection Status" class="dmca-badge"> <img src ="https://images.dmca.com/Badges/dmca-badge-w250-2x1-03.png?ID=4802ed5d-363f-49a5-bc03-edf9f5466e76"  alt="DMCA.com Protection Status" /></a>  <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"> </script>
-
-<meta name='dmca-site-verification' content='L1JjRFNoam02TGVnNk5yWG9PSmpkZz090' />
-   <!--============= Banner Section Starts Here =============-->
-    <section class="banner-8 oh">
-        <div class="banner-shape-8 d-lg-block d-none">
-            <img src="banner-shape-9.png" alt="banner">
-        </div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="banner-content-8">
-                        <h1 class="title">𝚃𝚅𝚂𝙼𝙰𝚁𝚃𝙸𝙿𝚃𝚅<br>𝟒𝐊 𝐔𝐥𝐭𝐫𝐚 𝐇𝐃</h1>
-                        <p>
-                        Sinema - Spor - Film - Dizi - Haber - Belgesel<br>Ulusal - Yerel - +18 Yetişkin - Yabancı Kanallar.<br>Durdur-Oynat - İleri-Geri Tv Smart IPTV'de
-                        </p>
-                        <div class="banner-button-group">
-                            <a href="iptv-paketleri.php" class="button-4">Paketleri İncele</a>
-                           
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 d-none">
-                </div>
-                <div class="col-12">
-                    <div class="counter-wrapper-3">
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="./assets/images/icon/counter1.png" alt="icon">
-                            </div>
-                            <div class="counter-content">
-                                <h2 class="title"><span class="counter">500.952</span></h2>
-                                <span class="name">Toplam Kullanıcı</span>
-                            </div>
-                        </div>
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="./assets/images/icon/counter2.png" alt="icon">
-                            </div>
-                            <div class="counter-content">
-                                <h2 class="title"><span class="counter">55.000</span></h2>
-                                <span class="name">Toplam İçerik Sayısı</span>
-                            </div>
-                        </div>
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="./assets/images/icon/counter5.png" alt="icon">
-                            </div>
-                            <div class="counter-content">
-                                <h2 class="title"><span class="counter">100</span><span>%</span></h2>
-                                <span class="name">Müşteri Memnuniyeti</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--============= Banner Section Ends Here =============-->
-
-
-    <!--============= To Access Section Starts Here =============-->
-    <section class="to-access-section padding-top padding-bottom bg_img mb-lg-5" data-background="./assets/images/feature/to-access-bg.png" id="feature">
-        <div class="container">
-            <div class="section-header">
-
-                <h2 class="title">Neden Biz?</h2>
-                <p>Sözleşme Ve Taahhüt Yoktur. Paketinizi Kolayca İptal Edebilirsiniz. İptal Ücreti Yoktur. Paketinizi İstediğiniz Zaman Başlatın Veya Durdurun. Yüksek Performans Özel Yazılımlarımız Ve Sürprizlerle Sizlere Hizmet Vermeye Hazırız!</p>
-            </div>
-            <div class="row mb-30 justify-content-center">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="to-access-item">
-                        <div class="to-access-thumb">
-                            <span class="anime"></span>
-                            <div class="thumb">
-                                <img src="./assets/images/icon/access1.png" alt="access">
-                            </div>
-                        </div>
-                        <h5 class="title">Kesintisiz Yayın</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="to-access-item active">
-                        <div class="to-access-thumb">
-                            <span class="anime"></span>
-                            <div class="thumb">
-                                <img src="./assets/images/icon/access2.png" alt="access">
-                            </div>
-                        </div>
-                        <h5 class="title">Hızlı Kurulum</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="to-access-item">
-                        <div class="to-access-thumb">
-                            <span class="anime"></span>
-                            <div class="thumb">
-                                <img src="./assets/images/icon/access3.png" alt="access">
-                            </div>
-                        </div>
-                        <h5 class="title">Güvenli Hizmet</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="to-access-item">
-                        <div class="to-access-thumb">
-                            <span class="anime"></span>
-                            <div class="thumb">
-                                <img src="./assets/images/icon/access4.png" alt="access">
-                            </div>
-                        </div>
-                        <h5 class="title">Canlı Destek Hattı</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center">
-          
-            </div>
-        </div>
-    </section>
-    <!--============= To Access Section Ends Here =============--> 
-
-  <!--============= How Section Starts Here =============-->
-    <section class="how-section padding-bottom padding-top" id="how">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="title">Genel IPTV Hizmetleri</h2>
-                <p>IPTV Bayilik Hizmetleri İPTV Resteram Hizmetleri Xtream UI IPTV Hizmetleri Ödeme Yöntemleri</p>
-            </div>
-            <div class="row justify-content-xl-between justify-content-center mb-40-none">
-				                      <div class="col-lg-4 col-sm-6 col-xl-3">
-                    <div class="how-item">
-                        <div class="how-thumb">
-                            <img src="./assets/images/how/how1.png" alt="how">
-                        </div>
-                        <div class="how-content">
-                            <a href="#0" class="button-3 active">Ödeme Yöntemleri?</a>
- 
-                            <p>PayPal Transfer Online Ödeme £ Sterlin IBAN Transfer € Euro IBAN Transfer ₺ TL IBAN Transfer UPTION Para Transferi </p>
-                        </div>
-                    </div>
-                </div>
-                         <div class="col-lg-4 col-sm-6 col-xl-3">
-                    <div class="how-item">
-                        <div class="how-thumb">
-                            <img src="./assets/images/how/how1.png" alt="how">
-                        </div>
-                        <div class="how-content">
-                            <a href="#0" class="button-3 active">Xtream-UI Panel 350 €</a>
- 
-                            <p> Yönetici Arayüzü
- Güçlü Dönüştürücü
- Yük Dengeleme
- CCTV Yakalama
- Bayi Arayüzü
- Tüm Cihazlar
- Web TV Player
- Ömür Boyu Lisans</p>
-                        </div>
-                    </div>
-                </div>
-                         <div class="col-lg-4 col-sm-6 col-xl-3">
-                    <div class="how-item">
-                        <div class="how-thumb">
-                            <img src="./assets/images/how/how1.png" alt="how">
-                        </div>
-                        <div class="how-content">
-                            <a href="#0" class="button-3 active">IPTV Restream 1000 €</a>
- 
-                            <p> 1500 Connection
-15000 + Canlı Kanal
- 30 000 + VOD Arşivi
- M3U, M3U8, MPEGTS
- 4k/HD/3D/SD
- Web Tv Paneli
- IPTV Uygulama
- Web Site
- Size Özel Numara</p>
-                        </div>
-                    </div>
-                </div>
-                         <div class="col-lg-4 col-sm-6 col-xl-3">
-                    <div class="how-item">
-                        <div class="how-thumb">
-                            <img src="./assets/images/how/how1.png" alt="how">
-                        </div>
-                        <div class="how-content">
-                            <a href="#0" class="button-3 active">IPTV Reseller 1500 User 1000 €</a>
- 
-                            <p>+100.000 Canlı Kanal ve VOD
-Özel Panel ve Bulut Sistemi
-4k/HD/3D/SD Kanalları
-Xtream XUI.one Paneli
-Özel DNS Seçimi
-Kategorileri Özelleştirin
-Alt Bayi Oluştur
-7/24 Tam Destek</p>
-                        </div>
-                    </div>
-                </div>
-                     </div>
-        </div>
-    </section>
-    <!--============= How Section Ends Here =============-->
-
-
-<br><br><br>
-
-
-
-
-
- 
- <!--============= Pricing Section Starts Here =============-->
-     <section class="pricing-section padding-top oh padding-bottom pb-lg-half bg_img pos-rel" data-background="./assets/images/bg/pricing-bg.jpg" id="pricing">
-        <div class="top-shape d-none d-md-block">
-            <img src="./assets/css/img/top-shape.png" alt="css">
-        </div>
-        <div class="bottom-shape d-none d-md-block mw-0">
-            <img src="./assets/css/img/bottom-shape.png" alt="css">
-        </div>
-        <div class="ball-2" data-paroller-factor="-0.30" data-paroller-factor-lg="0.60"
-        data-paroller-type="foreground" data-paroller-direction="horizontal">
-            <img src="./assets/images/balls/1.png" alt="balls">
-        </div>
-        <div class="ball-3" data-paroller-factor="0.30" data-paroller-factor-lg="-0.30"
-        data-paroller-type="foreground" data-paroller-direction="horizontal">
-            <img src="./assets/images/balls/2.png" alt="balls">
-        </div>
-        <div class="ball-4" data-paroller-factor="0.30" data-paroller-factor-lg="-0.30"
-        data-paroller-type="foreground" data-paroller-direction="horizontal">
-            <img src="./assets/images/balls/3.png" alt="balls">
-        </div>
-        <div class="ball-5" data-paroller-factor="0.30" data-paroller-factor-lg="-0.30"
-        data-paroller-type="foreground" data-paroller-direction="vertical">
-            <img src="./assets/images/balls/4.png" alt="balls">
-        </div>
-        <div class="ball-6" data-paroller-factor="-0.30" data-paroller-factor-lg="0.60"
-        data-paroller-type="foreground" data-paroller-direction="horizontal">
-            <img src="./assets/images/balls/5.png" alt="balls">
-        </div>
-        <div class="ball-7" data-paroller-factor="-0.30" data-paroller-factor-lg="0.60"
-        data-paroller-type="foreground" data-paroller-direction="vertical">
-            <img src="./assets/images/balls/6.png" alt="balls">
-        </div>
-        <div class="container">
-            <div class="section-header pb-30 cl-white">
-                <h5 class="cate">İPTV Paketlerimiz</h5>
-                <h2 class="title">Fiyatlarımız</h2>
-                <p>
-                    Dilediğin iPTV Paketini Seç ve Hemen Satın al!
-
-
-
-
-                </p>
-            </div>
-      
-                            <div class="tab-area">
-                    <div class="tab-item active">
-                        <div class="pricing-slider-wrapper">
-                            <div class="pricing-slider owl-theme owl-carousel">
-                                                                      <div class="pricing-item-2">
-                                    <h5 class="cate"> Türkiye IPTV Paketleri</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center"><span style="font-size:20px"><span style="color:#c0392b"><strong>☪️T&uuml;rkiye</strong></span></span></p>
-
-<p style="text-align:center"><strong>✅&nbsp;<span style="color:#000000">Tek Girişli Paketler</span></strong></p>
-
-<p style="text-align:center"><strong>☪️ <span style="color:#e74c3c">3 Aylık Paket: 550&nbsp;₺</span><br />
-☪️ <span style="color:#e74c3c">6 Aylık Paket: 750&nbsp;₺</span><br />
-☪️ <span style="color:#e74c3c">12 Aylık Paket: 1000&nbsp;₺</span><br />
-☪️ <span style="color:#e74c3c">24 Aylık Paket: 1600 ₺</span></strong></p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">Ücretsiz IPTV Test Paketi</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center">+7000&#39;den Fazla Kanal<br />
-+50&#39;den Fazla &Uuml;lke<br />
-3000+ Vod Sinema + G&uuml;nl&uuml;k Dizi<br />
-7/24 Destek &Uuml;cretsiz Kurulum</p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">IPTV Satın Al - IPTV Satış</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center">IPTV Bayilik<br />
-İPTV Satış Scripti<br />
-IPTV Restream<br />
-Sınırsız IPTV Reseller<br />
-Xui ONE vs Xtream UI R22F install</p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-odeme-bildirimi.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">Avrupa Çift Girişli Paketler</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center"><span style="color:#3498db"><strong>✅ Avrupa</strong></span></p>
-
-<p style="text-align:center"><strong>✅&nbsp;&Ccedil;ift Girişli Paketler</strong></p>
-
-<p style="text-align:center"><strong>✅ 3 Aylık Paket: 50 &euro;<br />
-✅ 6 Aylık Paket: 60 &euro;<br />
-✅ 12 Aylık Paket: 80 &euro;<br />
-✅ 24 Aylık Paket: 160&nbsp;&euro;</strong></p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">IPTV Restream Kaynak</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center"><span style="color:#7f8c8d">✅ Avrupa</span></p>
-
-<p style="text-align:center"><span style="color:#7f8c8d">✅&nbsp;</span><strong>IPTV Restream Kaynak</strong></p>
-
-<p style="text-align:center"><span style="color:#7f8c8d">✅100 Con 180 &euro;<br />
-✅250 Con 350 &euro;<br />
-✅500 Con 750 &euro;<br />
-✅1000 Con 1500 &euro;</span></p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">Avrupa IPTV Paketleri</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center"><span style="font-size:20px"><span style="color:#ffffff"><strong>✅ Avrupa</strong></span></span></p>
-
-<p style="text-align:center"><strong>✅&nbsp;<span style="color:#f1c40f">Tek Girişli Paketler</span></strong></p>
-
-<p style="text-align:center"><strong>✅ <span style="color:#3498db">3 Aylık Paket: 30 &euro;</span><br />
-✅ <span style="color:#3498db">6 Aylık Paket: 40 &euro;</span><br />
-✅ <span style="color:#3498db">12 Aylık Paket: 60 &euro;</span><br />
-✅ <span style="color:#3498db">24 Aylık Paket: 120&nbsp;&euro;</span></strong></p>
-
-<div id="gtx-trans" style="left:698px; position:absolute; top:202.781px">
-<div class="gtx-trans-icon">&nbsp;</div>
-</div>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                                   <div class="pricing-item-2">
-                                    <h5 class="cate">Türkiye Çift Girişli Paketler</h5>
-                                    <div class="thumb">
-                                        <img src="./assets/images/pricing/pricing7.png" alt="pricing">
-                                    </div>
-                                    <h2 class="title">Full HD İçerik </h2>
-                                    <span class="info">İp Tv Yayını</span>
-                                    <ul class="pricing-content-3">
-                                       <center><p style="text-align:center"><strong>☪️T&uuml;rkiye</strong></p>
-
-<p style="text-align:center"><strong>✅ &Ccedil;ift Girişli Paketler</strong></p>
-
-<p style="text-align:center"><strong>☪️ 3 Aylık Paket: 750 ₺<br />
-☪️ 6 Aylık Paket: 850&nbsp;₺<br />
-☪️ 12 Aylık Paket: 1850&nbsp;₺<br />
-☪️ 24 Aylık Paket: 3300 ₺</strong></p>
-</center>
-                                    </ul>
-                                    <a href="https://tvsmartiptv.com/iptv-test.php" class="get-button">Satın Al<i class="flaticon-right"></i></a>
-                                </div>
-                               
-                                                              
-                            
-                            </div>
-                            
-                        </div>
-                    </div>
-                    
-                   
-            <div class="text-center mt-70">
-                
-            </div>
-        </div>
-    </section>
-    <!--============= Pricing Section Ends Here =============-->
-
-    <!--============= Pricing Section Ends Here =============-->
-<br><br><br>
-    
-   <center> <h2 class="title mt-0">iPTV Kanal Listesi
-</h2></center>
-    <!--============= About Section Starts Here =============-->
-    <section class="about-section padding-top padding-bottom oh">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5">
-                    <div class="about-thumb rtl pr-xl-15">
-                        <img src="./assets/images/about/about.png" alt="about">
-                    </div>
-                </div>
-                <div class="col-xl-7 pl-xl-0">
-                    <div class="about-content">
-                        <div class="section-header left-style">
-                            <h5 class="cate">tvsmartiptv.com</h5>
-                            <h2 class="title">Güncel iPTV Kanal Listesi
-</h2>
-                            <p><a href="iptv-kanal-listesi.php">GÜNCEL KANAL LİSTESİMİZE ULAŞMAK İÇİN TIKLAYIN!</a></p>
-                        </div>
-                        <div class="counter-area-5">
-                            <div class="counter-item-5">
-                                <div class="counter-thumb">
-                                    <img src="./assets/images/counter/counter1.png" alt="counter">
-                                </div>
-                                <div class="counter-content">
-                                    <h3 class="title"><span class="counter">500</span><span>k</span></h3>
-                                    <p>Toplam Kullanıcı</p>
-                                </div>
-                            </div>
-                            <div class="counter-item-5">
-                                <div class="counter-thumb">
-                                    <img src="./assets/images/counter/counter2.png" alt="counter">
-                                </div>
-                                <div class="counter-content">
-                                    <h3 class="title"><span class="counter">25</span><span>+</span></h3>
-                                    <p>Tüm Ülkeler</p>
-                                </div>
-                            </div>
-                            <div class="counter-item-5">
-                                <div class="counter-thumb">
-                                    <img src="./assets/images/counter/counter3.png" alt="counter">
-                                </div>
-                                <div class="counter-content">
-                                    <h3 class="title"><span class="counter">100</span><span>%</span></h3>
-                                    <p>Memnuniyet</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--============= About Section Ends Here =============-->
-    
-    
-     
-      <center> <h2 class="title mt-0">Sıkça Sorulan Sorular
-</h2></center>
-     <section class="faq-section padding-top padding-bottom">
-        <div class="container">
-            <div class="row justify-content-between">
-               
-                <div class="col-lg-12">
-                    <article class="mt-70 mt-lg-0">
-                        <div class="faq--wrapper" id="get">
-                            <h3 class="main-title"></h3>
-                            <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">   Kaç Yıldır Hizmet Veriyorsunuz?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>   14 Senedir iPTV Server Hizmetimize Devam Ediyoruz İnsanlara Elimizden Geldiğince Yardımcı Olmaya Çalışıyoruz.</p>
-                                    </div>
-                                </div>
-<br>
-                <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">   Hangi Cihazlarda İptv Paketimi Kullanabilirim ?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>   Bilgisayar, smart tv, akıllı telefon ve tablet, IPTV destekli uydu alıcılar ve tv box cihazlarında yayınları izleyebilirsiniz,sürekli güncellenen içerikleri reklamsız sınırsız dilediğiniz kadar izlemenizi sağlar.</p>
-                                    </div>
-                                </div>
-                
-                                
-                </div>
-            </div>
-        </div>
-        <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">   Aynı Anda Farklı Cihazlardan İzleyebilir Miyim?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>   Tek hesap ile aynı anda yalnızca tek bir cihazdan izleyebilirsiniz ancak diğer bir cihazdan izlemeyi bırakıp farklı cihaza geçebilirsiniz. Bu nedenle şifrenizi bir başka kişiyle paylaşırsanız, o kişi izleme yaparken siz izleyemezsiniz.</p>
-                                    </div>
-                                </div>
-                
-                                
-                </div>
-            </div>
-        </div>
-       <br><br>
-        <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">   Yayınlarda Kesinti Veya Takılma Oluyormu?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>   Yayınlarda Teknik bir problem olmadığı sürece bizden kaynaklı donma olmaz. Kotanız Dolduysa IPTV kullanırken donması normaldir. IPTV İnternet Altyapısı ile Çalışan Bi Sistemdir o Yüzden Kota ve internet hızınız donup donmamayı direkt etkiler. IPTV kullanım sürenize göre harcadığınız kota değişir. Hd Yayınları İzlediğimizi Varsayarak günde Ortalama 3 saat İzlenimde Aylık ort. 20-25 Gb harcama yapar. Kota Aşımı Gerçekleşirse Sözleşmeli Olduğunuz İnternet Aboneliğine Göre Bağlantı hızınızı düşürürler. Hız Eğer 6 Mbit in altına düşerse IPTV Yayınında Donma-Takılma Meydana Gelebilir!</p>
-                                    </div>
-                                </div>
-                                <br>
-                                 <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">Nasıl IPTV Paketi Satın Alabilirim?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>Satın Al sayfamızdan ilgilendiğiniz paket için ödeme butonuna tıklayarak açılan sayfada satın alma işleminizi gerçekleştirebilirsiniz. Satın alma işleminden sonra bize canlı destek hattımızdan bilgi verirseniz hesabınız 10 dakika içinde aktif edilecektir.</p>
-                                    </div>
-                                </div>
-                
-                                
-                </div>
-            </div>
-        </div>
-                
-                                
-                </div>
-            </div>
-        </div>
-                       
-                </div>
-            </div>
-        </div>
-        
-        
-    </section>
-    <!--============= Faqs Section Ends Here =============-->
-    
-        <center> <h2 class="title mt-0">Kurulum Öğretici
-</h2></center>
-     <!--============= Faqs Section Starts Here =============-->
-    <section class="faq-section padding-top padding-bottom">
-        <div class="container">
-            <div class="row justify-content-between">
-          
-                <div class="col-lg-12">
-                    <article class="mt-70 mt-lg-0">
-                        <div class="faq--wrapper" id="get">
-                            <h3 class="main-title">Kurulum Cihazlar</h3>
-                            <div class="faq--area">
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">ENIGMA2 (DREAMBOX/VU+) KURULUMU</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>* Öncelikle FTP ile bilgisayarınızdan cihazınıza bağlanın. * FTP ile cihazınızın ıp adresini yazarak giriş yapın. Kullanıcı adı : root Şifre : dreambox (Genel Olarak) * Sizlere Vereceğimiz userboguet yani hazır yükleme dosyasını size göstereceğimiz yere atınız. * Ardından userboguet dosyasını ETC/Enigma2 Yolunu Bularak Enigma2 klasörüne atınız. * Ardından cihazınızı yeniden başlatın. Kanallarımız hazır bir şekilde önümüze çıkacaktır.</p>
-                                    </div>
-                                </div>
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">Bilgisayar Televizyon Telefon Tablet İle Nasıl İptv İzlerim?</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>Smart IPTV-SS IPTV-Room IPTV-Flix IPTV-Flex IPTV-Net IPTV-quzu IPTV-Home IPTV-Set IPTV-Smart One IPTV-Smart Club IPTV-Royal IPTV-Bay IPTV-Mega IPTV-Gecko IPTV-Asxx IPTV-Dublex IPTV-IPTV Extreme-Zeta Cron IPTV-MK IPTV-Ott Player-IPTV Xtream Codes-Tivimate IPTV-IPTV Stream Player-Smarters Player Lite-GSE Smart IPTV-247 IPTV Player-Redo Player IPTV-Ücretli Uygulamalar Tarafımızdan Sizin İçin Aktivasyon Yapılmaktadır.</p>
-                                    </div>
-                                </div>
-                                <div class="faq--item">
-                                    <div class="faq-title">
-                                        <h6 class="title">Mag250 ve Üzeri (256 Hariç) Portal ve Kurulumu</h6>
-                                        <span class="icon"></span>
-                                    </div>
-                                    <div class="faq-content">
-                                        <p>Kullanmakta Olduğumuz Özel Sistem Sayesinde Mag Portal Sistemimizi Minumum 5 Mbit Bağlantınız Olması Halinde, Full HD Bir Şekilde Donma yada Kopma Olmadan İzleyebilmektesiniz.  Mag Portal; Herhangi Bir Kurulum Bilgisi Gerektirmez. Cihazınızın Altında Bulunan MAC Adresini Bize İletmeniz Yeterli Olmaktadır.  Tüm Kanalları, Güncellemeleri Otomatik Olarak Sistemimiz Kendini Yapacaktır. Fişe Takıp İzlemeye Başlayabilirsiniz Mag Portal Satın Almak İçin Bizim ile iletişime geçin.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                       
-                              
-                
-                    </article>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--============= Faqs Section Ends Here =============-->
-    
-
-
-
-  <!--============= Custom-Plan Section Starts Here =============-->
-    <section class="help-section padding-bottom padding-top oh">
-        <div class="container">
-            <div class="section-header">
-                <h5 class="cate">İPTV</h5>
-                <h2 class="title">Yardıma mı ihtiyaç var?</h2>
-            </div>
-            <div class="row justify-content-between">
-                <div class="col-lg-6 rtl d-none d-lg-block">
-                    <img src="assets/images/feature/help.png" alt="feature">
-                </div>
-                <div class="col-lg-6 col-xl-5 mb-30-none">
-                    <div class="help-item">
-                        <div class="help-thumb">
-                            <img src="assets/images/feature/help1.png" alt="help">
-                        </div>
-						                               <div class="help-content">
-                            <h5 class="title">iPTV İle İlgili Sorularınız mı Var?</h5>
-                            <p>Bize Her an Whatsapp Veya Destek Sistemi Üzerinden Ulaşabilirsiniz. Tüm sorularınızı İletebilirsiniz.</p>
-                        </div>
-                    </div>
-                    <div class="help-item">
-                        <div class="help-thumb">
-                            <img src="assets/images/feature/help2.png" alt="help">
-                        </div>
-                        <div class="help-content">
-                            <h5 class="title">İstediğim Her Cihazdan İPTV İzleyebilirmiyim?</h5>
-                            <p>Yayınlarımızı Ekstra Ücret Ödemeden Telefonda, Tablette, Bilgisayarda, Televizyonda Sınırsız İzleyin.</p>
-                        </div>
-                    </div>
-                    <div class="help-item">
-                        <div class="help-thumb">
-                            <img src="assets/images/feature/help3.png" alt="help">
-                        </div>
-                        <div class="help-content">
-                            <h5 class="title">IPTV Nedir?</h5>
-                            <p>IPTV, internet protokolü televizyonu anlamına geliyor ve kullanıcılar anten, uydu veya fiber optik kablolar yerine internet üzerinden bu kanallara ulaşabiliyor. Yani IPTV, televizyonlardaki içeriği direkt olarak internet üzerinden yayınlıyor.</p>
-								                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--============= Custom-Plan Section Ends Here =============-->
-
-
-    
-    <!--============= Testimonial Section Starts Here =============-->
-    <section class="testimonial-section padding-top pt-lg-half padding-bottom pos-rel oh">
-        <div class="container">
-            <div class="ball-3 style2 d-none d-lg-block" data-paroller-factor="0.30" data-paroller-factor-lg="-0.30" data-paroller-type="foreground" data-paroller-direction="horizontal">
-                <img src="assets/images/client/circle2.png" alt="client">
-            </div>
-            <div class="ball-6 style2 d-none d-lg-block" data-paroller-factor="-0.30" data-paroller-factor-lg="0.60" data-paroller-type="foreground" data-paroller-direction="horizontal">
-                <img src="assets/images/client/circle1.png" alt="client">
-            </div>
-            <div class="row justify-content-between flex-wrap-reverse align-items-center">
-                <div class="col-lg-7">
-                    <div class="testimonial-wrapper style-two">
-                        <a href="#0" class="testi-next trigger">
-                            <img src="assets/images/client/left.png" alt="client">
-                        </a>
-                        <a href="#0" class="testi-prev trigger">
-                            <img src="assets/images/client/right.png" alt="client">
-                        </a>
-       
-                        <div class="testimonial-area testimonial-slider owl-carousel owl-theme">
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                                                    
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Firma ile İletişim Kurmak Çok Basit Whatsaptan Yazdım hemen Paketimi Aldım Anında Kurulum Yapıldı                                    </p>
-                                    <h5 class="title"><a href="#0">Berrak Naz</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Daha Önce Çok Kişilerden iPTV Ürünü Aldım ama Gerek İçerik ve Gerek Süreklilik Olsun iPTVHD.oRg Firmasından Cok Memnunuz Tavsiye Ederiz :)                                    </p>
-                                    <h5 class="title"><a href="#0">Murat Keleş</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       30 Bin Kanal var %80 i Aktif. Whatsap Desteğide Harika Ben KISA Vadeli ALdım ama SÜrem Bitince Senelik Alacagım                                    </p>
-                                    <h5 class="title"><a href="#0">Hasan Başbostan</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       iPTV Fİyatları bana Çok Uygun Geldi , Tereddüt Ettim ama Sonradan Sorun oLmuycanı Anladım.                                    </p>
-                                    <h5 class="title"><a href="#0">Hatice Enver</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       5 Senedir Müşterisiyim Ciddi Anlamda Öneriyorum. Fiyatlar Aklınızda ucuz gelmesin En İyisi Bunlar                                    </p>
-                                    <h5 class="title"><a href="#0">Burak Cerkez</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Maç Kanalları Oldukca güzel Özellıkle Maçlarda Extra Sunucu Baglıyorlar Buda Donmayı Engellıyor Teşekkürler.                                    </p>
-                                    <h5 class="title"><a href="#0">Hüseyin Kandırmış</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Daha Önce Çok Kişilerden iPTV Ürünü Aldım ama Gerek İçerik ve Gerek Süreklilik Olsun tvsmartiptv.com Firmasından Cok Memnunuz Tavsiye Ederiz :)                                    </p>
-                                    <h5 class="title"><a href="#0">Murat Keleş</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Merhaba uzun süredir tvsmartiptv hizmetinden faydalanıyorummüşteri memnuniyeti gerçekten çok iyi bir arkadaş gibi destek veriyorlar iyi çalışmalar dilerim                                    </p>
-                                    <h5 class="title"><a href="#0">Derya</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                               
-                                <div class="testimonial-content">
-                                    <div class="ratings">
-                                        
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                        <span><i class="fas fa-star"></i></span>
-                                    </div>
-                           
-                                    <p>
-                                       Daha Önce Çok Kişilerden iPTV Ürünü Aldım ama Gerek İçerik ve Gerek Süreklilik Olsun tvsmartiptv.com Firmasından Cok Memnunuz Tavsiye Ederiz :)                                    </p>
-                                    <h5 class="title"><a href="#0">Murat Keleş</a></h5>
-                                </div>
-                            </div>
-                            <div class="testimonial-item">
-                                <div class="testimonial-thumb">
-                                    <div class="thumb">
-                                        <img src="assets/images/client/client1.jpg" alt="client">
-                                    </div>
-                                </div>
-                                
-                                                          </div>
-                             
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="testi-wrapper">
-                        <div class="testi-header">
-                            <div class="section-header left-style">
-                                <h5 class="cate">iPTV Müşteri Yorumları</h5>
-                                <h2 class="title">Mutlu Müşterinin Yorumları</h2>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-       
-<br><br><br><br>
-
-
-
- <!--============= Footer Section Starts Here =============-->
-    <footer class="footer-section bg_img" data-background="./assets/images/footer/footer-bg.jpg">
-        <div class="container">
-            <div class="footer-top padding-top padding-bottom">
-                <div class="logo">
-                    <a href="#0">
-                        <img src="./assets/images/logo/footer-logo.png" alt="logo">
-                    </a>
-                </div>
-                <ul class="social-icons">
-                    <li>
-                        <a href=""><i class="fab fa-facebook-f"></i></a>
-                    </li>
-                    <li>
-                        <a href=""><i class="fab fa-instagram"></i></a>
-                    </li>
-                    <li>
-                        <a href=""><i class="fab fa-telegram"></i></a>
-                    </li>
-                    <li>
-                        <a href=""><i class="fab fa-twitter"></i></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="footer-bottom">
-                <ul class="footer-link">
-                    <li>
-                        <a href="index.php">Ana Sayfa</a>
-                    </li>
-                    <li>
-                        <a href="iptv-paketleri.php">iPTV Paketleri</a>
-                    </li>
-                    <li>
-                        <a href="iptv-kanal-listesi.php">iPTV Kanal Listesi</a>
-                    </li>
-                    <li>
-                        <a href="iptv-kurulum.php">iPTV Kurulum</a>
-                    </li>
-                    <li>
-                        <a href="iptv-iletisim.php">iPTV İletişim</a>
-                    </li>
-					 <li>
-                        <a href="iptv-test.php">iPTV Test Talebi</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="copyright">
-                <p>
-                    Tüm Telif Hakkı Sakldır - Copyright © 2007-2023 Tv Smart IPTV <a href="iptv-iletisim.php">www.tvsmartiptv.com</a>
-                </p>
-            </div>
-        </div>
-    </footer>
-    <!--============= Footer Section Ends Here =============-->
-
-    <script src="./assets/js/jquery-3.3.1.min.js"></script>
-    <script src="./assets/js/modernizr-3.6.0.min.js"></script>
-    <script src="./assets/js/plugins.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
-    <script src="./assets/js/magnific-popup.min.js"></script>
-    <script src="./assets/js/jquery-ui.min.js"></script>
-    <script src="./assets/js/wow.min.js"></script>
-    <script src="./assets/js/waypoints.js"></script>
-    <script src="./assets/js/nice-select.js"></script>
-    <script src="./assets/js/owl.min.js"></script>
-    <script src="./assets/js/counterup.min.js"></script>
-    <script src="./assets/js/paroller.js"></script>
-    <script src="./assets/js/main.js"></script>
+    </script>
 </body>
 </html>
