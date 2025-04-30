@@ -37,6 +37,7 @@
             top: 0;
             left: 0;
             z-index: 20;
+            animation: slideIn 1s ease-out;
         }
 
         #nav {
@@ -52,10 +53,12 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
         #nav button:hover {
             background-color: #777;
+            transform: scale(1.1);
         }
 
         #video-container {
@@ -99,6 +102,12 @@
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(1); opacity: 0.9; }
         }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
@@ -108,6 +117,8 @@
             <button onclick="switchStream('bein')">#bein</button>
             <button onclick="switchStream('fella')">#fella stream</button>
             <button onclick="window.location.href='digerkanal.html'">#diğer kanallar</button>
+            <!-- Yeni Dizi Yayınları Butonu -->
+            <button onclick="window.location.href='dizi.html'">Dizi Yayınları</button>
         </div>
     </div>
 
