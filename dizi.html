@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dizi Yayını - Fella Stream</title>  
+
+    <!-- Open Graph Etiketleri -->
+    <meta property="og:title" content="Fella Stream - Dizi Yayını" />
+    <meta property="og:description" content="Fella Stream ile dizi yayını izleyin!" />
+    <meta property="og:image" content="https://i.hizliresim.com/3ux3yd7.png" />
+    <meta property="og:url" content="https://bevke.github.io/Barafella/" />
+    <meta property="og:type" content="website" />
+    
+    <script src="https://cdn.tutorialjinni.com/hls.js/1.2.1/hls.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #cccccc;
+        }
+
+        #header {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            background-color: #333;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+        }
+
+        #nav {
+            margin-top: 10px;
+        }
+
+        #nav button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #nav button:hover {
+            background-color: #777;
+        }
+
+        #video-container {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            margin-top: 120px;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #loading-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-logo img {
+            width: 180px;
+            height: auto;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        /* Animation for the header */
+        @keyframes slideIn {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        #header {
+            animation: slideIn 1s ease-out;
+        }
+
+        /* Hover effects for buttons */
+        #nav button {
+            transition: transform 0.3s ease;
+        }
+
+        #nav button:hover {
+            transform: scale(1.1);
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        Fella Stream - Dizi Yayını
+    </div>
+
+    <!-- Loading ekranı -->
+    <div id="loading-logo">
+        <img src="https://i.hizliresim.com/3ux3yd7.png" alt="Loading..." />
+    </div>
+
+    <div id="nav">
+        <button onclick="switchStream('adanalidizisi')">Adanalı</button>
+        <button onclick="switchStream('avrupayakasi')">Avrupa Yakası</button>
+        <button onclick="switchStream('behzatc')">Behzat C</button>
+        <button onclick="switchStream('cennetmahallesishowtv')">Cennet Mahallesi</button>
+        <button onclick="switchStream('cocuklarduymasindizi')">Çocuklar Duymasın</button>
+        <button onclick="switchStream('kemalsunal')">Kemal Sunal</button>
+        <button onclick="switchStream('kizilcikserbetidizi')">Kızılcık Şerbeti</button>
+        <button onclick="switchStream('muhtesemyuzyil')">Muhteşem Yüzyıl</button>
+    </div>
+
+    <div id="video-container">
+        <video id="video" controls autoplay></video>
+    </div>
+
+    <script>
+        const streams = {
+            adanalidizisi: 'http://51.20.137.71/stream/yt2/adanalidizisi.m3u8',
+            avrupayakasi: 'http://51.20.137.71/stream/yt2/avrupayakasi.m3u8',
+            behzatc: 'http://51.20.137.71/stream/yt2/behzatc.m3u8',
+            cennetmahallesishowtv: 'http://51.20.137.71/stream/yt2/cennetmahallesishowtv.m3u8',
+            cocuklarduymasindizi: 'http://51.20.137.71/stream/yt2/cocuklarduymasindizi.m3u8',
+            kemalsunal: 'http://51.20.137.71/stream/yt2/kemalsunal.m3u8',
+            kizilcikserbetidizi: 'http://51.20.137.71/stream/yt2/kizilcikserbetidizi.m3u8',
+            muhtesemyuzyil: 'http://51.20.137.71/stream/yt2/muhtesemyuzyil.m3u8'
+        };
+
+        let hls;
+
+        function setVideoSize() {
+            var video = document.getElementById('video');
+            video.width = window.innerWidth;
+            video.height = window.innerHeight;
+        }
+
+        window.onresize = setVideoSize;
+
+        function switchStream(channel) {
+            const video = document.getElementById('video');
+            const loading = document.getElementById('loading-logo');
+
+            loading.style.display = 'block';
+            loading.style.opacity = 1;
+
+            if (Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy();
+                }
+                hls = new Hls();
+                hls.loadSource(streams[channel]);
+                hls.attachMedia(video);
+                video.oncanplay = function () {
+                    loading.style.opacity = 0;
+                    setTimeout(() => loading.style.display = 'none', 500);
+                };
+            } else {
+                video.src = streams[channel];
+                video.oncanplay = function () {
+                    loading.style.opacity = 0;
+                    setTimeout(() => loading.style.display = 'none', 500);
+                };
+            }
+        }
+
+        window.onload = function () {
+            setVideoSize();
+            switchStream('adanalidizisi'); // Varsayılan olarak "Adanalı" yayını açılıyor
+        };
+    </script>
+</body>
+</html>
