@@ -1,18 +1,26 @@
-/* style.css */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-#video-container {
-  position: relative;
-}
-
 #video-logo {
-  position: absolute;
-  top: 3%;
-  right: 3%;
-  width: 10%;
-  z-index: 10;
-  pointer-events: none;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 10%;  /* Logo genişliği ekranın %10'u olacak şekilde ayarlandı */
+    z-index: 10;
+    pointer-events: none;
+    max-width: 150px;  /* Maksimum genişlik 150px */
+    max-height: 150px;  /* Maksimum yükseklik 150px */
+    object-fit: contain;  /* Logo oranını bozmadan sığdırma */
+    transition: all 0.3s ease-in-out;  /* Geçiş efekti */
+}
+
+@media (max-width: 768px) {
+    #video-logo {
+        width: 20%;  /* Küçük ekranlarda logoyu %20'ye çıkar */
+        max-width: 100px;  /* Maksimum genişlik 100px */
+    }
+}
+
+@media (max-width: 480px) {
+    #video-logo {
+        width: 30%;  /* Çok küçük ekranlarda logoyu %30 yap */
+        max-width: 80px;  /* Maksimum genişlik 80px */
+    }
 }
