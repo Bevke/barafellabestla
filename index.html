@@ -79,6 +79,16 @@
             object-fit: cover;
         }
 
+        /* 🔽 Video üstüne logo stilleri */
+        #video-logo {
+            position: absolute;
+            top: 3%;
+            right: 3%;
+            width: 10%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
         #loading-logo {
             position: fixed;
             top: 50%;
@@ -117,7 +127,6 @@
             <button onclick="switchStream('bein')">#bein</button>
             <button onclick="switchStream('fella')">#fella stream</button>
             <button onclick="window.location.href='digerkanal.html'">#diğer kanallar</button>
-            <!-- Yeni Dizi Yayınları Butonu -->
             <button onclick="window.location.href='dizi.html'">Dizi Yayınları</button>
         </div>
     </div>
@@ -129,6 +138,9 @@
 
     <div id="video-container">
         <video id="video" controls autoplay></video>
+
+        <!-- 🔽 Yayının üstüne gelecek logo -->
+        <img id="video-logo" src="https://i.hizliresim.com/8dvhdq1.png" alt="Logo">
     </div>
 
     <script>
