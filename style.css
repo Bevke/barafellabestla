@@ -1,26 +1,43 @@
+#video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Videoyu arkada tutuyoruz */
+}
+
 #video-logo {
     position: absolute;
     top: 5%;
     left: 5%;
-    width: 10%;  /* Logo genişliği ekranın %10'u olacak şekilde ayarlandı */
-    z-index: 10;
-    pointer-events: none;
-    max-width: 150px;  /* Maksimum genişlik 150px */
-    max-height: 150px;  /* Maksimum yükseklik 150px */
-    object-fit: contain;  /* Logo oranını bozmadan sığdırma */
-    transition: all 0.3s ease-in-out;  /* Geçiş efekti */
+    width: 10%; /* Logo genişliği ekranın %10'u olacak şekilde ayarlandı */
+    z-index: 10; /* Logo her zaman video üzerinde olacak */
+    pointer-events: none; /* Logo üzerine tıklamaları engelliyoruz */
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+    transition: all 0.3s ease-in-out;
 }
 
 @media (max-width: 768px) {
     #video-logo {
-        width: 20%;  /* Küçük ekranlarda logoyu %20'ye çıkar */
-        max-width: 100px;  /* Maksimum genişlik 100px */
+        width: 20%;
+        max-width: 100px;
     }
 }
 
 @media (max-width: 480px) {
     #video-logo {
-        width: 30%;  /* Çok küçük ekranlarda logoyu %30 yap */
-        max-width: 80px;  /* Maksimum genişlik 80px */
+        width: 30%;
+        max-width: 80px;
     }
 }
