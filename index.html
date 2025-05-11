@@ -85,7 +85,7 @@
   <div class="overlay"></div>
   <div class="login-box">
     <h2>Şifreyle Giriş</h2>
-    <input type="password" id="passInput" placeholder="Şifreyi gir moruk">
+    <input type="password" id="passInput" placeholder="Şifreyi gir">
     <br />
     <button onclick="checkPass()">Giriş Yap</button>
   </div>
@@ -93,12 +93,12 @@
   <script>
     function checkPass() {
       const input = document.getElementById('passInput').value;
-      const encoded = btoa(input); // Base64 encode
-      if (encoded === "bW9ydWsyMDI1") { // moruk2025
+      const encoded = btoa(input); 
+      if (encoded === "bW9ydWsyMDI1") {
         localStorage.setItem("auth", "ok");
         window.location.href = "yayın.html";
       } else {
-        alert("Yanlış şifre moruk!");
+        alert("Yanlış şifre!");
       }
     }
 
