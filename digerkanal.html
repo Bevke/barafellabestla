@@ -5,6 +5,12 @@
   <title>Diğer Kanallar - Fella Stream</title>
   <script src="https://cdn.tutorialjinni.com/hls.js/1.2.1/hls.min.js"></script>
 
+<script>
+  if (localStorage.getItem("auth") !== "ok") {
+    window.location.href = "index.html";
+  }
+</script>
+  
   <style>
     * {
       box-sizing: border-box;
