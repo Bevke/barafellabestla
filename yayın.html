@@ -121,7 +121,10 @@
     <div id="header">
         Fella Stream
         <div id="nav">
-            <button onclick="switchStream('bein')">#bein</button>
+            <button onclick="switchStream('bein')">#Be*n Sports 1</button>
+            <button onclick="switchStream('bein2')">#Be*n Sports 2</button>
+            <button onclick="switchStream('bein3')">#Be*n Sports 3</button>
+            <button onclick="switchStream('bein5')">#Be*n Sports 5</button>
             <button onclick="switchStream('fella')">#fella stream</button>
             <button onclick="window.location.href='digerkanal.html'">#diğer kanallar</button>
             <!-- Yeni Dizi Yayınları Butonu -->
@@ -140,8 +143,11 @@
 
     <script>
         const streams = {
-            bein: 'https://dt-live-bc-beinsports01.akamaized.net/ppv/beinsports01/beinsports01.isml/hdntl=exp=1747005553~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1746929952946~data=hdntl~hmac=4f874ac769b8357867d6f948312cb19181d848907d81639c3d96692d64b6772e/beinsports01dp-audio_tur=128000-video=6000000.m3u8',
-            fella: 'http://2.59.119.32/tmp_hls/stream95/index.m3u8'
+            bein1: 'https://dt-live-bc-beinsports01.akamaized.net/ppv/beinsports01/beinsports01.isml/hdntl=exp=1747612693~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1747537092548~data=hdntl~hmac=61af7e30864ec79fcc0901c4c89eda716225f7c3b14ca593bf5d79bef4283ef2/beinsports01dp-audio_tur=128000-video=6000000.m3u8',
+            bein2: 'http://dt-live-int.akamaized.net/int/beinsports02/beinsports02.isml/hdntl=exp=1747612755~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1747537154656~data=hdntl~hmac=bf8b3253cbe69b163cc4fa7bafb9a66f56e2b8bae081f62ca7ffb6925299fae5/beinsports02dp-audio_tur=128000-video=6000000.m3u8',
+ bein3: 'http://dt-live-int.akamaized.net/int/beinsports02/beinsports02.isml/hdntl=exp=1747612755~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1747537154656~data=hdntl~hmac=bf8b3253cbe69b163cc4fa7bafb9a66f56e2b8bae081f62ca7ffb6925299fae5/beinsports02dp-audio_tur=128000-video=6000000.m3u8',
+ bein5: 'https://dt-live-bc-beinsports05.akamaized.net/ppv/beinsports05/beinsports05.isml/hdntl=exp=1747613037~acl=%2f*~id=acf9cbdffa-278c-8072-76cc-5b563985fe57_1747537437415~data=hdntl~hmac=af9b830297b473883ce240ff400ce4f8217b1b31bfa5f53692275f26a3d54505/beinsports05dp-audio_tur=128000-video=6000000.m3u8',
+            fella: 'http://2.59.119.32/tmp_hls/stream15/index.m3u8'
         };
 
         let hls;
@@ -164,7 +170,7 @@
             if (Hls.isSupported()) {
                 if (hls) {
                     hls.destroy();
-                }
+                }--
                 hls = new Hls();
                 hls.loadSource(streams[channel]);
                 hls.attachMedia(video);
