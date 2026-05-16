@@ -3,88 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M3U8 Canlı Yayın Oynatıcı</title>
-    <!-- Video.js veya Hls.js için modern bir oynatıcı tasarımı (Plyr) -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <title>Modern Canlı TV Oynatıcı</title>
+    <!-- Google Fonts ve FontAwesome (İkonlar için) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- HLS.js Kitaplığı (M3U8 oynatabilmek için) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --accent-color: #00f2fe;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            overflow-x: hidden;
         }
+
+        /* Arka Plan Animasyonu */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
-            width: 100%;
-            max-width: 800px;
-            background: #1e293b;
+            width: 90%;
+            max-width: 900px;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
             text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #38bdf8;
         }
-        .video-wrapper {
-            border-radius: 8px;
-            overflow: hidden;
-            background: #000;
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite alternate;
         }
-        video {
+
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0,242,254,0.4)); }
+            100% { transform: scale(1.02); filter: drop-shadow(0 0 15px rgba(0,242,254,0.8)); }
+        }
+
+        /* Ana Panel Tasarımı */
+        .main-wrapper {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Video Alanı */
+        .video-container {
+            position: relative;
             width: 100%;
-            display: block;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Kanal Listesi / Kontrol Alanı */
+        .playlist-area {
+            margin-top: 25px;
+        }
+
+        .channel-btn {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            border: 2px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .channel-btn:hover {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6);
+            color: #000;
+        }
+
+        .channel-btn i {
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .status-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #a0aec0;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Canlı Yayın Oynatıcı</h1>
-    
-    <div class="video-wrapper">
-        <!-- Oynatıcı Elementi -->
-        <video id="player" controls crossorigin playsinline></video>
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-satellite-dish"></i> CANLI YAYIN PLATFORMU</h1>
+        </header>
+
+        <div class="main-wrapper">
+            <!-- Video Oynatıcı Bölümü -->
+            <div class="video-container">
+                <video id="video" controls autoplay playsinline poster="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200&auto=format&fit=crop"></video>
+            </div>
+
+            <!-- Kanal Seçim Butonu -->
+            <div class="playlist-area">
+                <button class="channel-btn" id="playBtn">
+                    <i class="fa-solid fa-circle" style="color: #ff3838;"></i>
+                    gsu19mac Kanalını Başlat
+                </button>
+                <p class="status-text">Kanal değiştirmek veya yayını yüklemek için butona tıklayın.</p>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- HLS.js ve Plyr Kütüphaneleri -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script>
+        // İlettiğin M3U8 (HLS) Canlı Yayın Linki
+        const streamUrl = "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1778956470/ei/VWQIasDEPMmQv_IPtoCjsQ8/ip/46.196.177.250/id/5xCLdhV1G7M.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr2---sn-u0g3uxax3-pnus.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/bui/AbKmrwoVMSZLyoOeF6NVvYdY3tNPoZ3iK3v-CpJZr6KBY9Yc5Plzi8UjhvJHn6DcdG8tcEis5ToVIaZ8/spc/96Xrv1ClbOfz2hMkCdzgUtF57ZOc3tHBFa3Jbm72PXIumeL5uA/vprv/1/reg/0/playlist_type/DVR/met/1778934870,/mh/pU/mm/44/mn/sn-u0g3uxax3-pnus/ms/lva/mv/u/mvi/2/pcm2cms/yes/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51565116,51565681/mt/1778934611/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,bui,spc,vprv,reg,playlist_type/sig/AHEqNM4wRQIgIp1OqJc7p6xlq6tCU9GCKP4rILGmHOX802aLxb8ilHQCIQD2uwPkf7n2zSjd3wf96BEFBruekhDfRPikcSKO1mabRA%3D%3D/lsparams/hls_chunk_host,met,mh,mm,mn,ms,mv,mvi,pcm2cms,pl,rms/lsig/APaTxxMwRAIgRiBYALYaFJVDQ-dLvKHKjCcrNNOjs66hBLNhCXZVxHYCIBibFTnBQVae62zXCX7PIX9dDymbWYvpnYjd1Due0svp/playlist/index.m3u8";
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // BURAYA KENDİ M3U8 LINKINIZI YAZIN
-        const source = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'; 
-        
-        const video = document.getElementById('player');
-        
-        // Tarayıcının yerel HLS desteği yoksa (Chrome, Firefox vb.) Hls.js kullan
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(source);
-            hls.attachMedia(video);
-            window.hls = hls;
-        } 
-        // Tarayıcının yerel HLS desteği varsa (Safari veya iOS cihazlar) doğrudan oynat
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = source;
+        const video = document.getElementById('video');
+        const playBtn = document.getElementById('playBtn');
+
+        function loadStream() {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            }
+            // Safari gibi yerel HLS desteği olan tarayıcılar için
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            } else {
+                alert("Tarayıcınız bu canlı yayın formatını desteklemiyor.");
+            }
         }
-        
-        // Oynatıcı arayüzünü güzelleştirmek için Plyr'ı başlat
-        const player = new Plyr(video, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-            tooltips: { controls: true, seek: true }
-        });
-    });
-</script>
 
+        // Sayfa açıldığında otomatik yüklemeyi dene
+        window.addEventListener('DOMContentLoaded', loadStream);
+
+        // Butona tıklandığında kanalı yeniden tetikle
+        playBtn.addEventListener('click', () => {
+            loadStream();
+            playBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> gsu19mac Açılıyor...`;
+            setTimeout(() => {
+                playBtn.innerHTML = `<i class="fa-solid fa-circle" style="color: #ff3838;"></i> gsu19mac Aktif`;
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
