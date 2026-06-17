@@ -18,246 +18,773 @@
             --neon-blue: #38bdf8;
             --neon-purple: #a855f7;
             --neon-gold: #f59e0b;
+            --neon-green: #22c55e;
+            --glass-bg: rgba(10, 15, 30, 0.7);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg-dark); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+            padding-bottom: 60px;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+        }
 
         header {
+            background: linear-gradient(180deg, rgba(6, 11, 25, 0.95) 0%, rgba(6, 11, 25, 0) 100%);
+            padding: 40px 20px 30px 20px;
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(to bottom, rgba(8, 47, 73, 0.5), transparent);
+            position: relative;
+            z-index: 10;
         }
 
-        header h1 {
+        .logo-container {
+            display: inline-block;
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        .logo-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            margin-bottom: 5px;
         }
 
-        header p { color: var(--text-muted); font-size: 1.1rem; margin-top: 10px; font-weight: 300; }
+        .logo-sub {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            color: var(--neon-gold);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
 
-        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; padding: 0 20px; flex-wrap: wrap; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
         .tab-btn {
-            background: rgba(30, 41, 59, 0.5);
+            background: rgba(30, 41, 59, 0.4);
             border: 1px solid var(--border-glow);
             color: var(--text-muted);
-            padding: 12px 28px;
+            padding: 14px 35px;
             border-radius: 8px;
-            cursor: pointer;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
             font-weight: 700;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .tab-btn:hover, .tab-btn.active {
+
+        .tab-btn.active, .tab-btn:hover {
             color: var(--text-main);
-            background: rgba(56, 189, 248, 0.15);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
             border-color: var(--neon-blue);
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+            transform: translateY(-2px);
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s ease forwards; }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
 
-        .card {
+        .tab-content.active {
+            display: block;
+        }
+
+        .krallik-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .glass-panel {
             background: var(--bg-card);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-glow);
             border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: border 0.3s;
-            margin-bottom: 25px;
-        }
-        .card:hover { border-color: var(--border-glow-hover); }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-family: 'Orbitron', sans-serif; color: var(--neon-blue); font-size: 0.85rem; letter-spacing: 1px; padding: 15px; border-bottom: 2px solid rgba(255,255,255,0.05); }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; }
-        tr:hover td { background: rgba(255,255,255,0.01); }
-
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .team-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: all 0.3s ease;
         }
-        .team-card:hover { border-color: var(--neon-gold); transform: translateY(-5px); }
-        .team-logo { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.1); }
-        
-        .recent-match-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .match-date { font-size: 0.8rem; color: var(--text-muted); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-panel:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.1);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .player-grid, .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .player-card, .team-card {
+            background: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .player-card::before, .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(56, 189, 248, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .player-card:hover::before, .team-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .player-card:hover, .team-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--neon-blue);
+            box-shadow: 0 15px 35px rgba(56, 189, 248, 0.25);
+        }
+
+        .avatar-frame {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px auto;
+        }
+
+        .player-avatar, .team-logo-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1e293b;
+            background-color: var(--bg-dark);
+            z-index: 2;
+            position: relative;
+        }
+
+        .avatar-glow {
+            position: absolute;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 50%;
+            z-index: 1;
+            animation: rotateGlow 4s linear infinite;
+        }
+
+        .p-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+
+        .p-team {
+            font-size: 0.85rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .p-badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--text-main);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .futuristic-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .futuristic-table th {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .futuristic-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.95rem;
+        }
+
+        .futuristic-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+            color: #fff;
+        }
+
+        .team-detail-panel {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .team-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .team-detail-grid { grid-template-columns: 1fr; }
+        }
+
+        .sub-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sub-list li {
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--neon-blue);
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(4, 6, 14, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: radial-gradient(circle at 50% 0%, #1e293b, #0b1120);
+            border: 2px solid var(--neon-blue);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover { color: #fff; }
+
+        .modal-header-detail {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-avatar-lg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card-premium {
+            background: rgba(6, 11, 25, 0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .loading-pulse {
+            text-align: center;
+            padding: 40px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            animation: pulseText 1.5s infinite;
+            width: 100%;
+        }
+
+        @keyframes rotateGlow {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
+            50% { filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.6)); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="cyber-grid"></div>
+
     <header>
-        <h1>Editor League | Beta</h1>
-        <p>Canlı İstatistik ve Kulüp Veritabanı Merkezi</p>
+        <div class="logo-container">
+            <div class="logo-text">EDITOR LEAGUE</div>
+            <div class="logo-sub">Beta</div>
+        </div>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('puan-durumu')">PUAN DURUMU</button>
-        <button class="tab-btn" onclick="switchTab('kralliklar')">KRALLIKLAR</button>
-        <button class="tab-btn" onclick="switchTab('takimlar')">TAKIMLAR</button>
-        <button class="tab-btn" onclick="switchTab('son-maclar')">SON MAÇLAR</button>
-    </div>
-
     <div class="container">
-        <div id="puan-durumu" class="tab-content active">
-            <div class="card">
-                <table>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('players')">🛡️ Oyuncular</button>
+            <button class="tab-btn" onclick="switchTab('stats')">🏆 Krallıklar</button>
+            <button class="tab-btn" onclick="switchTab('teams')">👥 Takımlar</button>
+            <button class="tab-btn" onclick="switchTab('fixtures')">📊 Son Maçlar</button>
+        </div>
+
+        <div id="players" class="tab-content active">
+            <div class="player-grid" id="playerGrid">
+                <div class="loading-pulse">VERİ MOTORU BAĞLANIYOR...</div>
+            </div>
+        </div>
+
+        <div id="stats" class="tab-content">
+            <div class="krallik-wrapper">
+                <div class="glass-panel">
+                    <div class="panel-title">👑 GOL KRALLIĞI</div>
+                    <table class="futuristic-table">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Gol</th>
+                            </tr>
+                        </thead>
+                        <tbody id="golTableBody">
+                            <tr><td colspan="4" class="loading-pulse">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="panel-title">🎯 ASİST KRALLIĞI</div>
+                    <table class="futuristic-table">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Asist</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asistTableBody">
+                            <tr><td colspan="4" class="loading-pulse">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="panel-title">🛡️ KURTARIŞ KRALLIĞI</div>
+                    <table class="futuristic-table">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Kurtarış</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kurtarisTableBody">
+                            <tr><td colspan="4" class="loading-pulse">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="teams" class="tab-content">
+            <div class="teams-grid" id="teamsGrid"></div>
+            
+            <div class="glass-panel team-detail-panel" id="teamDetailPanel">
+                <h2 id="dtTeamName" style="font-family: 'Orbitron', sans-serif; color: var(--neon-gold); margin-bottom: 5px;"></h2>
+                <p id="dtTeamDesc" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; font-style: italic;"></p>
+                
+                <div class="team-detail-grid">
+                    <div>
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--neon-blue); margin-bottom: 12px;">🏃 AKTİF KADRO</h3>
+                        <ul class="sub-list" id="dtPlayersList"></ul>
+                    </div>
+                    <div>
+                        <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--neon-purple); margin-bottom: 12px;">📋 KULÜP MAÇLARI</h3>
+                        <ul class="sub-list" id="dtMatchesList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="fixtures" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">📅 OYNANAN MAÇLAR VE LOGLAR</div>
+                <table class="futuristic-table">
                     <thead>
-                        <tr><th>#</th><th>TAKIM</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AV</th><th>PUAN</th></tr>
+                        <tr>
+                            <th>Tarih / Saat</th>
+                            <th>Ev Sahibi</th>
+                            <th style="text-align: center;">Skor</th>
+                            <th>Deplasman</th>
+                            <th>Maçın Adamı (MOTM)</th>
+                        </tr>
                     </thead>
-                    <tbody id="puanTbody"></tbody>
+                    <tbody id="fixturesTableBody">
+                        <tr><td colspan="5" class="loading-pulse">Fikstür Yükleniyor...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
+    </div>
 
-        <div id="kralliklar" class="tab-content">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <div class="card">
-                    <h3 style="color: var(--neon-gold); margin-bottom: 15px; font-family:'Orbitron';">⚽ GOL KRALLIĞI</h3>
-                    <table><thead><tr><th>OYUNCU</th><th>TAKIM</th><th>GOL</th></tr></thead><tbody id="golTbody"></tbody></table>
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeProfile()">&times;</span>
+            <div class="modal-header-detail">
+                <img src="" id="mdAvatar" class="modal-avatar-lg" alt="Avatar">
+                <h2 id="mdName" style="font-family: 'Orbitron', sans-serif; font-size: 1.8rem; letter-spacing: 1px;"></h2>
+                <div id="mdTeam" style="color: var(--neon-blue); font-weight: bold; margin-top: 5px; text-transform: uppercase;"></div>
+                <div id="mdMevki" class="p-badge" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card-premium">
+                    <div id="mdO" class="stat-num">0</div>
+                    <div class="stat-label">Maç</div>
                 </div>
-                <div class="card">
-                    <h3 style="color: var(--neon-blue); margin-bottom: 15px; font-family:'Orbitron';">🎯 ASİST KRALLIĞI</h3>
-                    <table><thead><tr><th>OYUNCU</th><th>TAKIM</th><th>ASİST</th></tr></thead><tbody id="asistTbody"></tbody></table>
+                <div class="stat-card-premium">
+                    <div id="mdG" class="stat-num">0</div>
+                    <div class="stat-label">Gol</div>
                 </div>
-                <div class="card">
-                    <h3 style="color: var(--neon-purple); margin-bottom: 15px; font-family:'Orbitron';">🛡️ KURTARIŞ KRALLIĞI</h3>
-                    <table><thead><tr><th>OYUNCU</th><th>TAKIM</th><th>SAVE</th></tr></thead><tbody id="kurtarisTbody"></tbody></table>
+                <div class="stat-card-premium">
+                    <div id="mdA" class="stat-num">0</div>
+                    <div class="stat-label">Asist</div>
+                </div>
+                <div class="stat-card-premium">
+                    <div id="mdK" class="stat-num">0</div>
+                    <div class="stat-label">Kurtarış (GK)</div>
+                </div>
+                <div class="stat-card-premium">
+                    <div id="mdINT" class="stat-num">0</div>
+                    <div class="stat-label">Intercept</div>
+                </div>
+                <div class="stat-card-premium">
+                    <div id="mdMOTM" class="stat-num">0</div>
+                    <div class="stat-label">MOTM Sayısı</div>
                 </div>
             </div>
-        </div>
-
-        <div id="takimlar" class="tab-content">
-            <div class="grid-layout" id="takimlarGrid"></div>
-            <div id="takimDetayCard" class="card" style="margin-top: 30px; display: none;">
-                <h2 id="detayTakimAdi" style="font-family:'Orbitron'; color: var(--neon-blue); margin-bottom: 10px;"></h2>
-                <p id="detayTakimAciklama" style="color: var(--text-muted); margin-bottom: 20px; font-style: italic;"></p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <h4 style="color: var(--neon-gold); margin-bottom: 10px;">🏃 Aktif Oyuncular</h4>
-                        <ul id="detayOyuncuList" style="list-style: none; padding-left: 5px;"></ul>
-                    </div>
-                    <div>
-                        <h4 style="color: var(--neon-blue); margin-bottom: 10px;">📋 Son Maçları</h4>
-                        <div id="detayMacList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="son-maclar" class="tab-content">
-            <div class="card" id="maclarListesi"></div>
         </div>
     </div>
 
     <script>
+        const API_URL = 'https://yepfella.onrender.com/api/puan-durumu';
         let globalData = {};
-        const apiURL = "http://127.0.0.1:5000/api/puan-durumu"; // Render API URL'ini buraya koy moruk
 
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
             document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        async def verileriYukle() {
+        async function loadDashboardData() {
             try {
-                const res = await fetch(apiURL);
-                globalData = await res.json();
-                
-                // 1. PUAN DURUMU RENDER
-                const pTbody = document.getElementById('puanTbody');
-                pTbody.innerHTML = "";
-                let takimlarSorted = Object.entries(globalData.takimlar || {}).sort((a,b) => b[1].Puan - a[1].Puan);
-                takimlarSorted.forEach(([name, s], idx) => {
-                    pTbody.innerHTML += `<tr><td>${idx+1}</td><td><b>${name}</b></td><td>${s.O}</td><td>${s.G}</td><td>${s.B}</td><td>${s.M}</td><td>${s.AG-s.YG}</td><td style="color:var(--neon-blue); font-weight:bold;">${s.Puan}</td></tr>`;
-                });
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                globalData = data;
 
-                // 2. KRALLIKLAR RENDER (GOL, ASİST, KURTARIŞ)
-                const oyuncular = Object.values(globalData.oyuncular || {});
-                
-                const golSorted = [...oyuncular].sort((a,b) => b.G - a.G).slice(0, 5);
-                document.getElementById('golTbody').innerHTML = golSorted.map(o => `<tr><td>${o.futbolcu_ismi}</td><td>${o.takim}</td><td style="color:var(--neon-gold)"><b>${o.G}</b></td></tr>`).join('');
-                
-                const asistSorted = [...oyuncular].sort((a,b) => b.A - a.A).slice(0, 5);
-                document.getElementById('asistTbody').innerHTML = asistSorted.map(o => `<tr><td>${o.futbolcu_ismi}</td><td>${o.takim}</td><td style="color:var(--neon-blue)"><b>${o.A}</b></td></tr>`).join('');
+                const oyuncular = Object.values(data.oyuncular || {});
 
-                const kurtarisSorted = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 5);
-                document.getElementById('kurtarisTbody').innerHTML = kurtarisSorted.map(o => `<tr><td>${o.futbolcu_ismi}</td><td>${o.takim}</td><td style="color:var(--neon-purple)"><b>${o.K || 0}</b></td></tr>`).join('');
+                renderPlayers(oyuncular);
+                renderLeaderboards(oyuncular);
+                renderTeams();
+                renderFixtures(data.maclar || []);
 
-                // 3. TAKIMLAR SEKMESİ RENDER
-                const tGrid = document.getElementById('takimlarGrid');
-                tGrid.innerHTML = "";
-                const sabitTakimlar = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Anaokulu FC"];
-                sabitTakimlar.forEach(tName => {
-                    const meta = (globalData.takim_ayarlari && globalData.takim_ayarlari[tName]) || {logo: "https://via.placeholder.com/150", aciklama: "Resmi Lig Kulübü"};
-                    const logoSrc = meta.logo || "https://via.placeholder.com/150";
-                    tGrid.innerHTML += `
-                        <div class="team-card" onclick="takimDetayAc('${tName}')">
-                            <img class="team-logo" src="${logoSrc}">
-                            <h3 style="font-family:'Orbitron';">${tName}</h3>
-                        </div>
-                    `;
-                });
-
-                // 4. SON MAÇLAR RENDER (Kayıt Tarihli, ID'siz)
-                const mList = document.getElementById('maclarListesi');
-                mList.innerHTML = "";
-                const maclar = globalData.maclar || [];
-                if(maclar.length === 0) mList.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>Henüz maç oynanmadı moruk.</p>";
-                [...maclar].reverse().forEach(m => {
-                    mList.innerHTML += `
-                        <div class="recent-match-row">
-                            <div><span style="color:var(--neon-blue); font-weight:bold;">${m.ev}</span> vs <span style="color:var(--neon-gold); font-weight:bold;">${m.dep}</span></div>
-                            <div style="font-family:'Orbitron'; font-weight:900; font-size:1.1rem; background:rgba(255,255,255,0.05); padding:5px 15px; border-radius:5px;">${m.skor}</div>
-                            <div class="match-date">📅 ${m.tarih || 'Az Önce'}</div>
-                        </div>
-                    `;
-                });
-
-            } catch(e) { console.log("Veri yükleme hatası moruk:", e); }
+            } catch (error) {
+                console.error("Dashboard Engine Error:", error);
+                document.getElementById('playerGrid').innerHTML = `<div style="text-align:center; color:#ef4444; width:100%;">API Bağlantı Hatası! Sunucuyu Kontrol Et.</div>`;
+            }
         }
 
-        function takimDetayAc(tName) {
-            const meta = (globalData.takim_ayarlari && globalData.takim_ayarlari[tName]) || {aciklama: "Resmi Lig Kulübü"};
-            document.getElementById('detayTakimAdi').innerText = tName;
-            document.getElementById('detayTakimAciklama').innerText = meta.aciklama || "Açıklama girilmemiş moruk.";
+        function renderPlayers(oyuncular) {
+            const grid = document.getElementById('playerGrid');
+            if(oyuncular.length === 0) {
+                grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted);">Hiç lisanslı oyuncu bulunamadı.</div>`;
+                return;
+            }
+            grid.innerHTML = '';
+
+            oyuncular.forEach(oyuncu => {
+                const defAvatar = oyuncu.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.innerHTML = `
+                    <div class="avatar-frame">
+                        <div class="avatar-glow"></div>
+                        <img src="${defAvatar}" class="player-avatar" alt="${oyuncu.futbolcu_ismi}">
+                    </div>
+                    <div class="p-name">${oyuncu.futbolcu_ismi}</div>
+                    <div class="p-team">${oyuncu.takim || 'Serbest'}</div>
+                    <div class="p-badge">${oyuncu.mevki || 'Girilmedi'}</div>
+                `;
+                card.onclick = () => openProfile(oyuncu);
+                grid.appendChild(card);
+            });
+        }
+
+        function renderLeaderboards(oyuncular) {
+            // Gol
+            const golSirali = [...oyuncular].sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
+            const golBody = document.getElementById('golTableBody');
+            golBody.innerHTML = golSirali.map((o, i) => `
+                <tr>
+                    <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
+                </tr>
+            `).join('');
+
+            // Asist
+            const asistSirali = [...oyuncular].sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
+            const asistBody = document.getElementById('asistTableBody');
+            asistBody.innerHTML = asistSirali.map((o, i) => `
+                <tr>
+                    <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
+                </tr>
+            `).join('');
+
+            // Kurtarış
+            const kurtarisSirali = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
+            const kurtarisBody = document.getElementById('kurtarisTableBody');
+            kurtarisBody.innerHTML = kurtarisSirali.map((o, i) => `
+                <tr>
+                    <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTeams() {
+            const tGrid = document.getElementById('teamsGrid');
+            tGrid.innerHTML = "";
+            const sabitTakimlar = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Anaokulu FC"];
             
-            // Oyuncuları Filtrele
+            sabitTakimlar.forEach(tName => {
+                const meta = (globalData.takim_ayarlari && globalData.takim_ayarlari[tName]) || {};
+                const logoSrc = meta.logo || "https://via.placeholder.com/150/0f172a/fff?text=" + tName.split(' ')[0];
+                
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.innerHTML = `
+                    <div class="avatar-frame">
+                        <div class="avatar-glow"></div>
+                        <img src="${logoSrc}" class="team-logo-img" alt="${tName}">
+                    </div>
+                    <div class="p-name">${tName}</div>
+                `;
+                card.onclick = () => showTeamDetails(tName, meta.aciklama);
+                tGrid.appendChild(card);
+            });
+        }
+
+        function showTeamDetails(tName, customDesc) {
+            document.getElementById('dtTeamName').innerText = tName;
+            document.getElementById('dtTeamDesc').innerText = customDesc || "Editor League Resmi Kulübü.";
+            
             const kadro = Object.values(globalData.oyuncular || {}).filter(o => o.takim === tName);
-            const oList = document.getElementById('detayOyuncuList');
-            oList.innerHTML = kadro.length ? kadro.map(o => `<li style="padding:4px 0; color:var(--text-main)">⚡ ${o.futbolcu_ismi} <span style='color:var(--text-muted); font-size:0.8rem;'>(${o.mevki})</span></li>`).join('') : "<li>Kadro boş moruk.</li>";
+            const pList = document.getElementById('dtPlayersList');
+            pList.innerHTML = kadro.length ? kadro.map(o => `
+                <li><span>⚡ ${o.futbolcu_ismi}</span> <strong style="color:var(--neon-blue); font-size:0.8rem;">${o.mevki || 'GK'}</strong></li>
+            `).join('') : `<li>Kadroda aktif oyuncu yok moruk.</li>`;
             
-            // Takımın Maçlarını Filtrele
-            const tMaclar = (globalData.maclar || []).filter(m => m.ev === tName || m.dep === tName);
-            const mList = document.getElementById('detayMacList');
-            mList.innerHTML = tMaclar.length ? tMaclar.map(m => `<div style='font-size:0.85rem; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.02);'>🏟️ ${m.ev} ${m.skor} ${m.dep}</div>`).join('') : "<div style='color:var(--text-muted);'>Maç kaydı yok.</div>";
+            const maclar = (globalData.maclar || []).filter(m => m.ev === tName || m.dep === tName || m.ev_sahibi === tName || m.deplasman === tName);
+            const mList = document.getElementById('dtMatchesList');
+            mList.innerHTML = maclar.length ? maclar.map(m => `
+                <li><span>⚽ ${m.ev || m.ev_sahibi} vs ${m.dep || m.deplasman}</span> <strong style="color:var(--neon-gold);">${m.skor}</strong></li>
+            `).join('') : `<li>Kulübe ait oynanmış maç kaydı bulunamadı.</li>`;
             
-            document.getElementById('takimDetayCard').style.display = "block";
-            document.getElementById('takimDetayCard').scrollIntoView({ behavior: 'smooth' });
+            const panel = document.getElementById('teamDetailPanel');
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: 'smooth' });
         }
 
-        verileriYukle();
-        setInterval(verileriYukle, 30000); // 30 saniyede bir otomatik tıkla
+        function renderFixtures(maclar) {
+            const body = document.getElementById('fixturesTableBody');
+            if(maclar.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Henüz oynanmış maç logu bulunamadı.</td></tr>`;
+                return;
+            }
+            body.innerHTML = '';
+            
+            [...maclar].reverse().forEach(mac => {
+                body.innerHTML += `
+                    <tr>
+                        <td style="font-size:0.85rem; color:var(--text-muted); font-weight:bold;">🕒 ${mac.tarih || 'Az Önce'}</td>
+                        <td style="font-weight:600;">${mac.ev_sahibi || mac.ev}</td>
+                        <td style="text-align:center; font-family:'Orbitron', sans-serif; font-weight:bold; color:var(--neon-gold); background:rgba(245,158,11,0.05); border-radius:6px;">${mac.skor}</td>
+                        <td style="font-weight:600;">${mac.deplasman || mac.dep}</td>
+                        <td><span style="color:var(--neon-blue); font-weight:600;">🔥 ${mac.motm || 'Yok'}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openProfile(oyuncu) {
+            const defAvatar = oyuncu.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+
+            document.getElementById('mdAvatar').src = defAvatar;
+            document.getElementById('mdName').innerText = oyuncu.futbolcu_ismi;
+            document.getElementById('mdTeam').innerText = `TAKIM: ${oyuncu.takim || 'Serbest'}`;
+            document.getElementById('mdMevki').innerText = oyuncu.mevki || 'Belirtilmedi';
+            document.getElementById('mdO').innerText = oyuncu.O || 0;
+            document.getElementById('mdG').innerText = oyuncu.G || 0;
+            document.getElementById('mdA').innerText = oyuncu.A || 0;
+            document.getElementById('mdK').innerText = oyuncu.K || 0;
+            document.getElementById('mdINT').innerText = oyuncu.INT || 0;
+            document.getElementById('mdMOTM').innerText = oyuncu.MOTM || 0;
+
+            document.getElementById('playerModal').classList.add('open');
+        }
+
+        function closeProfile() {
+            document.getElementById('playerModal').classList.remove('open');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('playerModal');
+            if (event.target == modal) {
+                modal.classList.remove('open');
+            }
+        }
+
+        loadDashboardData();
     </script>
 </body>
 </html>
