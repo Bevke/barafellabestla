@@ -1,1 +1,204 @@
-<!DOCTYPE html> <html lang="tr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>M3U8 Canlı Yayın Oynatıcı</title> <!-- Video.js veya Hls.js için modern bir oynatıcı tasarımı (Plyr) --> <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" /> <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; } .container { width: 100%; max-width: 800px; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); } h1 { text-align: center; font-size: 24px; margin-bottom: 20px; color: #38bdf8; } .video-wrapper { border-radius: 8px; overflow: hidden; background: #000; } video { width: 100%; display: block; } </style> </head> <body> <div class="container"> <h1>Canlı Yayın Oynatıcı</h1> <div class="video-wrapper"> <!-- Oynatıcı Elementi --> <video id="player" controls crossorigin playsinline></video> </div> </div> <!-- HLS.js ve Plyr Kütüphaneleri --> <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> <script> document.addEventListener('DOMContentLoaded', () => { // BURAYA KENDİ M3U8 LINKINIZI YAZIN const source = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'; const video = document.getElementById('player'); // Tarayıcının yerel HLS desteği yoksa (Chrome, Firefox vb.) Hls.js kullan if (Hls.isSupported()) { const hls = new Hls(); hls.loadSource(source); hls.attachMedia(video); window.hls = hls; } // Tarayıcının yerel HLS desteği varsa (Safari veya iOS cihazlar) doğrudan oynat else if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = source; } // Oynatıcı arayüzünü güzelleştirmek için Plyr'ı başlat const player = new Plyr(video, { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'], tooltips: { controls: true, seek: true } }); }); </script> </body> </html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanal Lig | Canlı Puan Durumu</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.6);
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background-color: rgba(51, 65, 85, 0.4);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pos {
+            font-weight: bold;
+            width: 40px;
+            text-align: center;
+        }
+
+        tr:nth-child(1) .pos { color: #fbbf24; } /* 1. Altın */
+        tr:nth-child(2) .pos { color: #94a3b8; } /* 2. Gümüş */
+        tr:nth-child(3) .pos { color: #b45309; } /* 3. Bronz */
+
+        .team-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .puan-col {
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .center-col {
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🏆 SANAL LİG PUAN DURUMU 🏆</h1>
+
+    <div class="container">
+        <table id="puan-tablosu">
+            <thead>
+                <tr>
+                    <th class="center-col" style="width: 50px;">Sıra</th>
+                    <th>Takım Adı</th>
+                    <th class="center-col">O</th>
+                    <th class="center-col">G</th>
+                    <th class="center-col">B</th>
+                    <th class="center-col">M</th>
+                    <th class="center-col">AG</th>
+                    <th class="center-col">YG</th>
+                    <th class="center-col">AV</th>
+                    <th class="center-col">Puan</th>
+                </tr>
+            </thead>
+            <tbody id="tablo-govde">
+                <tr>
+                    <td colspan="10" class="loading">Puan durumu canlı olarak güncelleniyor...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Senin gizli GitHub Gist ID'n
+        const GIST_ID = "fec6c1667f8c385986eb497937cecee3"; 
+
+        async function puanDurumuGetir() {
+            try {
+                // GitHub API üzerinden şifresiz direkt veriyi çekiyoruz
+                const response = await fetch(`https://api.github.com/gists/${GIST_ID}`);
+                const gistData = await response.json();
+                
+                // JSON verisini ayıklıyoruz
+                const fileContent = gistData.files["puan_durumu.json"].content;
+                const ligVerisi = JSON.parse(fileContent);
+
+                // Takımları diziye çevirip Puan ve Averaja göre sıralıyoruz
+                const takimListesi = [];
+                for (const takimAdi in ligVerisi) {
+                    const ist = ligVerisi[takimAdi];
+                    const av = ist.AG - ist.YG;
+                    takimListesi.push({
+                        isim: takimAdi,
+                        o: ist.O, g: ist.G, b: ist.B, m: ist.M,
+                        ag: ist.AG, yg: ist.YG, av: av, puan: ist.Puan
+                    });
+                }
+
+                // Önce puana, puanlar eşitse averaja göre büyükten küçüğe sırala
+                takimListesi.sort((a, b) => {
+                    if (b.puan !== a.puan) return b.puan - a.puan;
+                    return b.av - a.av;
+                });
+
+                // Tabloyu ekrana basıyoruz
+                const tbody = document.getElementById("tablo-govde");
+                tbody.innerHTML = ""; // Yükleniyor yazısını temizle
+
+                if (takimListesi.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="10" class="loading">Henüz işlenmiş maç verisi bulunamadı.</td></tr>`;
+                    return;
+                }
+
+                takimListesi.forEach((takim, index) => {
+                    const row = `
+                        <tr>
+                            <td class="pos center-col">${index + 1}</td>
+                            <td class="team-name">${takim.isim}</td>
+                            <td class="center-col">${takim.o}</td>
+                            <td class="center-col">${takim.g}</td>
+                            <td class="center-col">${takim.b}</td>
+                            <td class="center-col">${takim.m}</td>
+                            <td class="center-col">${takim.ag}</td>
+                            <td class="center-col">${takim.yg}</td>
+                            <td class="center-col">${takim.av > 0 ? '+' + takim.av : takim.av}</td>
+                            <td class="center-col puan-col">${takim.puan}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error("Veri çekilirken hata oluştu:", error);
+                document.getElementById("tablo-govde").innerHTML = 
+                    `<tr><td colspan="10" class="loading" style="color: #ef4444;">❌ Veriler yüklenirken bir hata oluştu!</td></tr>`;
+            }
+        }
+
+        // Sayfa açıldığında fonksiyonu tetikle
+        puanDurumuGetir();
+    </script>
+</body>
+</html>
