@@ -5,102 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanal Lig | Canlı Puan Durumu</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-color: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --border-color: #334155;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            color: var(--accent-color);
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background-color: var(--card-color);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: rgba(15, 23, 42, 0.6);
-            color: var(--accent-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-
-        tr:hover {
-            background-color: rgba(51, 65, 85, 0.4);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .pos {
-            font-weight: bold;
-            width: 40px;
-            text-align: center;
-        }
-
-        tr:nth-child(1) .pos { color: #fbbf24; } /* 1. Altın */
-        tr:nth-child(2) .pos { color: #94a3b8; } /* 2. Gümüş */
-        tr:nth-child(3) .pos { color: #b45309; } /* 3. Bronz */
-
-        .team-name {
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .puan-col {
-            font-weight: 700;
-            color: var(--accent-color);
-        }
-
-        .center-col {
-            text-align: center;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            color: #94a3b8;
-        }
+        :root { --bg-color: #0f172a; --card-color: #1e293b; --text-color: #f8fafc; --accent-color: #38bdf8; --border-color: #334155; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--accent-color); margin-bottom: 20px; font-size: 2.5rem; text-transform: uppercase; }
+        .container { width: 100%; max-width: 1000px; background-color: var(--card-color); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+        th { background-color: rgba(15, 23, 42, 0.6); color: var(--accent-color); }
+        .pos { font-weight: bold; width: 40px; text-align: center; }
+        .team-name { font-weight: 600; color: #fff; }
+        .puan-col { font-weight: 700; color: var(--accent-color); }
+        .center-col { text-align: center; }
+        .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -125,25 +41,53 @@
             </thead>
             <tbody id="tablo-govde">
                 <tr>
-                    <td colspan="10" class="loading">Puan durumu canlı olarak güncelleniyor...</td>
+                    <td colspan="10" class="loading">Puan durumu güvenli sunucudan çekiliyor...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <script>
-        // Senin Gist ID'ni buraya tam yerine oturttum moruk
-        const GIST_ID = "fec6c1667f8c385986eb497937cecee3"; 
-
         async function puanDurumuGetir() {
             try {
-                // Tarayıcı engelini aşan doğrudan (Raw) bağlantıyı kurdum, cache engeli için de zaman damgası ekledim
-                const url = `https://gist.githubusercontent.com/Bevke/${GIST_ID}/raw/puan_durumu.json?t=${new Date().getTime()}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) throw new Error("Veri çekilemedi");
+                // Site direkt senin bilgisayarındaki bota soruyor. Arada aracı yok, şifre yok!
+                const response = await fetch('http://localhost:5000/api/puan-durumu');
                 const ligVerisi = await response.json();
 
                 const takimListesi = [];
                 for (const takimAdi in ligVerisi) {
-                    const
+                    const ist = ligVerisi[takimAdi];
+                    takimListesi.push({
+                        isim: takimAdi, o: ist.O, g: ist.G, b: ist.B, m: ist.M,
+                        ag: ist.AG, yg: ist.YG, av: (ist.AG - ist.YG), puan: ist.Puan
+                    });
+                }
+
+                takimListesi.sort((a, b) => b.puan !== a.puan ? b.puan - a.puan : b.av - a.av);
+
+                const tbody = document.getElementById("tablo-govde");
+                tbody.innerHTML = ""; 
+
+                takimListesi.forEach((takim, index) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="pos center-col">${index + 1}</td>
+                            <td class="team-name">${takim.isim}</td>
+                            <td class="center-col">${takim.o}</td>
+                            <td class="center-col">${takim.g}</td>
+                            <td class="center-col">${takim.b}</td>
+                            <td class="center-col">${takim.m}</td>
+                            <td class="center-col">${takim.ag}</td>
+                            <td class="center-col">${takim.yg}</td>
+                            <td class="center-col">${takim.av > 0 ? '+' + takim.av : takim.av}</td>
+                            <td class="center-col puan-col">${takim.puan}</td>
+                        </tr>`;
+                });
+            } catch (error) {
+                document.getElementById("tablo-govde").innerHTML = `<tr><td colspan="10" class="loading" style="color: #ef4444;">❌ Lig sunucusuna bağlanılamadı! (Botun açık olduğundan emin olun)</td></tr>`;
+            }
+        }
+        puanDurumuGetir();
+    </script>
+</body>
+</html>
