@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-dark: #060b19;
@@ -19,7 +20,6 @@
             --neon-purple: #a855f7;
             --neon-gold: #f59e0b;
             --neon-green: #22c55e;
-            --neon-red: #ef4444;
             --glass-bg: rgba(10, 15, 30, 0.7);
         }
 
@@ -94,7 +94,7 @@
         .nav-tabs {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 40px;
             flex-wrap: wrap;
         }
@@ -103,11 +103,11 @@
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid var(--border-glow);
             color: var(--text-muted);
-            padding: 12px 25px;
+            padding: 14px 35px;
             border-radius: 8px;
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
@@ -132,36 +132,13 @@
             display: block;
         }
 
-        /* Arama ve Filtreleme Alanı */
-        .filter-bar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .search-input, .filter-select {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border-glow);
-            color: var(--text-main);
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-input { flex: 1; min-width: 250px; }
-        .filter-select { min-width: 180px; cursor: pointer; }
-        .search-input:focus, .filter-select:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
+        /* Ortalanmış ve kayması düzeltilmiş Krallık Alanı */
         .krallik-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
+            width: 100%;
+            justify-content: center;
         }
 
         .glass-panel {
@@ -172,7 +149,7 @@
             padding: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: all 0.3s ease;
-            overflow-x: auto;
+            overflow-x: hidden; /* Hücre dışı kaymaları önler moruk */
         }
 
         .glass-panel:hover {
@@ -182,7 +159,7 @@
 
         .panel-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 20px;
             display: flex;
@@ -221,7 +198,9 @@
             transition: 0.6s;
         }
 
-        .player-card:hover::before, .team-card:hover::before { transform: translateX(100%); }
+        .player-card:hover::before, .team-card:hover::before {
+            transform: translateX(100%);
+        }
 
         .player-card:hover, .team-card:hover {
             transform: translateY(-8px) scale(1.02);
@@ -293,20 +272,36 @@
 
         .futuristic-table th {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            padding: 15px;
+            padding: 12px;
             border-bottom: 2px solid rgba(255,255,255,0.05);
             text-transform: uppercase;
             letter-spacing: 1px;
-            white-space: nowrap;
         }
 
         .futuristic-table td {
-            padding: 15px;
+            padding: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.95rem;
-            white-space: nowrap;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        /* Küçük logo tasarımı moruk */
+        .mini-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-right: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--bg-dark);
+        }
+
+        .team-inline {
+            display: flex;
+            align-items: center;
         }
 
         .futuristic-table tr:hover td {
@@ -331,7 +326,11 @@
             .team-detail-grid { grid-template-columns: 1fr; }
         }
 
-        .sub-list { list-style: none; padding: 0; }
+        .sub-list {
+            list-style: none;
+            padding: 0;
+        }
+
         .sub-list li {
             padding: 10px 15px;
             background: rgba(255,255,255,0.02);
@@ -343,98 +342,105 @@
             justify-content: space-between;
         }
 
-        /* VS Kıyaslama Motoru Stilleri */
+        /* --- VS PANELİ TASARIMI (SS BİREBİR ESİNTİ) --- */
         .vs-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        .vs-selectors {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            background: rgba(15, 23, 42, 0.4);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-glow);
-        }
-        .vs-vs-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--text-main);
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
-        .vs-display {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        @media (max-width: 992px) {
-            .vs-display { grid-template-columns: 1fr; }
-            .vs-center-stats { order: 3; }
-        }
-        .vs-side-profile {
-            background: var(--bg-card);
-            border: 2px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 30px 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        .vs-side-profile.left-side { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.15); }
-        .vs-side-profile.right-side { border-color: var(--neon-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
-        
-        .vs-center-stats {
-            background: rgba(10, 15, 30, 0.8);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 25px;
-        }
-        .vs-row {
-            margin-bottom: 20px;
-        }
-        .vs-label-container {
-            display: flex;
-            justify-content: space-between;
+            grid-template-columns: 1fr 340px 1fr;
             align-items: center;
-            margin-bottom: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-        .vs-stat-title {
-            color: var(--text-main);
-            font-weight: bold;
-            background: rgba(255,255,255,0.05);
-            padding: 2px 12px;
-            border-radius: 4px;
-        }
-        .vs-bar-bg {
-            height: 24px;
-            background: #0f172a;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-        }
-        .vs-bar-fill {
-            height: 100%;
-            transition: width 0.5s ease-out;
-        }
-        .vs-bar-fill.left {
-            background: linear-gradient(90deg, #0284c7, var(--neon-blue));
-            border-right: 2px solid #fff;
-        }
-        .vs-bar-fill.right {
-            background: linear-gradient(90deg, var(--neon-gold), #b45309);
-            border-left: 2px solid #fff;
-            margin-left: auto;
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        /* Modal */
+        @media (max-width: 992px) {
+            .vs-container {
+                grid-template-columns: 1fr;
+            }
+            .vs-center-chart {
+                order: -1;
+            }
+        }
+
+        .vs-player-box {
+            background: rgba(6, 11, 25, 0.5);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .vs-player-box.left-side { border-left: 4px solid var(--neon-blue); }
+        .vs-player-box.right-side { border-right: 4px solid var(--neon-gold); }
+
+        .vs-select {
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid var(--border-glow);
+            padding: 8px 12px;
+            border-radius: 6px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .vs-center-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .vs-title-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .vs-bar-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 70px;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+
+        .vs-bar-label {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.03);
+            padding: 4px 0;
+            border-radius: 4px;
+        }
+
+        .vs-bar-container {
+            display: flex;
+            height: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .vs-bar-fill {
+            height: 100%;
+            transition: width 0.4s ease;
+        }
+        .vs-bar-fill.left { background: var(--neon-blue); margin-left: auto; width: 50%; }
+        .vs-bar-fill.right { background: var(--neon-gold); width: 50%; }
+
+        .vs-val { font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1.1rem; }
+        .vs-val.left { color: var(--neon-blue); text-align: left; padding-left: 5px; }
+        .vs-val.right { color: var(--neon-gold); text-align: right; padding-right: 5px; }
+
+        /* Klasik Modal Bölümleri */
         .modal {
             display: none;
             position: fixed;
@@ -448,7 +454,10 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal.open { display: flex; opacity: 1; }
+        .modal.open {
+            display: flex;
+            opacity: 1;
+        }
 
         .modal-content {
             background: radial-gradient(circle at 50% 0%, #1e293b, #0b1120);
@@ -463,7 +472,9 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .modal.open .modal-content { transform: scale(1); }
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
 
         .close-btn {
             position: absolute;
@@ -476,7 +487,10 @@
 
         .close-btn:hover { color: #fff; }
 
-        .modal-header-detail { text-align: center; margin-bottom: 30px; }
+        .modal-header-detail {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
         .modal-avatar-lg {
             width: 120px;
@@ -527,7 +541,9 @@
             width: 100%;
         }
 
-        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        @keyframes rotateGlow {
+            100% { transform: rotate(360deg); }
+        }
         @keyframes pulseGlow {
             0%, 100% { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
             50% { filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.6)); }
@@ -536,7 +552,10 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -553,51 +572,15 @@
     <div class="container">
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('players')">🛡️ Oyuncular</button>
-            <button class="tab-btn" onclick="switchTab('standings')">📊 Puan Durumu</button>
             <button class="tab-btn" onclick="switchTab('stats')">👑 Krallıklar</button>
+            <button class="tab-btn" onclick="switchTab('vs-panel')">⚔️ VERSUS (KIYAS)</button>
             <button class="tab-btn" onclick="switchTab('teams')">👥 Takımlar</button>
-            <button class="tab-btn" onclick="switchTab('fixtures')">📜 Son Maçlar</button>
-            <button class="tab-btn" onclick="switchTab('vsMode')">⚔️ VS Kıyaslama</button>
+            <button class="tab-btn" onclick="switchTab('fixtures')">📊 Son Maçlar</button>
         </div>
 
         <div id="players" class="tab-content active">
-            <div class="filter-bar">
-                <input type="text" id="playerSearch" class="search-input" placeholder="Oyuncu ismi ile ara moruk..." oninput="filterPlayers()">
-                <select id="mevkiFilter" class="filter-select" onchange="filterPlayers()">
-                    <option value="">Tüm Mevkiler</option>
-                    <option value="FORVET">Forvet</option>
-                    <option value="ORTA SAHA">Orta Saha</option>
-                    <option value="DEFANS">Defans</option>
-                    <option value="KALECİ">Kaleci</option>
-                </select>
-            </div>
             <div class="player-grid" id="playerGrid">
                 <div class="loading-pulse">VERİ MOTORU BAĞLANIYOR...</div>
-            </div>
-        </div>
-
-        <div id="standings" class="tab-content">
-            <div class="glass-panel">
-                <div class="panel-title">📊 LİG PUAN DURUMU</div>
-                <table class="futuristic-table">
-                    <thead>
-                        <tr>
-                            <th>Sıra</th>
-                            <th>Takım</th>
-                            <th style="text-align: center;">OM</th>
-                            <th style="text-align: center;">G</th>
-                            <th style="text-align: center;">B</th>
-                            <th style="text-align: center;">M</th>
-                            <th style="text-align: center;">AG</th>
-                            <th style="text-align: center;">YG</th>
-                            <th style="text-align: center;">AV</th>
-                            <th style="text-align: right; color: var(--neon-gold);">Puan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingsTableBody">
-                        <tr><td colspan="10" class="loading-pulse">Hesaplanıyor...</td></tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
@@ -608,10 +591,10 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th style="width: 15%;">Sıra</th>
-                                <th style="width: 45%;">Oyuncu</th>
-                                <th style="width: 25%;">Takım</th>
-                                <th style="width: 15%; text-align: right;">Gol</th>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Gol</th>
                             </tr>
                         </thead>
                         <tbody id="golTableBody">
@@ -625,10 +608,10 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th style="width: 15%;">Sıra</th>
-                                <th style="width: 45%;">Oyuncu</th>
-                                <th style="width: 25%;">Takım</th>
-                                <th style="width: 15%; text-align: right;">Asist</th>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Asist</th>
                             </tr>
                         </thead>
                         <tbody id="asistTableBody">
@@ -642,16 +625,108 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th style="width: 15%;">Sıra</th>
-                                <th style="width: 45%;">Oyuncu</th>
-                                <th style="width: 25%;">Takım</th>
-                                <th style="width: 15%; text-align: right;">Kurtarış</th>
+                                <th>Sıra</th>
+                                <th>Oyuncu</th>
+                                <th>Takım</th>
+                                <th style="text-align: right;">Kurtarış</th>
                             </tr>
                         </thead>
                         <tbody id="kurtarisTableBody">
                             <tr><td colspan="4" class="loading-pulse">Yükleniyor...</td></tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="vs-panel" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">⚔️ OYUNCU GÜÇ KARŞILAŞTIRMASI</div>
+                <div class="vs-container">
+                    
+                    <div class="vs-player-box left-side">
+                        <label style="color: var(--neon-blue); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">1. OYUNCU</label>
+                        <select id="vsSelectLeft" class="vs-select" onchange="updateVersusStats()"></select>
+                        <div class="avatar-frame">
+                            <div class="avatar-glow" style="background: var(--neon-blue)"></div>
+                            <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarLeft" class="player-avatar">
+                        </div>
+                        <h3 id="vsNameLeft" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                        <p id="vsTeamLeft" style="color: var(--neon-blue); font-size: 0.85rem;">Serbest</p>
+                    </div>
+
+                    <div class="vs-center-chart">
+                        <div class="vs-title-text">VS</div>
+                        <div style="width: 100%; max-width: 300px; height: 300px;">
+                            <canvas id="versusRadarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="vs-player-box right-side">
+                        <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. OYUNCU</label>
+                        <select id="vsSelectRight" class="vs-select" onchange="updateVersusStats()"></select>
+                        <div class="avatar-frame">
+                            <div class="avatar-glow" style="background: var(--neon-gold)"></div>
+                            <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarRight" class="player-avatar">
+                        </div>
+                        <h3 id="vsNameRight" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                        <p id="vsTeamRight" style="color: var(--neon-gold); font-size: 0.85rem;">Serbest</p>
+                    </div>
+
+                </div>
+
+                <div style="max-width: 800px; margin: 40px auto 0 auto; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02);">
+                    
+                    <div class="vs-bar-row">
+                        <div class="vs-val left" id="valLeftMaç">0</div>
+                        <div class="vs-bar-label">MAÇ</div>
+                        <div class="vs-val right" id="valRightMaç">0</div>
+                    </div>
+                    <div class="vs-bar-container" style="margin-bottom: 20px;">
+                        <div class="vs-bar-fill left" id="barLeftMaç"></div>
+                        <div class="vs-bar-fill right" id="barRightMaç"></div>
+                    </div>
+
+                    <div class="vs-bar-row">
+                        <div class="vs-val left" id="valLeftGol">0</div>
+                        <div class="vs-bar-label">GOL</div>
+                        <div class="vs-val right" id="valRightGol">0</div>
+                    </div>
+                    <div class="vs-bar-container" style="margin-bottom: 20px;">
+                        <div class="vs-bar-fill left" id="barLeftGol"></div>
+                        <div class="vs-bar-fill right" id="barRightGol"></div>
+                    </div>
+
+                    <div class="vs-bar-row">
+                        <div class="vs-val left" id="valLeftAsist">0</div>
+                        <div class="vs-bar-label">ASİST</div>
+                        <div class="vs-val right" id="valRightAsist">0</div>
+                    </div>
+                    <div class="vs-bar-container" style="margin-bottom: 20px;">
+                        <div class="vs-bar-fill left" id="barLeftAsist"></div>
+                        <div class="vs-bar-fill right" id="barRightAsist"></div>
+                    </div>
+
+                    <div class="vs-bar-row">
+                        <div class="vs-val left" id="valLeftInt">0</div>
+                        <div class="vs-bar-label">INTERCEPT</div>
+                        <div class="vs-val right" id="valRightInt">0</div>
+                    </div>
+                    <div class="vs-bar-container" style="margin-bottom: 20px;">
+                        <div class="vs-bar-fill left" id="barLeftInt"></div>
+                        <div class="vs-bar-fill right" id="barRightInt"></div>
+                    </div>
+
+                    <div class="vs-bar-row">
+                        <div class="vs-val left" id="valLeftSave">0</div>
+                        <div class="vs-bar-label">GK SAVE</div>
+                        <div class="vs-val right" id="valRightSave">0</div>
+                    </div>
+                    <div class="vs-bar-container">
+                        <div class="vs-bar-fill left" id="barLeftSave"></div>
+                        <div class="vs-bar-fill right" id="barRightSave"></div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -693,117 +768,6 @@
                         <tr><td colspan="5" class="loading-pulse">Fikstür Yükleniyor...</td></tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <div id="vsMode" class="tab-content">
-            <div class="glass-panel">
-                <div class="panel-title">⚔️ OYUNCU KIYASLAMA MOTORU</div>
-                <div class="vs-container">
-                    <div class="vs-selectors">
-                        <select id="vsLeftSelect" class="filter-select" onchange="updateVsComparison()">
-                            <option value="">1. Oyuncuyu Seç</option>
-                        </select>
-                        <span class="vs-vs-text">VS</span>
-                        <select id="vsRightSelect" class="filter-select" onchange="updateVsComparison()">
-                            <option value="">2. Oyuncuyu Seç</option>
-                        </select>
-                    </div>
-
-                    <div class="vs-display" id="vsDisplayArea" style="display: none;">
-                        <div class="vs-side-profile left-side">
-                            <div class="avatar-frame">
-                                <div class="avatar-glow"></div>
-                                <img src="" id="vsLeftAvatar" class="player-avatar" alt="Avatar">
-                            </div>
-                            <h2 id="vsLeftName" class="p-name"></h2>
-                            <div id="vsLeftTeam" class="p-team"></div>
-                            <div id="vsLeftBadge" class="p-badge"></div>
-                        </div>
-
-                        <div class="vs-center-stats">
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_O" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">MAÇ</span>
-                                    <span id="vsRightVal_O" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_O" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_O" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_G" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">GOL</span>
-                                    <span id="vsRightVal_G" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_G" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_G" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_A" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">ASİST</span>
-                                    <span id="vsRightVal_A" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_A" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_A" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_INT" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">INTERCEPT</span>
-                                    <span id="vsRightVal_INT" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_INT" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_INT" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_K" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">GK SAVE</span>
-                                    <span id="vsRightVal_K" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_K" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_K" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                            <div class="vs-row">
-                                <div class="vs-label-container">
-                                    <span id="vsLeftVal_TK" style="color: var(--neon-blue); font-weight: bold;">0</span>
-                                    <span class="vs-stat-title">TOP KAYBI</span>
-                                    <span id="vsRightVal_TK" style="color: var(--neon-gold); font-weight: bold;">0</span>
-                                </div>
-                                <div class="vs-bar-bg">
-                                    <div id="vsBarLeft_TK" class="vs-bar-fill left" style="width: 50%;"></div>
-                                    <div id="vsBarRight_TK" class="vs-bar-fill right" style="width: 50%;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="vs-side-profile right-side">
-                            <div class="avatar-frame">
-                                <div class="avatar-glow"></div>
-                                <img src="" id="vsRightAvatar" class="player-avatar" alt="Avatar">
-                            </div>
-                            <h2 id="vsRightName" class="p-name"></h2>
-                            <div id="vsRightTeam" class="p-team"></div>
-                            <div id="vsRightBadge" class="p-badge"></div>
-                        </div>
-                    </div>
-                    <div id="vsPlaceholder" style="text-align: center; color: var(--text-muted); padding: 40px 0;">
-                        Kıyaslamayı başlatmak için yukarıdan iki farklı dövüşçü seç moruk!
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -850,26 +814,24 @@
     <script>
         const API_URL = 'https://yepfella.onrender.com/api/puan-durumu';
         let globalData = {};
-        let cachedPlayers = [];
+        let radarChartInstance = null; // Radar grafiğini tutan değişken
 
-        // Sabit Takım Logoları Sözlüğü (Anaokulu FC olarak güncellendi)
+        // Sabit Takım Logoları Sözlüğü moruk
         const TEAM_LOGOS = {
             "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
             "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
             "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
-            "Anaokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461"
+            "Hayatokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461"
         };
-
-        const SABIT_TAKIMLAR = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Anaokulu FC"];
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            if (event) {
+            if(event) {
                 event.currentTarget.classList.add('active');
             }
         }
@@ -888,27 +850,27 @@
                 const data = await response.json();
                 globalData = data;
 
-                // Tüm backend verilerindeki isimleri "Anaokulu FC" olarak standartlaştırıyoruz
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => {
-                        if (o.takim === "Hayatokulu FC") o.takim = "Anaokulu FC";
+                        if (o.takim === "Anaokulu FC") o.takim = "Hayatokulu FC";
                     });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        if (m.ev === "Hayatokulu FC" || m.ev_sahibi === "Hayatokulu FC") { m.ev = "Anaokulu FC"; m.ev_sahibi = "Anaokulu FC"; }
-                        if (m.dep === "Hayatokulu FC" || m.deplasman === "Hayatokulu FC") { m.dep = "Anaokulu FC"; m.deplasman = "Anaokulu FC"; }
+                        if (m.ev === "Anaokulu FC") m.ev = "Hayatokulu FC";
+                        if (m.dep === "Anaokulu FC") m.dep = "Hayatokulu FC";
+                        if (m.ev_sahibi === "Anaokulu FC") m.ev_sahibi = "Hayatokulu FC";
+                        if (m.deplasman === "Anaokulu FC") m.deplasman = "Hayatokulu FC";
                     });
                 }
 
-                cachedPlayers = Object.values(data.oyuncular || {});
+                const oyuncular = Object.values(data.oyuncular || {});
 
-                renderPlayers(cachedPlayers);
-                renderStandings(data.maclar || []);
-                renderLeaderboards(cachedPlayers);
+                renderPlayers(oyuncular);
+                renderLeaderboards(oyuncular);
+                initVersusSelectors(oyuncular);
                 renderTeams();
                 renderFixtures(data.maclar || []);
-                populateVsSelectors(cachedPlayers);
 
             } catch (error) {
                 console.error("Dashboard Engine Error:", error);
@@ -942,128 +904,191 @@
             });
         }
 
-        function filterPlayers() {
-            const query = document.getElementById('playerSearch').value.toLowerCase().trim();
-            const mevki = document.getElementById('mevkiFilter').value;
-
-            const filtered = cachedPlayers.filter(o => {
-                const matchName = o.futbolcu_ismi.toLowerCase().includes(query);
-                const matchMevki = mevki === "" || (o.mevki && o.mevki.toUpperCase() === mevki);
-                return matchName && matchMevki;
-            });
-            renderPlayers(filtered);
-        }
-
-        function renderStandings(maclar) {
-            // Dinamik Puan Durumu Hesaplama Motoru
-            let tablo = {};
-            SABIT_TAKIMLAR.forEach(t => {
-                tablo[t] = { om: 0, g: 0, b: 0, m: 0, ag: 0, yg: 0, av: 0, p: 0 };
-            });
-
-            maclar.forEach(m => {
-                const evTakim = m.ev_sahibi || m.ev;
-                const depTakim = m.deplasman || m.dep;
-                if(!tablo[evTakim] || !tablo[depTakim]) return;
-
-                const skorParcalari = m.skor.split('-');
-                if(skorParcalari.length !== 2) return;
-
-                const agEv = parseInt(skorParcalari[0]);
-                const agDep = parseInt(skorParcalari[1]);
-
-                tablo[evTakim].om += 1;
-                tablo[depTakim].om += 1;
-                tablo[evTakim].ag += agEv;
-                tablo[evTakim].yg += agDep;
-                tablo[depTakim].ag += agDep;
-                tablo[depTakim].yg += agEv;
-
-                if(agEv > agDep) {
-                    tablo[evTakim].g += 1;
-                    tablo[evTakim].p += 3;
-                    tablo[depTakim].m += 1;
-                } else if(agEv < agDep) {
-                    tablo[depTakim].g += 1;
-                    tablo[depTakim].p += 3;
-                    tablo[evTakim].m += 1;
-                } else {
-                    tablo[evTakim].b += 1;
-                    tablo[evTakim].p += 1;
-                    tablo[depTakim].b += 1;
-                    tablo[depTakim].p += 1;
-                }
-            });
-
-            SABIT_TAKIMLAR.forEach(t => {
-                tablo[t].av = tablo[t].ag - tablo[t].yg;
-            });
-
-            const siraliTakimlar = Object.keys(tablo).sort((a,b) => {
-                if(tablo[b].p !== tablo[a].p) return tablo[b].p - tablo[a].p;
-                return tablo[b].av - tablo[a].av;
-            });
-
-            const tbody = document.getElementById('standingsTableBody');
-            tbody.innerHTML = siraliTakimlar.map((tName, index) => {
-                const stats = tablo[tName];
-                return `
-                    <tr>
-                        <td style="font-weight:bold; color:var(--neon-blue);">#${index + 1}</td>
-                        <td style="font-weight:600;">${tName}</td>
-                        <td style="text-align:center;">${stats.om}</td>
-                        <td style="text-align:center; color:var(--neon-green);">${stats.g}</td>
-                        <td style="text-align:center; color:var(--text-muted);">${stats.b}</td>
-                        <td style="text-align:center; color:var(--neon-red);">${stats.m}</td>
-                        <td style="text-align:center;">${stats.ag}</td>
-                        <td style="text-align:center;">${stats.yg}</td>
-                        <td style="text-align:center; font-weight:bold;">${stats.av > 0 ? '+' + stats.av : stats.av}</td>
-                        <td style="text-align:right; font-weight:900; color:var(--neon-gold); font-size:1.1rem;">${stats.p}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
+        // Krallık Tablosu ve Mini Logolar (İstediğin küçük logolu kısım moruk)
         function renderLeaderboards(oyuncular) {
-            // Gol
+            const getLogoHtml = (teamName) => {
+                if(!teamName || teamName === 'Serbest') return '';
+                const src = TEAM_LOGOS[teamName] || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+                return `<img src="${src}" class="mini-logo" alt="${teamName}">`;
+            };
+
+            // Gol Krallığı
             const golSirali = [...oyuncular].sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
             document.getElementById('golTableBody').innerHTML = golSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
-                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
-                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
                 </tr>
             `).join('');
 
-            // Asist
+            // Asist Krallığı
             const asistSirali = [...oyuncular].sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
             document.getElementById('asistTableBody').innerHTML = asistSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
-                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
-                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
                 </tr>
             `).join('');
 
-            // Kurtarış
+            // Kurtarış Krallığı
             const kurtarisSirali = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
             document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
-                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
-                    <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
                 </tr>
             `).join('');
         }
 
+        // Versus Seçicileri Kurulumu
+        function initVersusSelectors(oyuncular) {
+            const selLeft = document.getElementById('vsSelectLeft');
+            const selRight = document.getElementById('vsSelectRight');
+            
+            let optionsHtml = oyuncular.map(o => `<option value="${o.futbolcu_ismi}">${o.futbolcu_ismi}</option>`).join('');
+            selLeft.innerHTML = optionsHtml;
+            selRight.innerHTML = optionsHtml;
+
+            if(oyuncular.length > 1) {
+                selRight.selectedIndex = 1; // 2. oyuncuyu otomatik farklı seçsin moruk
+            }
+
+            // İlk grafik kurulumunu yap
+            buildRadarChart();
+            updateVersusStats();
+        }
+
+        // Dinamik Çubuk ve Radar Grafiği Güncelleyici (Tam SS tarzı)
+        function updateVersusStats() {
+            const pNameLeft = document.getElementById('vsSelectLeft').value;
+            const pNameRight = document.getElementById('vsSelectRight').value;
+
+            const oyuncular = Object.values(globalData.oyuncular || {});
+            const pLeft = oyuncular.find(o => o.futbolcu_ismi === pNameLeft) || {};
+            const pRight = oyuncular.find(o => o.futbolcu_ismi === pNameRight) || {};
+
+            // Kart Bilgileri Güncellemesi
+            document.getElementById('vsAvatarLeft').src = pLeft.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+            document.getElementById('vsNameLeft').innerText = pLeft.futbolcu_ismi || '-';
+            document.getElementById('vsTeamLeft').innerText = pLeft.takim || 'Serbest';
+
+            document.getElementById('vsAvatarRight').src = pRight.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+            document.getElementById('vsNameRight').innerText = pRight.futbolcu_ismi || '-';
+            document.getElementById('vsTeamRight').innerText = pRight.takim || 'Serbest';
+
+            // İstatistik Sayıları Eşitleme
+            const stats = ['Maç', 'Gol', 'Asist', 'Int', 'Save'];
+            const keys = { 'Maç': 'O', 'Gol': 'G', 'Asist': 'A', 'Int': 'INT', 'Save': 'K' };
+
+            stats.forEach(stat => {
+                const key = keys[stat];
+                const vLeft = Number(pLeft[key] || 0);
+                const vRight = Number(pRight[key] || 0);
+
+                document.getElementById(`valLeft${stat}`).innerText = vLeft;
+                document.getElementById(`valRight${stat}`).innerText = vRight;
+
+                // Çubuk Yüzde Dağılım Hesaplama
+                let total = vLeft + vRight;
+                let pctLeft = 50;
+                let pctRight = 50;
+
+                if (total > 0) {
+                    pctLeft = (vLeft / total) * 100;
+                    pctRight = (vRight / total) * 100;
+                } else {
+                    pctLeft = 0;
+                    pctRight = 0;
+                }
+
+                document.getElementById(`barLeft${stat}`).style.width = pctLeft + '%';
+                document.getElementById(`barRight${stat}`).style.width = pctRight + '%';
+            });
+
+            // Gerçek Hayattaki Futbol Kartı Gibi Geometrik Radar Güncellemesi
+            if (radarChartInstance) {
+                radarChartInstance.data.datasets[0].label = pLeft.futbolcu_ismi || '1. Oyuncu';
+                radarChartInstance.data.datasets[0].data = [
+                    Number(pLeft.G || 0), 
+                    Number(pLeft.A || 0), 
+                    Number(pLeft.K || 0), 
+                    Number(pLeft.INT || 0), 
+                    Number(pLeft.O || 0)
+                ];
+
+                radarChartInstance.data.datasets[1].label = pRight.futbolcu_ismi || '2. Oyuncu';
+                radarChartInstance.data.datasets[1].data = [
+                    Number(pRight.G || 0), 
+                    Number(pRight.A || 0), 
+                    Number(pRight.K || 0), 
+                    Number(pRight.INT || 0), 
+                    Number(pRight.O || 0)
+                ];
+
+                radarChartInstance.update();
+            }
+        }
+
+        // Chart.js Radar Motoru Kurulumu
+        function buildRadarChart() {
+            const ctx = document.getElementById('versusRadarChart').getContext('2d');
+            
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['GOL', 'ASİST', 'KURTARIŞ', 'INTERCEPT', 'PAS/MAÇ'],
+                    datasets: [
+                        {
+                            label: '1. Oyuncu',
+                            data: [0, 0, 0, 0, 0],
+                            backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                            borderColor: '#38bdf8',
+                            pointBackgroundColor: '#38bdf8',
+                            borderWidth: 2
+                        },
+                        {
+                            label: '2. Oyuncu',
+                            data: [0, 0, 0, 0, 0],
+                            backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                            borderColor: '#f59e0b',
+                            pointBackgroundColor: '#f59e0b',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false } // Yukarıdaki kutuları gizleyip sade tuttuk moruk
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: {
+                                color: '#94a3b8',
+                                font: { family: 'Orbitron', size: 10, weight: 'bold' }
+                            },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
         function renderTeams() {
             const tGrid = document.getElementById('teamsGrid');
             tGrid.innerHTML = "";
+            const sabitTakimlar = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Hayatokulu FC"];
             
-            SABIT_TAKIMLAR.forEach(tName => {
+            sabitTakimlar.forEach(tName => {
                 const meta = (globalData.takim_ayarlari && globalData.takim_ayarlari[tName]) || {};
                 const logoSrc = TEAM_LOGOS[tName] || "https://via.placeholder.com/150/0f172a/fff?text=" + tName.split(' ')[0];
                 
@@ -1085,7 +1110,7 @@
             document.getElementById('dtTeamName').innerText = tName;
             document.getElementById('dtTeamDesc').innerText = customDesc || "Editor League Resmi Kulübü.";
             
-            const kadro = cachedPlayers.filter(o => o.takim === tName);
+            const kadro = Object.values(globalData.oyuncular || {}).filter(o => o.takim === tName);
             const pList = document.getElementById('dtPlayersList');
             pList.innerHTML = kadro.length ? kadro.map(o => `
                 <li><span>⚡ ${o.futbolcu_ismi}</span> <strong style="color:var(--neon-blue); font-size:0.8rem;">${o.mevki || 'GK'}</strong></li>
@@ -1123,72 +1148,6 @@
                     </tr>
                 `;
             });
-        }
-
-        // VS Motoru Seçeneklerini Doldurma
-        function populateVsSelectors(oyuncular) {
-            const leftSel = document.getElementById('vsLeftSelect');
-            const rightSel = document.getElementById('vsRightSelect');
-
-            const optionsHTML = oyuncular.map(o => `<option value="${o.futbolcu_ismi}">${o.futbolcu_ismi}</option>`).join('');
-            
-            leftSel.innerHTML = '<option value="">1. Oyuncuyu Seç</option>' + optionsHTML;
-            rightSel.innerHTML = '<option value="">2. Oyuncuyu Seç</option>' + optionsHTML;
-        }
-
-        function updateVsComparison() {
-            const leftName = document.getElementById('vsLeftSelect').value;
-            const rightName = document.getElementById('vsRightSelect').value;
-
-            if(!leftName || !rightName || leftName === rightName) {
-                document.getElementById('vsDisplayArea').style.display = "none";
-                document.getElementById('vsPlaceholder').style.display = "block";
-                return;
-            }
-
-            document.getElementById('vsPlaceholder').style.display = "none";
-            document.getElementById('vsDisplayArea').style.display = "grid";
-
-            const pLeft = cachedPlayers.find(o => o.futbolcu_ismi === leftName);
-            const pRight = cachedPlayers.find(o => o.futbolcu_ismi === rightName);
-
-            // Profilleri Doldurma
-            document.getElementById('vsLeftAvatar').src = pLeft.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
-            document.getElementById('vsLeftName').innerText = pLeft.futbolcu_ismi;
-            document.getElementById('vsLeftTeam').innerText = pLeft.takim || 'Serbest';
-            document.getElementById('vsLeftBadge').innerText = pLeft.mevki || 'Girilmedi';
-
-            document.getElementById('vsRightAvatar').src = pRight.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
-            document.getElementById('vsRightName').innerText = pRight.futbolcu_ismi;
-            document.getElementById('vsRightTeam').innerText = pRight.takim || 'Serbest';
-            document.getElementById('vsRightBadge').innerText = pRight.mevki || 'Girilmedi';
-
-            // İstatistik Karşılaştırma Fonksiyonu
-            function setStatBars(leftVal, rightVal, leftLabelId, rightLabelId, leftBarId, rightBarId) {
-                document.getElementById(leftLabelId).innerText = leftVal;
-                document.getElementById(rightLabelId).innerText = rightVal;
-
-                const total = leftVal + rightVal;
-                if(total === 0) {
-                    document.getElementById(leftBarId).style.width = "50%";
-                    document.getElementById(rightBarId).style.width = "50%";
-                } else {
-                    const leftPct = (leftVal / total) * 100;
-                    const rightPct = (rightVal / total) * 100;
-                    document.getElementById(leftBarId).style.width = leftPct + "%";
-                    document.getElementById(rightBarId).style.width = rightPct + "%";
-                }
-            }
-
-            // Statları Görsele Göre Eşleme
-            setStatBars(pLeft.O || 0, pRight.O || 0, 'vsLeftVal_O', 'vsRightVal_O', 'vsBarLeft_O', 'vsBarRight_O');
-            setStatBars(pLeft.G || 0, pRight.G || 0, 'vsLeftVal_G', 'vsRightVal_G', 'vsBarLeft_G', 'vsBarRight_G');
-            setStatBars(pLeft.A || 0, pRight.A || 0, 'vsLeftVal_A', 'vsRightVal_A', 'vsBarLeft_A', 'vsBarRight_A');
-            setStatBars(pLeft.INT || 0, pRight.INT || 0, 'vsLeftVal_INT', 'vsRightVal_INT', 'vsBarLeft_INT', 'vsBarRight_INT');
-            setStatBars(pLeft.K || 0, pRight.K || 0, 'vsLeftVal_K', 'vsRightVal_K', 'vsBarLeft_K', 'vsBarRight_K');
-            
-            // Eğer database'inizde Top Kaybı (TK) verisi yoksa default 0 çeker, varsa dinamik barı hesaplar moruk
-            setStatBars(pLeft.TK || 0, pRight.TK || 0, 'vsLeftVal_TK', 'vsRightVal_TK', 'vsBarLeft_TK', 'vsBarRight_TK');
         }
 
         function openProfile(oyuncu) {
