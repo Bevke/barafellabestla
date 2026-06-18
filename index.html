@@ -19,6 +19,7 @@
             --neon-purple: #a855f7;
             --neon-gold: #f59e0b;
             --neon-green: #22c55e;
+            --neon-red: #ef4444;
             --glass-bg: rgba(10, 15, 30, 0.7);
         }
 
@@ -93,7 +94,7 @@
         .nav-tabs {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 40px;
             flex-wrap: wrap;
         }
@@ -102,11 +103,11 @@
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid var(--border-glow);
             color: var(--text-muted);
-            padding: 14px 35px;
+            padding: 12px 25px;
             border-radius: 8px;
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
@@ -131,9 +132,35 @@
             display: block;
         }
 
+        /* Arama ve Filtreleme Alanı */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-input, .filter-select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-glow);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input { flex: 1; min-width: 250px; }
+        .filter-select { min-width: 180px; cursor: pointer; }
+        .search-input:focus, .filter-select:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
         .krallik-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 30px;
         }
 
@@ -145,6 +172,7 @@
             padding: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: all 0.3s ease;
+            overflow-x: auto;
         }
 
         .glass-panel:hover {
@@ -193,9 +221,7 @@
             transition: 0.6s;
         }
 
-        .player-card:hover::before, .team-card:hover::before {
-            transform: translateX(100%);
-        }
+        .player-card:hover::before, .team-card:hover::before { transform: translateX(100%); }
 
         .player-card:hover, .team-card:hover {
             transform: translateY(-8px) scale(1.02);
@@ -273,12 +299,14 @@
             border-bottom: 2px solid rgba(255,255,255,0.05);
             text-transform: uppercase;
             letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         .futuristic-table td {
             padding: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             font-size: 0.95rem;
+            white-space: nowrap;
         }
 
         .futuristic-table tr:hover td {
@@ -303,11 +331,7 @@
             .team-detail-grid { grid-template-columns: 1fr; }
         }
 
-        .sub-list {
-            list-style: none;
-            padding: 0;
-        }
-
+        .sub-list { list-style: none; padding: 0; }
         .sub-list li {
             padding: 10px 15px;
             background: rgba(255,255,255,0.02);
@@ -319,6 +343,98 @@
             justify-content: space-between;
         }
 
+        /* VS Kıyaslama Motoru Stilleri */
+        .vs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .vs-selectors {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glow);
+        }
+        .vs-vs-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        .vs-display {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+        @media (max-width: 992px) {
+            .vs-display { grid-template-columns: 1fr; }
+            .vs-center-stats { order: 3; }
+        }
+        .vs-side-profile {
+            background: var(--bg-card);
+            border: 2px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .vs-side-profile.left-side { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.15); }
+        .vs-side-profile.right-side { border-color: var(--neon-gold); box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
+        
+        .vs-center-stats {
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .vs-row {
+            margin-bottom: 20px;
+        }
+        .vs-label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .vs-stat-title {
+            color: var(--text-main);
+            font-weight: bold;
+            background: rgba(255,255,255,0.05);
+            padding: 2px 12px;
+            border-radius: 4px;
+        }
+        .vs-bar-bg {
+            height: 24px;
+            background: #0f172a;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+        .vs-bar-fill {
+            height: 100%;
+            transition: width 0.5s ease-out;
+        }
+        .vs-bar-fill.left {
+            background: linear-gradient(90deg, #0284c7, var(--neon-blue));
+            border-right: 2px solid #fff;
+        }
+        .vs-bar-fill.right {
+            background: linear-gradient(90deg, var(--neon-gold), #b45309);
+            border-left: 2px solid #fff;
+            margin-left: auto;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -332,10 +448,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal.open {
-            display: flex;
-            opacity: 1;
-        }
+        .modal.open { display: flex; opacity: 1; }
 
         .modal-content {
             background: radial-gradient(circle at 50% 0%, #1e293b, #0b1120);
@@ -350,9 +463,7 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .modal.open .modal-content {
-            transform: scale(1);
-        }
+        .modal.open .modal-content { transform: scale(1); }
 
         .close-btn {
             position: absolute;
@@ -365,10 +476,7 @@
 
         .close-btn:hover { color: #fff; }
 
-        .modal-header-detail {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .modal-header-detail { text-align: center; margin-bottom: 30px; }
 
         .modal-avatar-lg {
             width: 120px;
@@ -419,9 +527,7 @@
             width: 100%;
         }
 
-        @keyframes rotateGlow {
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
         @keyframes pulseGlow {
             0%, 100% { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
             50% { filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.6)); }
@@ -430,10 +536,7 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
+        @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -450,14 +553,51 @@
     <div class="container">
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('players')">🛡️ Oyuncular</button>
-            <button class="tab-btn" onclick="switchTab('stats')">🏆 Krallıklar</button>
+            <button class="tab-btn" onclick="switchTab('standings')">📊 Puan Durumu</button>
+            <button class="tab-btn" onclick="switchTab('stats')">👑 Krallıklar</button>
             <button class="tab-btn" onclick="switchTab('teams')">👥 Takımlar</button>
-            <button class="tab-btn" onclick="switchTab('fixtures')">📊 Son Maçlar</button>
+            <button class="tab-btn" onclick="switchTab('fixtures')">📜 Son Maçlar</button>
+            <button class="tab-btn" onclick="switchTab('vsMode')">⚔️ VS Kıyaslama</button>
         </div>
 
         <div id="players" class="tab-content active">
+            <div class="filter-bar">
+                <input type="text" id="playerSearch" class="search-input" placeholder="Oyuncu ismi ile ara moruk..." oninput="filterPlayers()">
+                <select id="mevkiFilter" class="filter-select" onchange="filterPlayers()">
+                    <option value="">Tüm Mevkiler</option>
+                    <option value="FORVET">Forvet</option>
+                    <option value="ORTA SAHA">Orta Saha</option>
+                    <option value="DEFANS">Defans</option>
+                    <option value="KALECİ">Kaleci</option>
+                </select>
+            </div>
             <div class="player-grid" id="playerGrid">
                 <div class="loading-pulse">VERİ MOTORU BAĞLANIYOR...</div>
+            </div>
+        </div>
+
+        <div id="standings" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">📊 LİG PUAN DURUMU</div>
+                <table class="futuristic-table">
+                    <thead>
+                        <tr>
+                            <th>Sıra</th>
+                            <th>Takım</th>
+                            <th style="text-align: center;">OM</th>
+                            <th style="text-align: center;">G</th>
+                            <th style="text-align: center;">B</th>
+                            <th style="text-align: center;">M</th>
+                            <th style="text-align: center;">AG</th>
+                            <th style="text-align: center;">YG</th>
+                            <th style="text-align: center;">AV</th>
+                            <th style="text-align: right; color: var(--neon-gold);">Puan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsTableBody">
+                        <tr><td colspan="10" class="loading-pulse">Hesaplanıyor...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -468,10 +608,10 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th>Sıra</th>
-                                <th>Oyuncu</th>
-                                <th>Takım</th>
-                                <th style="text-align: right;">Gol</th>
+                                <th style="width: 15%;">Sıra</th>
+                                <th style="width: 45%;">Oyuncu</th>
+                                <th style="width: 25%;">Takım</th>
+                                <th style="width: 15%; text-align: right;">Gol</th>
                             </tr>
                         </thead>
                         <tbody id="golTableBody">
@@ -485,10 +625,10 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th>Sıra</th>
-                                <th>Oyuncu</th>
-                                <th>Takım</th>
-                                <th style="text-align: right;">Asist</th>
+                                <th style="width: 15%;">Sıra</th>
+                                <th style="width: 45%;">Oyuncu</th>
+                                <th style="width: 25%;">Takım</th>
+                                <th style="width: 15%; text-align: right;">Asist</th>
                             </tr>
                         </thead>
                         <tbody id="asistTableBody">
@@ -502,10 +642,10 @@
                     <table class="futuristic-table">
                         <thead>
                             <tr>
-                                <th>Sıra</th>
-                                <th>Oyuncu</th>
-                                <th>Takım</th>
-                                <th style="text-align: right;">Kurtarış</th>
+                                <th style="width: 15%;">Sıra</th>
+                                <th style="width: 45%;">Oyuncu</th>
+                                <th style="width: 25%;">Takım</th>
+                                <th style="width: 15%; text-align: right;">Kurtarış</th>
                             </tr>
                         </thead>
                         <tbody id="kurtarisTableBody">
@@ -555,6 +695,117 @@
                 </table>
             </div>
         </div>
+
+        <div id="vsMode" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">⚔️ OYUNCU KIYASLAMA MOTORU</div>
+                <div class="vs-container">
+                    <div class="vs-selectors">
+                        <select id="vsLeftSelect" class="filter-select" onchange="updateVsComparison()">
+                            <option value="">1. Oyuncuyu Seç</option>
+                        </select>
+                        <span class="vs-vs-text">VS</span>
+                        <select id="vsRightSelect" class="filter-select" onchange="updateVsComparison()">
+                            <option value="">2. Oyuncuyu Seç</option>
+                        </select>
+                    </div>
+
+                    <div class="vs-display" id="vsDisplayArea" style="display: none;">
+                        <div class="vs-side-profile left-side">
+                            <div class="avatar-frame">
+                                <div class="avatar-glow"></div>
+                                <img src="" id="vsLeftAvatar" class="player-avatar" alt="Avatar">
+                            </div>
+                            <h2 id="vsLeftName" class="p-name"></h2>
+                            <div id="vsLeftTeam" class="p-team"></div>
+                            <div id="vsLeftBadge" class="p-badge"></div>
+                        </div>
+
+                        <div class="vs-center-stats">
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_O" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">MAÇ</span>
+                                    <span id="vsRightVal_O" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_O" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_O" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_G" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">GOL</span>
+                                    <span id="vsRightVal_G" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_G" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_G" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_A" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">ASİST</span>
+                                    <span id="vsRightVal_A" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_A" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_A" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_INT" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">INTERCEPT</span>
+                                    <span id="vsRightVal_INT" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_INT" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_INT" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_K" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">GK SAVE</span>
+                                    <span id="vsRightVal_K" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_K" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_K" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="vs-row">
+                                <div class="vs-label-container">
+                                    <span id="vsLeftVal_TK" style="color: var(--neon-blue); font-weight: bold;">0</span>
+                                    <span class="vs-stat-title">TOP KAYBI</span>
+                                    <span id="vsRightVal_TK" style="color: var(--neon-gold); font-weight: bold;">0</span>
+                                </div>
+                                <div class="vs-bar-bg">
+                                    <div id="vsBarLeft_TK" class="vs-bar-fill left" style="width: 50%;"></div>
+                                    <div id="vsBarRight_TK" class="vs-bar-fill right" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vs-side-profile right-side">
+                            <div class="avatar-frame">
+                                <div class="avatar-glow"></div>
+                                <img src="" id="vsRightAvatar" class="player-avatar" alt="Avatar">
+                            </div>
+                            <h2 id="vsRightName" class="p-name"></h2>
+                            <div id="vsRightTeam" class="p-team"></div>
+                            <div id="vsRightBadge" class="p-badge"></div>
+                        </div>
+                    </div>
+                    <div id="vsPlaceholder" style="text-align: center; color: var(--text-muted); padding: 40px 0;">
+                        Kıyaslamayı başlatmak için yukarıdan iki farklı dövüşçü seç moruk!
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal" id="playerModal">
@@ -599,26 +850,30 @@
     <script>
         const API_URL = 'https://yepfella.onrender.com/api/puan-durumu';
         let globalData = {};
+        let cachedPlayers = [];
 
-        // Sabit Takım Logoları Sözlüğü moruk
+        // Sabit Takım Logoları Sözlüğü (Anaokulu FC olarak güncellendi)
         const TEAM_LOGOS = {
             "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
             "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
             "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
-            "Hayatokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461"
+            "Anaokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461"
         };
+
+        const SABIT_TAKIMLAR = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Anaokulu FC"];
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (event) {
+                event.currentTarget.classList.add('active');
+            }
         }
 
-        // Günün tarihini GG.AA.YYYY formatında döndüren fonksiyon moruk
         function getTodayDateString() {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
@@ -633,27 +888,27 @@
                 const data = await response.json();
                 globalData = data;
 
-                // Backend'den eski isim gelebilecek durumlar için Hayatokulu eşlemesi
+                // Tüm backend verilerindeki isimleri "Anaokulu FC" olarak standartlaştırıyoruz
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => {
-                        if (o.takim === "Anaokulu FC") o.takim = "Hayatokulu FC";
+                        if (o.takim === "Hayatokulu FC") o.takim = "Anaokulu FC";
                     });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        if (m.ev === "Anaokulu FC") m.ev = "Hayatokulu FC";
-                        if (m.dep === "Anaokulu FC") m.dep = "Hayatokulu FC";
-                        if (m.ev_sahibi === "Anaokulu FC") m.ev_sahibi = "Hayatokulu FC";
-                        if (m.deplasman === "Anaokulu FC") m.deplasman = "Hayatokulu FC";
+                        if (m.ev === "Hayatokulu FC" || m.ev_sahibi === "Hayatokulu FC") { m.ev = "Anaokulu FC"; m.ev_sahibi = "Anaokulu FC"; }
+                        if (m.dep === "Hayatokulu FC" || m.deplasman === "Hayatokulu FC") { m.dep = "Anaokulu FC"; m.deplasman = "Anaokulu FC"; }
                     });
                 }
 
-                const oyuncular = Object.values(data.oyuncular || {});
+                cachedPlayers = Object.values(data.oyuncular || {});
 
-                renderPlayers(oyuncular);
-                renderLeaderboards(oyuncular);
+                renderPlayers(cachedPlayers);
+                renderStandings(data.maclar || []);
+                renderLeaderboards(cachedPlayers);
                 renderTeams();
                 renderFixtures(data.maclar || []);
+                populateVsSelectors(cachedPlayers);
 
             } catch (error) {
                 console.error("Dashboard Engine Error:", error);
@@ -687,14 +942,95 @@
             });
         }
 
+        function filterPlayers() {
+            const query = document.getElementById('playerSearch').value.toLowerCase().trim();
+            const mevki = document.getElementById('mevkiFilter').value;
+
+            const filtered = cachedPlayers.filter(o => {
+                const matchName = o.futbolcu_ismi.toLowerCase().includes(query);
+                const matchMevki = mevki === "" || (o.mevki && o.mevki.toUpperCase() === mevki);
+                return matchName && matchMevki;
+            });
+            renderPlayers(filtered);
+        }
+
+        function renderStandings(maclar) {
+            // Dinamik Puan Durumu Hesaplama Motoru
+            let tablo = {};
+            SABIT_TAKIMLAR.forEach(t => {
+                tablo[t] = { om: 0, g: 0, b: 0, m: 0, ag: 0, yg: 0, av: 0, p: 0 };
+            });
+
+            maclar.forEach(m => {
+                const evTakim = m.ev_sahibi || m.ev;
+                const depTakim = m.deplasman || m.dep;
+                if(!tablo[evTakim] || !tablo[depTakim]) return;
+
+                const skorParcalari = m.skor.split('-');
+                if(skorParcalari.length !== 2) return;
+
+                const agEv = parseInt(skorParcalari[0]);
+                const agDep = parseInt(skorParcalari[1]);
+
+                tablo[evTakim].om += 1;
+                tablo[depTakim].om += 1;
+                tablo[evTakim].ag += agEv;
+                tablo[evTakim].yg += agDep;
+                tablo[depTakim].ag += agDep;
+                tablo[depTakim].yg += agEv;
+
+                if(agEv > agDep) {
+                    tablo[evTakim].g += 1;
+                    tablo[evTakim].p += 3;
+                    tablo[depTakim].m += 1;
+                } else if(agEv < agDep) {
+                    tablo[depTakim].g += 1;
+                    tablo[depTakim].p += 3;
+                    tablo[evTakim].m += 1;
+                } else {
+                    tablo[evTakim].b += 1;
+                    tablo[evTakim].p += 1;
+                    tablo[depTakim].b += 1;
+                    tablo[depTakim].p += 1;
+                }
+            });
+
+            SABIT_TAKIMLAR.forEach(t => {
+                tablo[t].av = tablo[t].ag - tablo[t].yg;
+            });
+
+            const siraliTakimlar = Object.keys(tablo).sort((a,b) => {
+                if(tablo[b].p !== tablo[a].p) return tablo[b].p - tablo[a].p;
+                return tablo[b].av - tablo[a].av;
+            });
+
+            const tbody = document.getElementById('standingsTableBody');
+            tbody.innerHTML = siraliTakimlar.map((tName, index) => {
+                const stats = tablo[tName];
+                return `
+                    <tr>
+                        <td style="font-weight:bold; color:var(--neon-blue);">#${index + 1}</td>
+                        <td style="font-weight:600;">${tName}</td>
+                        <td style="text-align:center;">${stats.om}</td>
+                        <td style="text-align:center; color:var(--neon-green);">${stats.g}</td>
+                        <td style="text-align:center; color:var(--text-muted);">${stats.b}</td>
+                        <td style="text-align:center; color:var(--neon-red);">${stats.m}</td>
+                        <td style="text-align:center;">${stats.ag}</td>
+                        <td style="text-align:center;">${stats.yg}</td>
+                        <td style="text-align:center; font-weight:bold;">${stats.av > 0 ? '+' + stats.av : stats.av}</td>
+                        <td style="text-align:right; font-weight:900; color:var(--neon-gold); font-size:1.1rem;">${stats.p}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
         function renderLeaderboards(oyuncular) {
             // Gol
             const golSirali = [...oyuncular].sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
-            const golBody = document.getElementById('golTableBody');
-            golBody.innerHTML = golSirali.map((o, i) => `
+            document.getElementById('golTableBody').innerHTML = golSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
                     <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
                 </tr>
@@ -702,11 +1038,10 @@
 
             // Asist
             const asistSirali = [...oyuncular].sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
-            const asistBody = document.getElementById('asistTableBody');
-            asistBody.innerHTML = asistSirali.map((o, i) => `
+            document.getElementById('asistTableBody').innerHTML = asistSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
                     <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
                 </tr>
@@ -714,11 +1049,10 @@
 
             // Kurtarış
             const kurtarisSirali = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
-            const kurtarisBody = document.getElementById('kurtarisTableBody');
-            kurtarisBody.innerHTML = kurtarisSirali.map((o, i) => `
+            document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600; text-overflow:ellipsis; overflow:hidden;">${o.futbolcu_ismi}</td>
                     <td style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
                 </tr>
@@ -728,11 +1062,9 @@
         function renderTeams() {
             const tGrid = document.getElementById('teamsGrid');
             tGrid.innerHTML = "";
-            const sabitTakimlar = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Hayatokulu FC"];
             
-            sabitTakimlar.forEach(tName => {
+            SABIT_TAKIMLAR.forEach(tName => {
                 const meta = (globalData.takim_ayarlari && globalData.takim_ayarlari[tName]) || {};
-                // Gönderilen logoları buradan eşleştiriyoruz moruk
                 const logoSrc = TEAM_LOGOS[tName] || "https://via.placeholder.com/150/0f172a/fff?text=" + tName.split(' ')[0];
                 
                 const card = document.createElement('div');
@@ -753,7 +1085,7 @@
             document.getElementById('dtTeamName').innerText = tName;
             document.getElementById('dtTeamDesc').innerText = customDesc || "Editor League Resmi Kulübü.";
             
-            const kadro = Object.values(globalData.oyuncular || {}).filter(o => o.takim === tName);
+            const kadro = cachedPlayers.filter(o => o.takim === tName);
             const pList = document.getElementById('dtPlayersList');
             pList.innerHTML = kadro.length ? kadro.map(o => `
                 <li><span>⚡ ${o.futbolcu_ismi}</span> <strong style="color:var(--neon-blue); font-size:0.8rem;">${o.mevki || 'GK'}</strong></li>
@@ -777,8 +1109,6 @@
                 return;
             }
             body.innerHTML = '';
-            
-            // Gerçek zamanlı günün tarihi moruk
             const bugun = getTodayDateString();
             
             [...maclar].reverse().forEach(mac => {
@@ -793,6 +1123,72 @@
                     </tr>
                 `;
             });
+        }
+
+        // VS Motoru Seçeneklerini Doldurma
+        function populateVsSelectors(oyuncular) {
+            const leftSel = document.getElementById('vsLeftSelect');
+            const rightSel = document.getElementById('vsRightSelect');
+
+            const optionsHTML = oyuncular.map(o => `<option value="${o.futbolcu_ismi}">${o.futbolcu_ismi}</option>`).join('');
+            
+            leftSel.innerHTML = '<option value="">1. Oyuncuyu Seç</option>' + optionsHTML;
+            rightSel.innerHTML = '<option value="">2. Oyuncuyu Seç</option>' + optionsHTML;
+        }
+
+        function updateVsComparison() {
+            const leftName = document.getElementById('vsLeftSelect').value;
+            const rightName = document.getElementById('vsRightSelect').value;
+
+            if(!leftName || !rightName || leftName === rightName) {
+                document.getElementById('vsDisplayArea').style.display = "none";
+                document.getElementById('vsPlaceholder').style.display = "block";
+                return;
+            }
+
+            document.getElementById('vsPlaceholder').style.display = "none";
+            document.getElementById('vsDisplayArea').style.display = "grid";
+
+            const pLeft = cachedPlayers.find(o => o.futbolcu_ismi === leftName);
+            const pRight = cachedPlayers.find(o => o.futbolcu_ismi === rightName);
+
+            // Profilleri Doldurma
+            document.getElementById('vsLeftAvatar').src = pLeft.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+            document.getElementById('vsLeftName').innerText = pLeft.futbolcu_ismi;
+            document.getElementById('vsLeftTeam').innerText = pLeft.takim || 'Serbest';
+            document.getElementById('vsLeftBadge').innerText = pLeft.mevki || 'Girilmedi';
+
+            document.getElementById('vsRightAvatar').src = pRight.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+            document.getElementById('vsRightName').innerText = pRight.futbolcu_ismi;
+            document.getElementById('vsRightTeam').innerText = pRight.takim || 'Serbest';
+            document.getElementById('vsRightBadge').innerText = pRight.mevki || 'Girilmedi';
+
+            // İstatistik Karşılaştırma Fonksiyonu
+            function setStatBars(leftVal, rightVal, leftLabelId, rightLabelId, leftBarId, rightBarId) {
+                document.getElementById(leftLabelId).innerText = leftVal;
+                document.getElementById(rightLabelId).innerText = rightVal;
+
+                const total = leftVal + rightVal;
+                if(total === 0) {
+                    document.getElementById(leftBarId).style.width = "50%";
+                    document.getElementById(rightBarId).style.width = "50%";
+                } else {
+                    const leftPct = (leftVal / total) * 100;
+                    const rightPct = (rightVal / total) * 100;
+                    document.getElementById(leftBarId).style.width = leftPct + "%";
+                    document.getElementById(rightBarId).style.width = rightPct + "%";
+                }
+            }
+
+            // Statları Görsele Göre Eşleme
+            setStatBars(pLeft.O || 0, pRight.O || 0, 'vsLeftVal_O', 'vsRightVal_O', 'vsBarLeft_O', 'vsBarRight_O');
+            setStatBars(pLeft.G || 0, pRight.G || 0, 'vsLeftVal_G', 'vsRightVal_G', 'vsBarLeft_G', 'vsBarRight_G');
+            setStatBars(pLeft.A || 0, pRight.A || 0, 'vsLeftVal_A', 'vsRightVal_A', 'vsBarLeft_A', 'vsBarRight_A');
+            setStatBars(pLeft.INT || 0, pRight.INT || 0, 'vsLeftVal_INT', 'vsRightVal_INT', 'vsBarLeft_INT', 'vsBarRight_INT');
+            setStatBars(pLeft.K || 0, pRight.K || 0, 'vsLeftVal_K', 'vsRightVal_K', 'vsBarLeft_K', 'vsBarRight_K');
+            
+            // Eğer database'inizde Top Kaybı (TK) verisi yoksa default 0 çeker, varsa dinamik barı hesaplar moruk
+            setStatBars(pLeft.TK || 0, pRight.TK || 0, 'vsLeftVal_TK', 'vsRightVal_TK', 'vsBarLeft_TK', 'vsBarRight_TK');
         }
 
         function openProfile(oyuncu) {
