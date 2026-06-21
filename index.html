@@ -27,7 +27,7 @@
             --lig-theme-secondary: var(--neon-purple);
         }
 
-        /* Diğer Lig Aktifken Geçilecek Renk Paleti (Yeşil/Altın) */
+        /* Diğer Lig (Ana Lig) Aktifken Geçilecek Renk Paleti (Yeşil/Altın) */
         body.normal-league-active {
             --bg-dark: #040d06;
             --bg-card: rgba(11, 22, 14, 0.65);
@@ -848,16 +848,20 @@
 
     <script>
         let currentLeague = 'editor';
-
-        // Canlı API adresin
-        const API_URL = 'https://bot-lhr2.onrender.com/api/puan-durumu';
+        
+        // LİGLERİN KENDİNE ÖZEL API ADRESLERİ
+        const API_URLS = {
+            'editor': 'https://yepfella.onrender.com/api/puan-durumu', // 1. Lig
+            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  // Ana Lig
+        };
         
         let globalData = {};
         let cachedPlayersList = [];
         let radarChartInstance = null;
+        let activeLeagueTeams = [];
 
-        // --- TAKIM VE LOGO TANIMLAMALARI ---
-        const TEAM_LOGOS_EDITOR = {
+        // Bilinen Özel Logolar
+        const SPECIAL_LOGOS = {
             "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
@@ -865,29 +869,16 @@
             "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
             "Bambamspor FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a396f7b&is=6a381dfb&hm=2b7172c09f9c135bb368c21d6a2d4e23d3ffdb6ad33c26cd0f59aa7af41f1ffe&=&format=webp&quality=lossless&width=930&height=930"
         };
-        const SABIT_TAKIMLAR_EDITOR = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Bambamspor FC"];
-
-        // 2. Editor League (Ana Lig) Takımları
-        const SABIT_TAKIMLAR_NORMAL = ["Bay FC", "Van Parisspor", "OOG FC", "Messi FC"];
-        const TEAM_LOGOS_NORMAL = {
-            "Bay FC": "https://via.placeholder.com/150/040d06/22c55e?text=BAY",
-            "Van Parisspor": "https://via.placeholder.com/150/040d06/22c55e?text=VAN",
-            "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
-            "Messi FC": "https://via.placeholder.com/150/040d06/22c55e?text=LM10"
-        };
-
-        function getActiveTeams() {
-            return currentLeague === 'editor' ? SABIT_TAKIMLAR_EDITOR : SABIT_TAKIMLAR_NORMAL;
-        }
 
         function getTeamLogo(tName) {
-            if (currentLeague === 'editor') {
-                return TEAM_LOGOS_EDITOR[tName] || 'https://via.placeholder.com/150/0f172a/fff?text=' + tName.split(' ')[0];
-            }
-            return TEAM_LOGOS_NORMAL[tName] || 'https://via.placeholder.com/150/040d06/22c55e?text=' + tName.split(' ')[0];
+            if (SPECIAL_LOGOS[tName]) return SPECIAL_LOGOS[tName];
+            const initials = tName ? tName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase() : 'FC';
+            const bg = currentLeague === 'editor' ? '0f172a' : '040d06';
+            const textClr = currentLeague === 'editor' ? '38bdf8' : '22c55e';
+            return `https://via.placeholder.com/150/${bg}/${textClr}?text=${initials}`;
         }
 
-        function changeLeague(leagueType) {
+        async function changeLeague(leagueType) {
             currentLeague = leagueType;
             const body = document.body;
             const btnEl = document.getElementById('btnEl');
@@ -909,8 +900,13 @@
                 standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
             }
 
+            // Tabloları temizleyip yükleniyor durumuna getir
+            document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
+            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLEMESİ BAŞLATILIYOR...</div>`;
             document.getElementById('teamDetailPanel').style.display = "none";
-            refreshDashboardView();
+
+            // Yeni ligin API verisini çek
+            await loadDashboardData();
         }
 
         function switchTab(tabId) {
@@ -918,8 +914,8 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
+            if(window.event && window.event.currentTarget) {
+                window.event.currentTarget.classList.add('active');
             }
         }
 
@@ -932,11 +928,12 @@
 
         async function loadDashboardData() {
             try {
-                const response = await fetch(API_URL);
+                // Aktif ligin API URL'sine istek atıyoruz
+                const response = await fetch(API_URLS[currentLeague]);
                 const data = await response.json();
                 globalData = data;
 
-                // API verisindeki eski/alternatif isim temizlikleri
+                // Veri düzeltmeleri ve temizlikleri (Eski okul isimleri güncelleniyor)
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => {
                         if (o.takim === "Hayatokulu FC" || o.takim === "Anaokulu FC") o.takim = "Bambamspor FC";
@@ -949,34 +946,36 @@
                     });
                 }
 
+                // Gelen API içindeki tüm benzersiz takımları tespit et
+                const allTeams = new Set();
+                if (data.oyuncular) {
+                    Object.values(data.oyuncular).forEach(o => { if(o.takim && o.takim !== 'Serbest') allTeams.add(o.takim); });
+                }
+                if (data.maclar) {
+                    data.maclar.forEach(m => {
+                        const ev = m.ev_sahibi || m.ev;
+                        const dep = m.deplasman || m.dep;
+                        if(ev) allTeams.add(ev);
+                        if(dep) allTeams.add(dep);
+                    });
+                }
+                activeLeagueTeams = Array.from(allTeams);
+
+                // Arayüzü gelen veriye göre sıfırdan inşa et
                 refreshDashboardView();
 
             } catch (error) {
                 console.error("Dashboard Engine Error:", error);
-                document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ef4444;">Veri motoru yüklenirken hata oluştu!</td></tr>`;
+                document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ef4444;">Veri motoru yüklenirken hata oluştu! API açık mı moruk?</td></tr>`;
             }
         }
 
         function refreshDashboardView() {
-            let activeMatches = [];
+            // Sadece bu API'den gelen oyuncular
+            cachedPlayersList = Object.values(globalData.oyuncular || {});
             
-            if (currentLeague === 'editor') {
-                // 1. Editor League filtreleri
-                cachedPlayersList = Object.values(globalData.oyuncular || {}).filter(o => SABIT_TAKIMLAR_EDITOR.includes(o.takim));
-                activeMatches = (globalData.maclar || []).filter(m => {
-                    const ev = m.ev_sahibi || m.ev;
-                    const dep = m.deplasman || m.dep;
-                    return SABIT_TAKIMLAR_EDITOR.includes(ev) && SABIT_TAKIMLAR_EDITOR.includes(dep);
-                });
-            } else {
-                // Editor League (Ana lig) filtreleri - Aynı API'den bu lige ait takımları süzüyor
-                cachedPlayersList = Object.values(globalData.oyuncular || {}).filter(o => SABIT_TAKIMLAR_NORMAL.includes(o.takim));
-                activeMatches = (globalData.maclar || []).filter(m => {
-                    const ev = m.ev_sahibi || m.ev;
-                    const dep = m.deplasman || m.dep;
-                    return SABIT_TAKIMLAR_NORMAL.includes(ev) && SABIT_TAKIMLAR_NORMAL.includes(dep);
-                });
-            }
+            // Sadece bu API'den gelen maçlar
+            const activeMatches = globalData.maclar || [];
 
             renderStandings(activeMatches);
             renderPlayers(cachedPlayersList);
@@ -988,9 +987,8 @@
 
         function renderStandings(maclar) {
             let stats = {};
-            const mevcutTakimlar = getActiveTeams();
 
-            mevcutTakimlar.forEach(t => {
+            activeLeagueTeams.forEach(t => {
                 stats[t] = { name: t, om: 0, g: 0, b: 0, m: 0, ag: 0, yg: 0, av: 0, p: 0 };
             });
 
@@ -1033,6 +1031,11 @@
             siralamaListesi.sort((a, b) => b.p - a.p || b.av - a.av || b.ag - a.ag);
 
             const body = document.getElementById('puanDurumuTableBody');
+            if(siralamaListesi.length === 0) {
+                body.innerHTML = `<tr><td colspan="10" style="text-align:center; color:var(--text-muted);">Bu API linkinde henüz hiçbir maç veya takım verisi girilmemiş.</td></tr>`;
+                return;
+            }
+
             body.innerHTML = siralamaListesi.map((t, i) => {
                 return `
                     <tr>
@@ -1059,7 +1062,7 @@
         function renderPlayers(oyuncular) {
             const grid = document.getElementById('playerGrid');
             if(oyuncular.length === 0) {
-                grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted);">Eşleşen oyuncu bulunamadı.</div>`;
+                grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted);">Bu ligde lisanslı oyuncu bulunamadı.</div>`;
                 return;
             }
             grid.innerHTML = '';
@@ -1098,39 +1101,44 @@
             };
 
             const golSirali = [...oyuncular].sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
-            document.getElementById('golTableBody').innerHTML = golSirali.map((o, i) => `
+            document.getElementById('golTableBody').innerHTML = golSirali.length ? golSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
                     <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
                 </tr>
-            `).join('');
+            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
 
             const asistSirali = [...oyuncular].sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
-            document.getElementById('asistTableBody').innerHTML = asistSirali.map((o, i) => `
+            document.getElementById('asistTableBody').innerHTML = asistSirali.length ? asistSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
                     <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
                 </tr>
-            `).join('');
+            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
 
             const kurtarisSirali = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
-            document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.map((o, i) => `
+            document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.length ? kurtarisSirali.map((o, i) => `
                 <tr>
                     <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
                     <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
                 </tr>
-            `).join('');
+            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
         }
 
         function initVersusSelectors(oyuncular) {
             const selLeft = document.getElementById('vsSelectLeft');
             const selRight = document.getElementById('vsSelectRight');
+            if(oyuncular.length === 0) {
+                selLeft.innerHTML = '<option>-</option>';
+                selRight.innerHTML = '<option>-</option>';
+                return;
+            }
             let optionsHtml = oyuncular.map(o => `<option value="${o.futbolcu_ismi}">${o.futbolcu_ismi}</option>`).join('');
             selLeft.innerHTML = optionsHtml;
             selRight.innerHTML = optionsHtml;
@@ -1219,11 +1227,10 @@
         function renderTeams() {
             const tGrid = document.getElementById('teamsGrid');
             tGrid.innerHTML = "";
-            const mevcutTakimlar = getActiveTeams();
             
             const settingsSource = globalData.takim_ayarlari;
 
-            mevcutTakimlar.forEach(tName => {
+            activeLeagueTeams.forEach(tName => {
                 const meta = (settingsSource && settingsSource[tName]) || {};
                 const card = document.createElement('div');
                 card.className = 'team-card';
@@ -1240,7 +1247,7 @@
             document.getElementById('dtTeamName').innerText = tName;
             document.getElementById('dtTeamDesc').innerText = customDesc || "Lig Resmi Kulübü.";
             
-            const kadro = cachedPlayersList.filter(o => o.takim === tName);
+            const kadro = Object.values(globalData.oyuncular || {}).filter(o => o.takim === tName);
             document.getElementById('dtPlayersList').innerHTML = kadro.length ? kadro.map(o => `
                 <li><span>⚡ ${o.futbolcu_ismi}</span> <strong style="color:var(--neon-blue); font-size:0.8rem;">${o.mevki || 'GK'}</strong></li>
             `).join('') : `<li>Kadroda aktif oyuncu yok moruk.</li>`;
@@ -1301,6 +1308,7 @@
             if (event.target == modal) modal.classList.remove('open');
         }
 
+        // İlk yüklemede 1. Lig (yepfella) verilerini otomatik getirir
         loadDashboardData();
     </script>
 </body>
