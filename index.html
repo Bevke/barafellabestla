@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor League & Normal Lig | Hub</title>
+    <title>1. Editor League & Editor League | Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
             --lig-theme-secondary: var(--neon-purple);
         }
 
-        /* Normal Lig Aktifken Geçilecek Renk Paleti */
+        /* Diğer Lig Aktifken Geçilecek Renk Paleti (Yeşil/Altın) */
         body.normal-league-active {
             --bg-dark: #040d06;
             --bg-card: rgba(11, 22, 14, 0.65);
@@ -78,7 +78,7 @@
             z-index: 10;
         }
 
-        /* --- LİG SEÇİM SEKMELERİ (YENİ ALAN) --- */
+        /* LİG SEÇİM SEKMELERİ */
         .league-selector-zone {
             display: flex;
             justify-content: center;
@@ -589,12 +589,12 @@
 
     <header>
         <div class="league-selector-zone">
-            <button id="btnEl" class="league-toggle-btn active-el" onclick="changeLeague('editor')">⚡ Editor League</button>
-            <button id="btnNl" class="league-toggle-btn" onclick="changeLeague('normal')">⚽ Normal Lig</button>
+            <button id="btnEl" class="league-toggle-btn active-el" onclick="changeLeague('editor')">⚡ 1. Editor League</button>
+            <button id="btnNl" class="league-toggle-btn" onclick="changeLeague('normal')">⚽ Editor League</button>
         </div>
 
         <div class="logo-container">
-            <div id="mainLogoText" class="logo-text">EDITOR LEAGUE</div>
+            <div id="mainLogoText" class="logo-text">1. EDITOR LEAGUE</div>
             <div id="mainLogoSub" class="logo-sub">Beta Hub</div>
         </div>
     </header>
@@ -611,7 +611,7 @@
 
         <div id="puan-durumu" class="tab-content active">
             <div class="glass-panel">
-                <div id="standingsTitle" class="panel-title">📊 SEZON PUAN DURUMU</div>
+                <div id="standingsTitle" class="panel-title">📊 1. EDITOR LEAGUE PUAN DURUMU</div>
                 <table class="futuristic-table">
                     <thead>
                         <tr>
@@ -850,18 +850,19 @@
         // Şu anki aktif lig durumunu tutan değişken ('editor' veya 'normal')
         let currentLeague = 'editor';
 
-        const API_URL = 'https://yepfella.onrender.com/api/puan-durumu';
+        // Doğrudan senin API adresin
+        const API_URL = 'https://bot-lhr2.onrender.com/api/puan-durumu';
         
-        // Editor League Veri Havuzu
+        // 1. Editor League Canlı Veri Havuzu
         let globalData = {};
         let cachedPlayersList = [];
 
-        // --- NORMAL LİG İÇİN STATİK MOCK DATA ALANI ---
-        // API'ye bağlayana kadar buradaki takımları, oyuncuları ve maçları dilediğin gibi düzenleyebilirsin moruk.
+        // --- DİĞER EDİTOR LEAGUE İÇİN STATİK MOCK DATA ALANI ---
+        // Burayı dilediğin gibi doldurup özelleştirebilirsin moruk.
         let normalLeagueData = {
             "takimlar": ["Akrepler FC", "Kartallar SK", "Aslanlar Gücü", "Yıldızlar Spor"],
             "takim_ayarlari": {
-                "Akrepler FC": { aciklama: "Normal ligin en sert savunma yapan takımı." },
+                "Akrepler FC": { aciklama: "Ligin en sert savunma yapan takımı." },
                 "Kartallar SK": { aciklama: "Hızlı hücum hatlarıyla tanınan köklü kulüp." }
             },
             "oyuncular": {
@@ -877,7 +878,7 @@
 
         let radarChartInstance = null;
 
-        // Editor League Logoları ve Takımları
+        // 1. Editor League Logoları ve Takımları
         const TEAM_LOGOS_EDITOR = {
             "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
@@ -888,7 +889,6 @@
         };
         const SABIT_TAKIMLAR_EDITOR = ["Madeus FC", "OOG FC", "Tgf Juniors", "Bursaspor FC", "MetoSpor", "Anaokulu FC"];
 
-        // Aktif takımları ve logoları dinamik çekecek proxy fonksiyonlar
         function getActiveTeams() {
             return currentLeague === 'editor' ? SABIT_TAKIMLAR_EDITOR : normalLeagueData.takimlar;
         }
@@ -900,7 +900,7 @@
             return 'https://via.placeholder.com/150/0f172a/22c55e?text=' + tName.split(' ')[0];
         }
 
-        // --- LİG DEĞİŞTİRME MOTORU ---
+        // --- LİG DEĞİŞTİRME MOTORU VE BAŞLIK AYARLARI ---
         function changeLeague(leagueType) {
             currentLeague = leagueType;
             const body = document.body;
@@ -909,25 +909,21 @@
             const mainLogoText = document.getElementById('mainLogoText');
             const standingsTitle = document.getElementById('standingsTitle');
 
-            // UI ve Renk Değişimleri
             if (leagueType === 'editor') {
                 body.classList.remove('normal-league-active');
                 btnEl.className = "league-toggle-btn active-el";
                 btnNl.className = "league-toggle-btn";
-                mainLogoText.innerText = "EDITOR LEAGUE";
-                standingsTitle.innerText = "📊 SEZON PUAN DURUMU";
+                mainLogoText.innerText = "1. EDITOR LEAGUE";
+                standingsTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
             } else {
                 body.classList.add('normal-league-active');
                 btnEl.className = "league-toggle-btn";
                 btnNl.className = "league-toggle-btn active-nl";
-                mainLogoText.innerText = "NORMAL LİG";
-                standingsTitle.innerText = "📊 NORMAL LİG PUAN DURUMU";
+                mainLogoText.innerText = "EDITOR LEAGUE";
+                standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
             }
 
-            // Gizlenmiş olabilecek takım detay panelini kapat
             document.getElementById('teamDetailPanel').style.display = "none";
-
-            // Verileri Yeniden Filtrele ve Bas
             refreshDashboardView();
         }
 
@@ -954,7 +950,6 @@
                 const data = await response.json();
                 globalData = data;
 
-                // Eski isim düzeltmeleri (Anaokulu FC)
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => {
                         if (o.takim === "Hayatokulu FC" || o.takim === "Anaokulu FC") o.takim = "Anaokulu FC";
@@ -975,7 +970,6 @@
             }
         }
 
-        // Hangi lig seçiliyse ekranı ona göre baştan çizen fonksiyon
         function refreshDashboardView() {
             let activeMatches = [];
             
@@ -1145,7 +1139,6 @@
             selRight.innerHTML = optionsHtml;
             if(oyuncular.length > 1) selRight.selectedIndex = 1;
             
-            // Eğer radar grafik önceden varsa yok et ve yeniden temiz kur
             if (window.versusRadarChart && radarChartInstance) {
                 radarChartInstance.destroy();
             }
