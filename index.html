@@ -849,7 +849,7 @@
     <script>
         let currentLeague = 'editor';
         
-        // LİGLERİN KENDİNE ÖZEL API ADRESLERİ
+        // İKİ LİGİN KENDİNE ÖZEL API ADRESLERİ
         const API_URLS = {
             'editor': 'https://yepfella.onrender.com/api/puan-durumu', // 1. Lig
             'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  // Ana Lig
@@ -860,14 +860,15 @@
         let radarChartInstance = null;
         let activeLeagueTeams = [];
 
-        // Bilinen Özel Logolar
+        // Bilinen Özel Logolar ve Manuel Eşleşmeler
         const SPECIAL_LOGOS = {
             "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
             "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
             "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
-            "Bambamspor FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a396f7b&is=6a381dfb&hm=2b7172c09f9c135bb368c21d6a2d4e23d3ffdb6ad33c26cd0f59aa7af41f1ffe&=&format=webp&quality=lossless&width=930&height=930"
+            "Anaokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461",
+            "Bambamspor FC": "https://via.placeholder.com/150/0f172a/fff?text=BB"
         };
 
         function getTeamLogo(tName) {
@@ -900,12 +901,10 @@
                 standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
             }
 
-            // Tabloları temizleyip yükleniyor durumuna getir
             document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
             document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLEMESİ BAŞLATILIYOR...</div>`;
             document.getElementById('teamDetailPanel').style.display = "none";
 
-            // Yeni ligin API verisini çek
             await loadDashboardData();
         }
 
@@ -928,40 +927,48 @@
 
         async function loadDashboardData() {
             try {
-                // Aktif ligin API URL'sine istek atıyoruz
                 const response = await fetch(API_URLS[currentLeague]);
                 const data = await response.json();
                 globalData = data;
 
-                // Veri düzeltmeleri ve temizlikleri (Eski okul isimleri güncelleniyor)
+                // Veri Düzeltmeleri ve Normalize Etme (Harf uyuşmazlıkları ve patlamaları önler)
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => {
-                        if (o.takim === "Hayatokulu FC" || o.takim === "Anaokulu FC") o.takim = "Bambamspor FC";
+                        if (o.takim === "Hayatokulu FC" || o.takim === "Anaokulu FC") o.takim = "Anaokulu FC";
+                        if (o.takim === "Madeus Fc") o.takim = "Madeus FC";
+                        if (o.takim === "Bambamspor Fc") o.takim = "Bambamspor FC";
                     });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        if (m.ev === "Hayatokulu FC" || m.ev_sahibi === "Hayatokulu FC") { m.ev = "Bambamspor FC"; m.ev_sahibi = "Bambamspor FC"; }
-                        if (m.dep === "Hayatokulu FC" || m.deplasman === "Hayatokulu FC") { m.dep = "Bambamspor FC"; m.deplasman = "Bambamspor FC"; }
+                        let evTakim = m.ev_sahibi || m.ev || "";
+                        let depTakim = m.deplasman || m.dep || "";
+                        
+                        if (evTakim === "Hayatokulu FC") evTakim = "Anaokulu FC";
+                        if (depTakim === "Hayatokulu FC") depTakim = "Anaokulu FC";
+                        if (evTakim === "Madeus Fc") evTakim = "Madeus FC";
+                        if (depTakim === "Madeus Fc") depTakim = "Madeus FC";
+                        if (evTakim === "Bambamspor Fc") evTakim = "Bambamspor FC";
+                        if (depTakim === "Bambamspor Fc") depTakim = "Bambamspor FC";
+
+                        m.ev = evTakim; m.ev_sahibi = evTakim;
+                        m.dep = depTakim; m.deplasman = depTakim;
                     });
                 }
 
-                // Gelen API içindeki tüm benzersiz takımları tespit et
+                // API'den dinamik olarak benzersiz ve geçerli takımları topla
                 const allTeams = new Set();
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => { if(o.takim && o.takim !== 'Serbest') allTeams.add(o.takim); });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        const ev = m.ev_sahibi || m.ev;
-                        const dep = m.deplasman || m.dep;
-                        if(ev) allTeams.add(ev);
-                        if(dep) allTeams.add(dep);
+                        if(m.ev) allTeams.add(m.ev);
+                        if(m.dep) allTeams.add(m.dep);
                     });
                 }
-                activeLeagueTeams = Array.from(allTeams);
+                activeLeagueTeams = Array.from(allTeams).filter(t => t && t.trim() !== "");
 
-                // Arayüzü gelen veriye göre sıfırdan inşa et
                 refreshDashboardView();
 
             } catch (error) {
@@ -971,10 +978,7 @@
         }
 
         function refreshDashboardView() {
-            // Sadece bu API'den gelen oyuncular
             cachedPlayersList = Object.values(globalData.oyuncular || {});
-            
-            // Sadece bu API'den gelen maçlar
             const activeMatches = globalData.maclar || [];
 
             renderStandings(activeMatches);
@@ -997,11 +1001,12 @@
                 const depTakim = mac.deplasman || mac.dep;
                 if(!stats[evTakim] || !stats[depTakim]) return;
 
+                if(!mac.skor || !mac.skor.includes('-')) return;
                 const skorParcalari = mac.skor.split('-');
-                if(skorParcalari.length !== 2) return;
                 
                 const evGol = parseInt(skorParcalari[0].trim());
                 const depGol = parseInt(skorParcalari[1].trim());
+                if(isNaN(evGol) || isNaN(depGol)) return;
 
                 stats[evTakim].om += 1;
                 stats[depTakim].om += 1;
@@ -1144,9 +1149,6 @@
             selRight.innerHTML = optionsHtml;
             if(oyuncular.length > 1) selRight.selectedIndex = 1;
             
-            if (window.versusRadarChart && radarChartInstance) {
-                radarChartInstance.destroy();
-            }
             buildRadarChart();
             updateVersusStats();
         }
@@ -1195,7 +1197,11 @@
         }
 
         function buildRadarChart() {
-            const ctx = document.getElementById('versusRadarChart').getContext('2d');
+            const canvas = document.getElementById('versusRadarChart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if(radarChartInstance) { radarChartInstance.destroy(); }
+            
             const colorLeft = currentLeague === 'editor' ? '#38bdf8' : '#22c55e';
             const colorLeftBg = currentLeague === 'editor' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(34, 197, 94, 0.2)';
 
@@ -1308,7 +1314,7 @@
             if (event.target == modal) modal.classList.remove('open');
         }
 
-        // İlk yüklemede 1. Lig (yepfella) verilerini otomatik getirir
+        // İlk açılışta 1. Lig verilerini çekerek başlar
         loadDashboardData();
     </script>
 </body>
