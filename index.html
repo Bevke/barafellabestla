@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1. Editor League & Editor League | Hub</title>
+    
+    <meta property="og:title" content="Editor League | Resmi Veri Merkezi & Hub" />
+    <meta property="og:description" content="Editor League ve 1. Editor League lig turnuvalarının anlık puan durumu, canlı oyuncu krallıkları, istatistikleri ve detaylı takım kıyaslama motoru." />
+    <meta property="og:image" content="/assets/img/logo.png" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#38bdf8" />
+    
+    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -823,7 +832,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="modal" id="playerModal">
@@ -848,13 +856,12 @@
 
     <script>
         let currentLeague = 'editor';
-        
         // İKİ LİGİN KENDİNE ÖZEL API ADRESLERİ
         const API_URLS = {
-            'editor': 'https://yepfella.onrender.com/api/puan-durumu', // 1. Lig
-            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  // Ana Lig
+            'editor': 'https://yepfella.onrender.com/api/puan-durumu',
+            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'
         };
-        
+
         let globalData = {};
         let cachedPlayersList = [];
         let radarChartInstance = null;
@@ -862,50 +869,92 @@
 
         // Bilinen Özel Logolar ve Manuel Eşleşmeler
         const SPECIAL_LOGOS = {
-            "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
+            "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
+            "OOG": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
             "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
-            "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
-            "Anaokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461",
-            "Bambamspor FC": "https://via.placeholder.com/150/0f172a/fff?text=BB"
+            "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892695426109471/Gemini_Generated_Image_lsu7fllsu7fllsu7-Photoroom.png?ex=6a344be9&is=6a32fa69&hm=9b776bd376518105ca8654c60195ee91807d96a7ef6469dfcae7efdf7ca6d47b&=&format=webp&quality=lossless&width=930&height=930",
+            "Bambamspor": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
+            "Messi Fc": "https://media.discordapp.net/attachments/1285998157552947231/1519469532031353034/lionel-messi-logo-png_seeklogo-274864.png?ex=6a3dabc6&is=6a3c5a46&hm=2afecf95603b9a25d128ccfb6eb4ebf5154a1bc7be90aed730bb48c96a3c1746&=&format=webp&quality=lossless&width=400&height=400",
+            "Vanparisspor": "https://cdn.discordapp.com/attachments/1271488924899868765/1519470508138172507/ChatGPT_Image_25_Haz_2026_01_31_35-Photoroom.png?ex=6a3dacaf&is=6a3c5b2f&hm=f9b5a06b7aa88e7c1828de4a992c54113c12455fbddefcb8e8d6f0d4d7d5ba5d&"
         };
 
-        function getTeamLogo(tName) {
-            if (SPECIAL_LOGOS[tName]) return SPECIAL_LOGOS[tName];
-            const initials = tName ? tName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase() : 'FC';
-            const bg = currentLeague === 'editor' ? '0f172a' : '040d06';
-            const textClr = currentLeague === 'editor' ? '38bdf8' : '22c55e';
-            return `https://via.placeholder.com/150/${bg}/${textClr}?text=${initials}`;
+        function getTeamLogo(teamName) {
+            if(!teamName) return 'https://via.placeholder.com/100/0f172a/fff?text=EL';
+            const clean = teamName.trim();
+            if (SPECIAL_LOGOS[clean]) return SPECIAL_LOGOS[clean];
+            
+            // Kısmi eşleşme kontrolü (Örn: OOG veya OOG FC durumları için koruma)
+            for (let key in SPECIAL_LOGOS) {
+                if(clean.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(clean.toLowerCase())) {
+                    return SPECIAL_LOGOS[key];
+                }
+            }
+            return `https://via.placeholder.com/100/0f172a/fff?text=${encodeURIComponent(clean.substring(0,3).toUpperCase())}`;
         }
 
-        async function changeLeague(leagueType) {
-            currentLeague = leagueType;
-            const body = document.body;
+        async function loadLeagueData(leagueKey) {
+            showPulseLoaders();
+            try {
+                const response = await fetch(API_URLS[leagueKey]);
+                if (!response.ok) throw new Error("HTTP Hata: " + response.status);
+                const data = await response.json();
+                globalData = data;
+                
+                buildPuanDurumu(data.puan_durumu || []);
+                buildPlayersGrid(data.oyuncular || []);
+                buildKralliklar(data.oyuncular || []);
+                buildTeamsSection(data.takimlar || [], data.oyuncular || [], data.maclar || []);
+                buildFixtures(data.maclar || []);
+                initVersusSelects(data.oyuncular || []);
+                
+            } catch (error) {
+                console.error("Veri çekme hatası:", error);
+                const msg = `<tr><td colspan="10" style="color:red; text-align:center; padding:30px;">Veri motoru yüklenemedi. API yanıt vermiyor olabilir.</td></tr>`;
+                document.getElementById('puanDurumuTableBody').innerHTML = msg;
+            }
+        }
+
+        function changeLeague(type) {
+            if (currentLeague === type) return;
+            currentLeague = type;
+            
             const btnEl = document.getElementById('btnEl');
             const btnNl = document.getElementById('btnNl');
-            const mainLogoText = document.getElementById('mainLogoText');
-            const standingsTitle = document.getElementById('standingsTitle');
+            const mainTitle = document.getElementById('mainLogoText');
+            const stTitle = document.getElementById('standingsTitle');
 
-            if (leagueType === 'editor') {
-                body.classList.remove('normal-league-active');
-                btnEl.className = "league-toggle-btn active-el";
-                btnNl.className = "league-toggle-btn";
-                mainLogoText.innerText = "1. EDITOR LEAGUE";
-                standingsTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
+            if (type === 'editor') {
+                document.body.classList.remove('normal-league-active');
+                btnEl.classList.add('active-el');
+                btnNl.classList.remove('active-nl');
+                mainTitle.innerText = "1. EDITOR LEAGUE";
+                stTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
             } else {
-                body.classList.add('normal-league-active');
-                btnEl.className = "league-toggle-btn";
-                btnNl.className = "league-toggle-btn active-nl";
-                mainLogoText.innerText = "EDITOR LEAGUE";
-                standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
+                document.body.classList.add('normal-league-active');
+                btnEl.classList.remove('active-el');
+                btnNl.classList.add('active-nl');
+                mainTitle.innerText = "EDITOR LEAGUE";
+                stTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
             }
 
-            document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
-            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLEMESİ BAŞLATILIYOR...</div>`;
-            document.getElementById('teamDetailPanel').style.display = "none";
+            document.getElementById('teamDetailPanel').style.display = 'none';
+            loadLeagueData(type);
+        }
 
-            await loadDashboardData();
+        function showPulseLoaders() {
+            const loaders = ['puanDurumuTableBody', 'playerGrid', 'golTableBody', 'asistTableBody', 'kurtarisTableBody', 'fixturesTableBody'];
+            loaders.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    if(id.includes('Body')) {
+                        el.innerHTML = `<tr><td colspan="12" class="loading-pulse">Siber Ağa Bağlanılıyor...</td></tr>`;
+                    } else {
+                        el.innerHTML = `<div class="loading-pulse">Siber Ağa Bağlanılıyor...</div>`;
+                    }
+                }
+            });
         }
 
         function switchTab(tabId) {
@@ -913,368 +962,309 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            if(window.event && window.event.currentTarget) {
-                window.event.currentTarget.classList.add('active');
+            event.currentTarget.classList.add('active');
+            if(tabId === 'vs-panel') {
+                setTimeout(updateVersusStats, 50);
             }
         }
 
-        function getTodayDateString() {
-            const today = new Date();
-            const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            return `${dd}.${mm}.${today.getFullYear()}`;
-        }
-
-        async function loadDashboardData() {
-            try {
-                const response = await fetch(API_URLS[currentLeague]);
-                const data = await response.json();
-                globalData = data;
-
-                // API'den gelen verileri tamamen serbest bırakıyoruz, isim değiştirme mantığı kaldırıldı.
-                if (data.maclar) {
-                    data.maclar.forEach(m => {
-                        let evTakim = m.ev_sahibi || m.ev || "";
-                        let depTakim = m.deplasman || m.dep || "";
-                        m.ev = evTakim; m.ev_sahibi = evTakim;
-                        m.dep = depTakim; m.deplasman = depTakim;
-                    });
-                }
-
-                // API'den dinamik olarak benzersiz ve geçerli takımları topla
-                const allTeams = new Set();
-                if (data.oyuncular) {
-                    Object.values(data.oyuncular).forEach(o => { if(o.takim && o.takim !== 'Serbest') allTeams.add(o.takim); });
-                }
-                if (data.maclar) {
-                    data.maclar.forEach(m => {
-                        if(m.ev) allTeams.add(m.ev);
-                        if(m.dep) allTeams.add(m.dep);
-                    });
-                }
-                activeLeagueTeams = Array.from(allTeams).filter(t => t && t.trim() !== "");
-
-                refreshDashboardView();
-
-            } catch (error) {
-                console.error("Dashboard Engine Error:", error);
-                document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ef4444;">Veri motoru yüklenirken hata oluştu! API açık mı moruk?</td></tr>`;
-            }
-        }
-
-        function refreshDashboardView() {
-            cachedPlayersList = Object.values(globalData.oyuncular || {});
-            const activeMatches = globalData.maclar || [];
-
-            renderStandings(activeMatches);
-            renderPlayers(cachedPlayersList);
-            renderLeaderboards(cachedPlayersList);
-            initVersusSelectors(cachedPlayersList);
-            renderTeams();
-            renderFixtures(activeMatches);
-        }
-
-        function renderStandings(maclar) {
-            let stats = {};
-
-            activeLeagueTeams.forEach(t => {
-                stats[t] = { name: t, om: 0, g: 0, b: 0, m: 0, ag: 0, yg: 0, av: 0, p: 0 };
-            });
-
-            maclar.forEach(mac => {
-                const evTakim = mac.ev_sahibi || mac.ev;
-                const depTakim = mac.deplasman || mac.dep;
-                if(!stats[evTakim] || !stats[depTakim]) return;
-
-                if(!mac.skor || !mac.skor.includes('-')) return;
-                const skorParcalari = mac.skor.split('-');
-                
-                const evGol = parseInt(skorParcalari[0].trim());
-                const depGol = parseInt(skorParcalari[1].trim());
-                if(isNaN(evGol) || isNaN(depGol)) return;
-
-                stats[evTakim].om += 1;
-                stats[depTakim].om += 1;
-                stats[evTakim].ag += evGol;
-                stats[evTakim].yg += depGol;
-                stats[depTakim].ag += depGol;
-                stats[depTakim].yg += evGol;
-
-                if(evGol > depGol) {
-                    stats[evTakim].g += 1;
-                    stats[evTakim].p += 3;
-                    stats[depTakim].m += 1;
-                } else if(evGol < depGol) {
-                    stats[depTakim].g += 1;
-                    stats[depTakim].p += 3;
-                    stats[evTakim].m += 1;
-                } else {
-                    stats[evTakim].b += 1;
-                    stats[evTakim].p += 1;
-                    stats[depTakim].b += 1;
-                    stats[depTakim].p += 1;
-                }
-            });
-
-            let siralamaListesi = Object.values(stats);
-            siralamaListesi.forEach(s => { s.av = s.ag - s.yg; });
-            siralamaListesi.sort((a, b) => b.p - a.p || b.av - a.av || b.ag - a.ag);
-
-            const body = document.getElementById('puanDurumuTableBody');
-            if(siralamaListesi.length === 0) {
-                body.innerHTML = `<tr><td colspan="10" style="text-align:center; color:var(--text-muted);">Bu API linkinde henüz hiçbir maç veya takım verisi girilmemiş.</td></tr>`;
+        function buildPuanDurumu(list) {
+            const tbody = document.getElementById('puanDurumuTableBody');
+            if(!list || list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;">Kayıtlı takım bulunamadı.</td></tr>`;
                 return;
             }
-
-            body.innerHTML = siralamaListesi.map((t, i) => {
-                return `
+            let html = "";
+            list.forEach((t, index) => {
+                const logo = getTeamLogo(t.takim);
+                html += `
                     <tr>
-                        <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
+                        <td style="font-family:'Orbitron'; font-weight:bold; color:var(--text-muted);">${index + 1}</td>
                         <td>
                             <div class="team-inline">
-                                <img src="${getTeamLogo(t.name)}" class="mini-logo" alt="${t.name}">
-                                <span style="font-weight:600;">${t.name}</span>
+                                <img src="${logo}" class="mini-logo" alt="logo">
+                                <span style="font-weight:600;">${t.takim}</span>
                             </div>
                         </td>
-                        <td style="text-align:center; font-weight:600;">${t.om}</td>
-                        <td style="text-align:center; color:var(--neon-green);">${t.g}</td>
-                        <td style="text-align:center; color:var(--text-muted);">${t.b}</td>
-                        <td style="text-align:center; color:#ef4444;">${t.m}</td>
-                        <td style="text-align:center;">${t.ag}</td>
-                        <td style="text-align:center;">${t.yg}</td>
-                        <td style="text-align:center; font-weight:bold;">${t.av > 0 ? '+'+t.av : t.av}</td>
-                        <td style="text-align:center; font-weight:900; color:var(--neon-gold); font-size:1.05rem;">${t.p}</td>
+                        <td style="text-align: center; font-weight:bold;">${t.OM || 0}</td>
+                        <td style="text-align: center; color:var(--neon-green);">${t.G || 0}</td>
+                        <td style="text-align: center; color:var(--text-muted);">${t.B || 0}</td>
+                        <td style="text-align: center; color:red;">${t.M || 0}</td>
+                        <td style="text-align: center;">${t.AG || 0}</td>
+                        <td style="text-align: center;">${t.YG || 0}</td>
+                        <td style="text-align: center; color:var(--neon-blue);">${t.AV || 0}</td>
+                        <td style="text-align: center; font-family:'Orbitron'; font-weight:900; color:var(--neon-gold); font-size:1.05rem;">${t.P || 0}</td>
                     </tr>
                 `;
-            }).join('');
+            });
+            tbody.innerHTML = html;
         }
 
-        function renderPlayers(oyuncular) {
-            const grid = document.getElementById('playerGrid');
-            if(oyuncular.length === 0) {
-                grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted);">Bu ligde lisanslı oyuncu bulunamadı.</div>`;
-                return;
-            }
-            grid.innerHTML = '';
-
-            oyuncular.forEach(oyuncu => {
-                const defAvatar = oyuncu.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
-                const card = document.createElement('div');
-                card.className = 'player-card';
-                card.innerHTML = `
-                    <div class="avatar-frame">
-                        <div class="avatar-glow"></div>
-                        <img src="${defAvatar}" class="player-avatar" alt="${oyuncu.futbolcu_ismi}">
-                    </div>
-                    <div class="p-name">${oyuncu.futbolcu_ismi}</div>
-                    <div class="p-team">${oyuncu.takim || 'Serbest'}</div>
-                    <div class="p-badge">${oyuncu.mevki || 'Girilmedi'}</div>
-                `;
-                card.onclick = () => openProfile(oyuncu);
-                grid.appendChild(card);
-            });
+        function buildPlayersGrid(players) {
+            cachedPlayersList = players || [];
+            filterPlayers(); 
         }
 
         function filterPlayers() {
             const query = document.getElementById('playerSearchInput').value.toLowerCase().trim();
-            const filtrelenmis = cachedPlayersList.filter(o => 
-                o.futbolcu_ismi.toLowerCase().includes(query) || 
-                (o.takim && o.takim.toLowerCase().includes(query))
-            );
-            renderPlayers(filtrelenmis);
-        }
-
-        function renderLeaderboards(oyuncular) {
-            const getLogoHtml = (tName) => {
-                if(!tName || tName === 'Serbest') return '';
-                return `<img src="${getTeamLogo(tName)}" class="mini-logo" alt="${tName}">`;
-            };
-
-            const golSirali = [...oyuncular].sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
-            document.getElementById('golTableBody').innerHTML = golSirali.length ? golSirali.map((o, i) => `
-                <tr>
-                    <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
-                    <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
-                </tr>
-            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
-
-            const asistSirali = [...oyuncular].sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
-            document.getElementById('asistTableBody').innerHTML = asistSirali.length ? asistSirali.map((o, i) => `
-                <tr>
-                    <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
-                    <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
-                </tr>
-            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
-
-            const kurtarisSirali = [...oyuncular].sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
-            document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.length ? kurtarisSirali.map((o, i) => `
-                <tr>
-                    <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
-                    <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
-                </tr>
-            `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
-        }
-
-        function initVersusSelectors(oyuncular) {
-            const selLeft = document.getElementById('vsSelectLeft');
-            const selRight = document.getElementById('vsSelectRight');
-            if(oyuncular.length === 0) {
-                selLeft.innerHTML = '<option>-</option>';
-                selRight.innerHTML = '<option>-</option>';
+            const grid = document.getElementById('playerGrid');
+            if(cachedPlayersList.length === 0) {
+                grid.innerHTML = `<div class="loading-pulse">Aktif Oyuncu Listesi Yok.</div>`;
                 return;
             }
-            let optionsHtml = oyuncular.map(o => `<option value="${o.futbolcu_ismi}">${o.futbolcu_ismi}</option>`).join('');
-            selLeft.innerHTML = optionsHtml;
-            selRight.innerHTML = optionsHtml;
-            if(oyuncular.length > 1) selRight.selectedIndex = 1;
             
-            buildRadarChart();
+            const filtered = cachedPlayersList.filter(p => p.futbolcu_ismi && p.futbolcu_ismi.toLowerCase().includes(query));
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div style="padding:20px; color:var(--text-muted);">Eşleşen oyuncu bulunamadı.</div>`;
+                return;
+            }
+
+            let html = "";
+            filtered.forEach(p => {
+                const defAvatar = p.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
+                const esc = JSON.stringify(p).replace(/"/g, '&quot;');
+                html += `
+                    <div class="player-card" onclick="openProfile(${esc})">
+                        <div class="avatar-frame">
+                            <div class="avatar-glow"></div>
+                            <img src="${defAvatar}" class="player-avatar" alt="A">
+                        </div>
+                        <div class="p-name">${p.futbolcu_ismi}</div>
+                        <div class="p-team">${p.takim || 'Serbest'}</div>
+                        <div class="p-badge">${p.mevki || 'Belirtilmedi'}</div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function buildKralliklar(players) {
+            if(!players || players.length === 0) return;
+
+            // Gol Krallığı
+            const golS = [...players].filter(p => p.G > 0).sort((a,b) => (b.G || 0) - (a.G || 0)).slice(0, 10);
+            let gHtml = "";
+            if(golS.length===0) gHtml=`<tr><td colspan="4" style="text-align:center;">Veri Yok</td></tr>`;
+            golS.forEach((p, i) => {
+                gHtml += `<tr><td>${i+1}</td><td style="font-weight:600; color:#fff;">${p.futbolcu_ismi}</td><td>${p.takim || 'Serbest'}</td><td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${p.G}</td></tr>`;
+            });
+            document.getElementById('golTableBody').innerHTML = gHtml;
+
+            // Asist Krallığı
+            const asistS = [...players].filter(p => p.A > 0).sort((a,b) => (b.A || 0) - (a.A || 0)).slice(0, 10);
+            let aHtml = "";
+            if(asistS.length===0) aHtml=`<tr><td colspan="4" style="text-align:center;">Veri Yok</td></tr>`;
+            asistS.forEach((p, i) => {
+                aHtml += `<tr><td>${i+1}</td><td style="font-weight:600; color:#fff;">${p.futbolcu_ismi}</td><td>${p.takim || 'Serbest'}</td><td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${p.A}</td></tr>`;
+            });
+            document.getElementById('asistTableBody').innerHTML = aHtml;
+
+            // Kurtarış Krallığı
+            const kurtS = [...players].filter(p => p.K > 0).sort((a,b) => (b.K || 0) - (a.K || 0)).slice(0, 10);
+            let kHtml = "";
+            if(kurtS.length===0) kHtml=`<tr><td colspan="4" style="text-align:center;">Veri Yok</td></tr>`;
+            kurtS.forEach((p, i) => {
+                kHtml += `<tr><td>${i+1}</td><td style="font-weight:600; color:#fff;">${p.futbolcu_ismi}</td><td>${p.takim || 'Serbest'}</td><td style="text-align:right; font-weight:bold; color:var(--neon-gold);">${p.K}</td></tr>`;
+            });
+            document.getElementById('kurtarisTableBody').innerHTML = kHtml;
+        }
+
+        function buildTeamsSection(teams, players, matches) {
+            activeLeagueTeams = teams || [];
+            const grid = document.getElementById('teamsGrid');
+            if(activeLeagueTeams.length === 0) {
+                grid.innerHTML = `<div style="color:var(--text-muted)">Takım verisi yüklenemedi.</div>`;
+                return;
+            }
+            let html = "";
+            activeLeagueTeams.forEach(t => {
+                const logo = getTeamLogo(t.isim);
+                html += `
+                    <div class="team-card" onclick="showTeamDetail('${t.isim.replace(/'/g, "\\'")}')">
+                        <div class="avatar-frame">
+                            <div class="avatar-glow" style="background:var(--neon-gold)"></div>
+                            <img src="${logo}" class="team-logo-img" alt="L">
+                        </div>
+                        <div class="p-name" style="font-family:'Orbitron'; font-size:1.15rem;">${t.isim}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Kadro & Fikstür Detayları</div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function showTeamDetail(tName) {
+            const panel = document.getElementById('teamDetailPanel');
+            panel.style.display = 'block';
+            document.getElementById('dtTeamName').innerText = tName;
+            
+            const found = activeLeagueTeams.find(x => x.isim === tName);
+            document.getElementById('dtTeamDesc').innerText = found && found.acıklama ? found.acıklama : "Resmi Lig Katılımcısı Kulüp.";
+
+            // Kadro Filtreleme
+            const tPlayers = cachedPlayersList.filter(p => p.takim === tName);
+            const pList = document.getElementById('dtPlayersList');
+            if(tPlayers.length===0) pList.innerHTML=`<li>Kadro verisi bulunamadı.</li>`;
+            else {
+                pList.innerHTML = tPlayers.map(p => `<li><span>🏃 ${p.futbolcu_ismi}</span><span style="color:var(--text-muted); font-size:0.8rem;">${p.mevki || 'Mevki Yok'}</span></li>`).join('');
+            }
+
+            // Maç Filtreleme
+            const allMatches = globalData.maclar || [];
+            const tMatches = allMatches.filter(m => m.ev_sahibi === tName || m.deplasman === tName);
+            const mList = document.getElementById('dtMatchesList');
+            if(tMatches.length===0) mList.innerHTML=`<li>Henüz oynanmış resmi maçı yok.</li>`;
+            else {
+                mList.innerHTML = tMatches.map(m => {
+                    const isEv = m.ev_sahibi === tName;
+                    const resultColor = (isEv && m.ev_skor > m.dep_skor) || (!isEv && m.dep_skor > m.ev_skor) ? 'var(--neon-green)' : (m.ev_skor === m.dep_skor ? 'var(--text-muted)' : 'red');
+                    return `<li><span>vs ${isEv ? m.deplasman : m.ev_sahibi}</span><span style="font-weight:bold; color:${resultColor}">${m.ev_skor} - ${m.dep_skor}</span></li>`;
+                }).join('');
+            }
+            
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function buildFixtures(maclar) {
+            const tbody = document.getElementById('fixturesTableBody');
+            if(!maclar || maclar.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Henüz oynanmış lig maçı datası bulunmuyor.</td></tr>`;
+                return;
+            }
+            let html = "";
+            maclar.forEach(m => {
+                html += `
+                    <tr>
+                        <td style="font-size:0.8rem; color:var(--text-muted);">${m.tarih_saat || 'Belirtilmedi'}</td>
+                        <td>
+                            <div class="team-inline">
+                                <img src="${getTeamLogo(m.ev_sahibi)}" class="mini-logo">
+                                <span>${m.ev_sahibi}</span>
+                            </div>
+                        </td>
+                        <td style="text-align:center; font-family:'Orbitron'; font-weight:900; font-size:1.1rem; letter-spacing:2px; background:rgba(255,255,255,0.01)">
+                            ${m.ev_skor} - ${m.dep_skor}
+                        </td>
+                        <td>
+                            <div class="team-inline">
+                                <img src="${getTeamLogo(m.deplasman)}" class="mini-logo">
+                                <span>${m.deplasman}</span>
+                            </div>
+                        </td>
+                        <td style="color:var(--neon-gold); font-weight:600;">⭐ ${m.motm || 'Seçilmedi'}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function initVersusSelects(players) {
+            const selLeft = document.getElementById('vsSelectLeft');
+            const selRight = document.getElementById('vsSelectRight');
+            if(!players || players.length === 0) return;
+
+            let opts = players.map((p, i) => `<option value="${i}">${p.futbolcu_ismi} (${p.takim || 'Serbest'})</option>`).join('');
+            selLeft.innerHTML = opts;
+            selRight.innerHTML = opts;
+
+            if(players.length > 1) selRight.value = 1; 
             updateVersusStats();
         }
 
         function updateVersusStats() {
-            const pNameLeft = document.getElementById('vsSelectLeft').value;
-            const pNameRight = document.getElementById('vsSelectRight').value;
-            
-            const oyuncular = cachedPlayersList;
-            const pLeft = oyuncular.find(o => o.futbolcu_ismi === pNameLeft) || {};
-            const pRight = oyuncular.find(o => o.futbolcu_ismi === pNameRight) || {};
+            const players = globalData.oyuncular || [];
+            if(players.length === 0) return;
 
-            document.getElementById('vsAvatarLeft').src = pLeft.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
-            document.getElementById('vsNameLeft').innerText = pLeft.futbolcu_ismi || '-';
+            const pLeft = players[document.getElementById('vsSelectLeft').value];
+            const pRight = players[document.getElementById('vsSelectRight').value];
+
+            if(!pLeft || !pRight) return;
+
+            // DOM Güncellemeleri
+            document.getElementById('vsNameLeft').innerText = pLeft.futbolcu_ismi;
             document.getElementById('vsTeamLeft').innerText = pLeft.takim || 'Serbest';
+            document.getElementById('vsAvatarLeft').src = pLeft.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
 
-            document.getElementById('vsAvatarRight').src = pRight.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
-            document.getElementById('vsNameRight').innerText = pRight.futbolcu_ismi || '-';
+            document.getElementById('vsNameRight').innerText = pRight.futbolcu_ismi;
             document.getElementById('vsTeamRight').innerText = pRight.takim || 'Serbest';
+            document.getElementById('vsAvatarRight').src = pRight.avatar || 'https://via.placeholder.com/150/0f172a/fff?text=EL';
 
-            const stats = ['Maç', 'Gol', 'Asist', 'Int', 'Save'];
-            const keys = { 'Maç': 'O', 'Gol': 'G', 'Asist': 'A', 'Int': 'INT', 'Save': 'K' };
+            // İstatistik Çubukları Motoru
+            const statsConfig = [
+                { key: 'O', barL: 'barLeftMaç', barR: 'barRightMaç', valL: 'valLeftMaç', valR: 'valRightMaç' },
+                { key: 'G', barL: 'barLeftGol', barR: 'barRightGol', valL: 'valLeftGol', valR: 'valRightGol' },
+                { key: 'A', barL: 'barLeftAsist', barR: 'barRightAsist', valL: 'valLeftAsist', valR: 'valRightAsist' },
+                { key: 'INT', barL: 'barLeftInt', barR: 'barRightInt', valL: 'valLeftInt', valR: 'valRightInt' },
+                { key: 'K', barL: 'barLeftSave', barR: 'barRightSave', valL: 'valLeftSave', valR: 'valRightSave' }
+            ];
 
-            stats.forEach(stat => {
-                const key = keys[stat];
-                const vLeft = Number(pLeft[key] || 0);
-                const vRight = Number(pRight[key] || 0);
-                document.getElementById(`valLeft${stat}`).innerText = vLeft;
-                document.getElementById(`valRight${stat}`).innerText = vRight;
+            statsConfig.forEach(cfg => {
+                const vL = Number(pLeft[cfg.key]) || 0;
+                const vR = Number(pRight[cfg.key]) || 0;
+                document.getElementById(cfg.valL).innerText = vL;
+                document.getElementById(cfg.valR).innerText = vR;
 
-                let total = vLeft + vRight;
-                let pctLeft = total > 0 ? (vLeft / total) * 100 : 0;
-                let pctRight = total > 0 ? (vRight / total) * 100 : 0;
-
-                document.getElementById(`barLeft${stat}`).style.width = pctLeft + '%';
-                document.getElementById(`barRight${stat}`).style.width = pctRight + '%';
-            });
-
-            if (radarChartInstance) {
-                radarChartInstance.data.datasets[0].label = pLeft.futbolcu_ismi || '1. Oyuncu';
-                radarChartInstance.data.datasets[0].data = [Number(pLeft.G||0), Number(pLeft.A||0), Number(pLeft.K||0), Number(pLeft.INT||0), Number(pLeft.O||0)];
-                radarChartInstance.data.datasets[1].label = pRight.futbolcu_ismi || '2. Oyuncu';
-                radarChartInstance.data.datasets[1].data = [Number(pRight.G||0), Number(pRight.A||0), Number(pRight.K||0), Number(pRight.INT||0), Number(pRight.O||0)];
-                radarChartInstance.update();
-            }
-        }
-
-        function buildRadarChart() {
-            const canvas = document.getElementById('versusRadarChart');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            if(radarChartInstance) { radarChartInstance.destroy(); }
-            
-            const colorLeft = currentLeague === 'editor' ? '#38bdf8' : '#22c55e';
-            const colorLeftBg = currentLeague === 'editor' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(34, 197, 94, 0.2)';
-
-            radarChartInstance = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['GOL', 'ASİST', 'KURTARIŞ', 'INTERCEPT', 'PAS/MAÇ'],
-                    datasets: [
-                        { label: '1. Oyuncu', data: [0, 0, 0, 0, 0], backgroundColor: colorLeftBg, borderColor: colorLeft, pointBackgroundColor: colorLeft, borderWidth: 2 },
-                        { label: '2. Oyuncu', data: [0, 0, 0, 0, 0], backgroundColor: 'rgba(245, 158, 11, 0.2)', borderColor: '#f59e0b', pointBackgroundColor: '#f59e0b', borderWidth: 2 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                            pointLabels: { color: '#94a3b8', font: { family: 'Orbitron', size: 10, weight: 'bold' } },
-                            ticks: { display: false }
-                        }
-                    }
+                const total = vL + vR;
+                if(total === 0) {
+                    document.getElementById(cfg.barL).style.width = '50%';
+                    document.getElementById(cfg.barR).style.width = '50%';
+                } else {
+                    document.getElementById(cfg.barL).style.width = `${(vL / total) * 100}%`;
+                    document.getElementById(cfg.barR).style.width = `${(vR / total) * 100}%`;
                 }
             });
-        }
 
-        function renderTeams() {
-            const tGrid = document.getElementById('teamsGrid');
-            tGrid.innerHTML = "";
-            
-            const settingsSource = globalData.takim_ayarlari;
+            // Radar Grafik Sistemi
+            const labels = ['Maç', 'Gol', 'Asist', 'Intercept', 'GK Save', 'MOTM'];
+            const dataLeft = [pLeft.O||0, pLeft.G||0, pLeft.A||0, pLeft.INT||0, pLeft.K||0, pLeft.MOTM||0];
+            const dataRight = [pRight.O||0, pRight.G||0, pRight.A||0, pRight.INT||0, pRight.K||0, pRight.MOTM||0];
 
-            activeLeagueTeams.forEach(tName => {
-                const meta = (settingsSource && settingsSource[tName]) || {};
-                const card = document.createElement('div');
-                card.className = 'team-card';
-                card.innerHTML = `
-                    <div class="avatar-frame"><div class="avatar-glow"></div><img src="${getTeamLogo(tName)}" class="team-logo-img" alt="${tName}"></div>
-                    <div class="p-name">${tName}</div>
-                `;
-                card.onclick = () => showTeamDetails(tName, meta.aciklama);
-                tGrid.appendChild(card);
-            });
-        }
-
-        function showTeamDetails(tName, customDesc) {
-            document.getElementById('dtTeamName').innerText = tName;
-            document.getElementById('dtTeamDesc').innerText = customDesc || "Lig Resmi Kulübü.";
-            
-            const kadro = Object.values(globalData.oyuncular || {}).filter(o => o.takim === tName);
-            document.getElementById('dtPlayersList').innerHTML = kadro.length ? kadro.map(o => `
-                <li><span>⚡ ${o.futbolcu_ismi}</span> <strong style="color:var(--neon-blue); font-size:0.8rem;">${o.mevki || 'GK'}</strong></li>
-            `).join('') : `<li>Kadroda aktif oyuncu yok moruk.</li>`;
-            
-            const tumMaclar = globalData.maclar || [];
-            const maclar = tumMaclar.filter(m => m.ev === tName || m.dep === tName || m.ev_sahibi === tName || m.deplasman === tName);
-            
-            document.getElementById('dtMatchesList').innerHTML = maclar.length ? maclar.map(m => `
-                <li><span>⚽ ${m.ev || m.ev_sahibi} vs ${m.dep || m.deplasman}</span> <strong style="color:var(--neon-gold);">${m.skor}</strong></li>
-            `).join('') : `<li>Kulübe ait oynanmış maç kaydı bulunamadı.</li>`;
-            
-            const panel = document.getElementById('teamDetailPanel');
-            panel.style.display = "block";
-            panel.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function renderFixtures(maclar) {
-            const body = document.getElementById('fixturesTableBody');
-            if(!maclar || maclar.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Henüz oynanmış maç logu bulunamadı.</td></tr>`;
-                return;
+            if(radarChartInstance) {
+                radarChartInstance.data.datasets[0].label = pLeft.futbolcu_ismi;
+                radarChartInstance.data.datasets[0].data = dataLeft;
+                radarChartInstance.data.datasets[1].label = pRight.futbolcu_ismi;
+                radarChartInstance.data.datasets[1].data = dataRight;
+                radarChartInstance.update();
+            } else {
+                const ctx = document.getElementById('versusRadarChart').getContext('2d');
+                radarChartInstance = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: pLeft.futbolcu_ismi,
+                                data: dataLeft,
+                                backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                                borderColor: '#38bdf8',
+                                pointBackgroundColor: '#38bdf8'
+                            },
+                            {
+                                label: pRight.futbolcu_ismi,
+                                data: dataRight,
+                                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                                borderColor: '#f59e0b',
+                                pointBackgroundColor: '#f59e0b'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                angleLines: { color: 'rgba(255,255,255,0.05)' },
+                                pointLabels: { color: '#94a3b8', font: { family: 'Orbitron', size: 10 } },
+                                ticks: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
             }
-            body.innerHTML = '';
-            const bugun = getTodayDateString();
-            [...maclar].reverse().forEach(mac => {
-                const macTarihi = mac.tarih || bugun;
-                body.innerHTML += `
-                    <tr>
-                        <td style="font-size:0.85rem; color:var(--text-muted); font-weight:bold;">📅 ${macTarihi}</td>
-                        <td style="font-weight:600;">${mac.ev_sahibi || mac.ev}</td>
-                        <td style="text-align:center; font-family:'Orbitron', sans-serif; font-weight:bold; color:var(--neon-gold); background:rgba(245,158,11,0.05); border-radius:6px;">${mac.skor}</td>
-                        <td style="font-weight:600;">${mac.deplasman || mac.dep}</td>
-                        <td><span style="color:var(--neon-blue); font-weight:600;">🔥 ${mac.motm || 'Yok'}</span></td>
-                    </tr>
-                `;
-            });
         }
 
         function openProfile(oyuncu) {
@@ -1299,8 +1289,8 @@
             if (event.target == modal) modal.classList.remove('open');
         }
 
-        // İlk açılışta 1. Lig verilerini çekerek başlar
-        loadDashboardData();
+        // İlk açılış...
+        loadLeagueData('editor');
     </script>
 </body>
 </html>
