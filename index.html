@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1. Editor League & Editor League | Hub</title>
+    
+    <!-- Discord Embed (Open Graph) Ayarları -->
+    <meta property="og:title" content="⚡ Editor League | Resmi Hub ve Canlı İstatistikler" />
+    <meta property="og:description" content="Editor League heyecanı burada! Puan durumu, gol/asist krallıkları, fütüristik oyuncu kıyaslama motoru ve takım logoları ile canlı hub sistemi." />
+    <meta property="og:image" content="https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#38bdf8">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -798,7 +806,7 @@
                     </div>
                     <div class="vs-bar-container" style="margin-bottom: 20px;">
                         <div class="vs-bar-fill left" id="barLeftAsist"></div>
-                        <div class="vs-bar-fill right" id="barRightAsist"></div>
+                        <div class="vs-bar-fill right" id="barRightMaç"></div>
                     </div>
 
                     <div class="vs-bar-row">
@@ -862,13 +870,17 @@
 
         // Bilinen Özel Logolar ve Manuel Eşleşmeler
         const SPECIAL_LOGOS = {
-            "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
+            "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
             "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
             "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
             "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
             "Anaokulu FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461",
-            "Bambamspor FC": "https://via.placeholder.com/150/0f172a/fff?text=BB"
+            "Bambamspor FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
+            "Bambamspor": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
+            "Messi Fc": "https://media.discordapp.net/attachments/1285998157552947231/1519469532031353034/lionel-messi-logo-png_seeklogo-274864.png?ex=6a3dabc6&is=6a3c5a46&hm=2afecf95603b9a25d128ccfb6eb4ebf5154a1bc7be90aed730bb48c96a3c1746&=&format=webp&quality=lossless&width=400&height=400",
+            "Messi FC": "https://media.discordapp.net/attachments/1285998157552947231/1519469532031353034/lionel-messi-logo-png_seeklogo-274864.png?ex=6a3dabc6&is=6a3c5a46&hm=2afecf95603b9a25d128ccfb6eb4ebf5154a1bc7be90aed730bb48c96a3c1746&=&format=webp&quality=lossless&width=400&height=400",
+            "Vanparisspor": "https://cdn.discordapp.com/attachments/1271488924899868765/1519470508138172507/ChatGPT_Image_25_Haz_2026_01_31_35-Photoroom.png?ex=6a3dacaf&is=6a3c5b2f&hm=f9b5a06b7aa88e7c1828de4a992c54113c12455fbddefcb8e8d6f0d4d7d5ba5d&"
         };
 
         function getTeamLogo(tName) {
@@ -931,7 +943,6 @@
                 const data = await response.json();
                 globalData = data;
 
-                // API'den gelen verileri tamamen serbest bırakıyoruz, isim değiştirme mantığı kaldırıldı.
                 if (data.maclar) {
                     data.maclar.forEach(m => {
                         let evTakim = m.ev_sahibi || m.ev || "";
@@ -941,7 +952,6 @@
                     });
                 }
 
-                // API'den dinamik olarak benzersiz ve geçerli takımları topla
                 const allTeams = new Set();
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => { if(o.takim && o.takim !== 'Serbest') allTeams.add(o.takim); });
