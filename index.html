@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1. Editor League & Editor League | Hub</title>
+
+    <!-- Discord Web Embed (Meta Tag) Ayarları -->
+    <meta property="og:title" content="⚡ Editor League | Resmi Hub ve Canlı İstatistikler" />
+    <meta property="og:description" content="Editor League heyecanı burada! Puan durumu, gol/asist krallıkları, fütüristik oyuncu kıyaslama motoru ve takım logoları ile canlı hub sistemi." />
+    <meta property="og:url" content="https://bevke.github.io/editorleague/" />
+    <meta property="og:image" content="https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif" /> <!-- Sağdaki Kurbağalı OOG Logosu -->
+    <meta name="theme-color" content="#38bdf8" /> <!-- Sol Çizgi Rengi -->
     
     <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930">
     
@@ -634,7 +641,7 @@
             <div class="embed-text-zone">
                 <div id="mainLogoText" class="logo-text">1. EDITOR LEAGUE</div>
                 <div id="mainLogoSub" class="logo-sub">
-                    Veri tabanı entegrasyonu sağlandı. Anlık istatistikler, oyuncu verileri ve puan durumu başarıyla senkronize edildi. Maç sonuçlarına göre <strong>Beta Hub</strong> üzerinden krallıkları takip edebilirsiniz.
+                    Editor League ana lig veritabanı aktif edildi. Oyuncu panelleri, kulüp maç geçmişleri ve <strong>versus paneli</strong> güncel api üzerinden beslenmektedir.
                 </div>
             </div>
         </div>
@@ -943,7 +950,7 @@
                 btnNl.className = "league-toggle-btn";
                 mainLogoText.innerText = "1. EDITOR LEAGUE";
                 standingsTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
-                mainLogoSub.innerHTML = `Veri tabanı entegrasyonu sağlandı. Anlık istatistikler, oyuncu verileri ve puan durumu başarıyla senkronize edildi. Maç sonuçlarına göre <strong>Beta Hub</strong> üzerinden krallıkları takip edebilirsiniz.`;
+                mainLogoSub.innerHTML = `Editor League ana lig veritabanı aktif edildi. Oyuncu panelleri, kulüp maç geçmişleri ve <strong>versus paneli</strong> güncel api üzerinden beslenmektedir.`;
             } else {
                 body.classList.add('normal-league-active');
                 btnEl.className = "league-toggle-btn";
