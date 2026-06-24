@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1. Editor League & Editor League | Hub</title>
+    
+    <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -20,6 +23,7 @@
             --neon-purple: #a855f7;
             --neon-gold: #f59e0b;
             --neon-green: #22c55e;
+            --embed-bar: #00b0f4; /* Discord Tarzı Canlı Turkuaz Çizgi */
             --glass-bg: rgba(10, 15, 30, 0.7);
             
             /* Dinamik Değişecek Renkler İçin Proxy Değişkenler */
@@ -36,6 +40,7 @@
             --neon-purple: #eab308;
             --lig-theme: #22c55e;
             --lig-theme-secondary: #eab308;
+            --embed-bar: #22c55e; /* Diğer ligde çizgi rengi yeşile döner */
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(234, 179, 8, 0.05) 0%, transparent 40%);
@@ -122,32 +127,65 @@
             transform: scale(1.03);
         }
 
-        .logo-container {
-            display: inline-block;
-            animation: pulseGlow 3s infinite ease-in-out;
-            margin-bottom: 15px;
+        /* DISCORD EMBED HEADER KONSEPTİ */
+        .discord-embed-header {
+            max-width: 750px;
+            margin: 0 auto 20px auto;
+            background: rgba(4, 6, 14, 0.8);
+            border-radius: 8px;
+            border-left: 5px solid var(--embed-bar);
+            padding: 20px 25px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            transition: border-color 0.4s ease;
+        }
+
+        .embed-logo-wrapper {
+            position: relative;
+            width: 75px;
+            height: 75px;
+            flex-shrink: 0;
+        }
+
+        .embed-logo-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .embed-text-zone {
+            flex-grow: 1;
         }
 
         .logo-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.2rem;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 6px;
+            letter-spacing: 2px;
             background: linear-gradient(135deg, var(--lig-theme), var(--lig-theme-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             transition: all 0.5s ease;
         }
 
         .logo-sub {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .logo-sub strong {
             color: var(--neon-gold);
-            text-transform: uppercase;
-            font-weight: 700;
         }
 
         .container {
@@ -575,10 +613,6 @@
         }
 
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
-        @keyframes pulseGlow {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.2)); }
-            50% { filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.4)); }
-        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
@@ -593,9 +627,16 @@
             <button id="btnNl" class="league-toggle-btn" onclick="changeLeague('normal')">⚽ Editor League</button>
         </div>
 
-        <div class="logo-container">
-            <div id="mainLogoText" class="logo-text">1. EDITOR LEAGUE</div>
-            <div id="mainLogoSub" class="logo-sub">Beta Hub</div>
+        <div class="discord-embed-header">
+            <div class="embed-logo-wrapper">
+                <img src="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930" class="embed-logo-img" alt="Lig Logo">
+            </div>
+            <div class="embed-text-zone">
+                <div id="mainLogoText" class="logo-text">1. EDITOR LEAGUE</div>
+                <div id="mainLogoSub" class="logo-sub">
+                    Veri tabanı entegrasyonu sağlandı. Anlık istatistikler, oyuncu verileri ve puan durumu başarıyla senkronize edildi. Maç sonuçlarına göre <strong>Beta Hub</strong> üzerinden krallıkları takip edebilirsiniz.
+                </div>
+            </div>
         </div>
     </header>
 
@@ -851,8 +892,8 @@
         
         // İKİ LİGİN KENDİNE ÖZEL API ADRESLERİ
         const API_URLS = {
-            'editor': 'https://yepfella.onrender.com/api/puan-durumu', // 1. Lig
-            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  // Ana Lig
+            'editor': 'https://yepfella.onrender.com/api/puan-durumu', 
+            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  
         };
         
         let globalData = {};
@@ -860,7 +901,6 @@
         let radarChartInstance = null;
         let activeLeagueTeams = [];
 
-        // Bilinen Özel Logolar ve Manuel Eşleşmeler
         const SPECIAL_LOGOS = {
             "MADEUS FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
@@ -895,6 +935,7 @@
             const btnNl = document.getElementById('btnNl');
             const mainLogoText = document.getElementById('mainLogoText');
             const standingsTitle = document.getElementById('standingsTitle');
+            const mainLogoSub = document.getElementById('mainLogoSub');
 
             if (leagueType === 'editor') {
                 body.classList.remove('normal-league-active');
@@ -902,12 +943,14 @@
                 btnNl.className = "league-toggle-btn";
                 mainLogoText.innerText = "1. EDITOR LEAGUE";
                 standingsTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
+                mainLogoSub.innerHTML = `Veri tabanı entegrasyonu sağlandı. Anlık istatistikler, oyuncu verileri ve puan durumu başarıyla senkronize edildi. Maç sonuçlarına göre <strong>Beta Hub</strong> üzerinden krallıkları takip edebilirsiniz.`;
             } else {
                 body.classList.add('normal-league-active');
                 btnEl.className = "league-toggle-btn";
                 btnNl.className = "league-toggle-btn active-nl";
                 mainLogoText.innerText = "EDITOR LEAGUE";
                 standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
+                mainLogoSub.innerHTML = `Editor League ana lig veritabanı aktif edildi. Oyuncu panelleri, kulüp maç geçmişleri ve <strong>versus paneli</strong> güncel api üzerinden beslenmektedir.`;
             }
 
             document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
