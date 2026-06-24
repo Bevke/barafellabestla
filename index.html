@@ -862,17 +862,26 @@
 
         // Bilinen Özel Logolar ve Manuel Eşleşmeler
         const SPECIAL_LOGOS = {
-            "Madeus FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a344be9&is=6a32fa69&hm=cbb370242861efec6717e4519e3593ec3415947e055cb7239bbfd474f22a73ca&=&format=webp&quality=lossless&width=930&height=930",
-            "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a344d04&is=6a32fb84&hm=3fd097919f4ac27483de843c8364dda1e7f9e826dbbf9b85bba681eaeea4faa6&=&width=438&height=438",
-            "Tgf Juniors": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
-            "Bursaspor FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
-            "MetoSpor": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
-            "Bambamspor FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930"
+            "MADEUS FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
+            "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
+            "OOG": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
+            "TGF JUNIORS": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a344c77&is=6a32faf7&hm=0c56811b780b9b86517bd53e12abd59ca988d19493890fc9c50b3e55805fc705&=&format=webp&quality=lossless&width=625&height=625",
+            "BURSASPOR FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a344be5&is=6a32fa65&hm=7a46631130db628d8ef095e5d90a13de8b66c40a92c19e02d07afd0c3f157656&=&format=webp&quality=lossless&width=930&height=930",
+            "METOSPOR": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a344bed&is=6a32fa6d&hm=94150b3dfddc34751a3b8029a6f7653f911b8a45dc416faf92c1d7fb7dfea622&=&format=webp&width=919&height=894",
+            "ANAOKULU FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461",
+            "BAMBAMSPOR": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
+            "BAMBAMSPOR FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
+            "VANPARIS": "https://media.discordapp.net/attachments/1271488924899868765/1519470508138172507/ChatGPT_Image_25_Haz_2026_01_31_35-Photoroom.png?ex=6a3dacaf&is=6a3c5b2f&hm=f9b5a06b7aa88e7c1828de4a992c54113c12455fbddefcb8e8d6f0d4d7d5ba5d&=&format=webp&quality=lossless&width=930&height=930",
+            "VAN PARISSPOR": "https://media.discordapp.net/attachments/1271488924899868765/1519470508138172507/ChatGPT_Image_25_Haz_2026_01_31_35-Photoroom.png?ex=6a3dacaf&is=6a3c5b2f&hm=f9b5a06b7aa88e7c1828de4a992c54113c12455fbddefcb8e8d6f0d4d7d5ba5d&=&format=webp&quality=lossless&width=930&height=930",
+            "MESSI FC": "https://media.discordapp.net/attachments/1285998157552947231/1519469532031353034/lionel-messi-logo-png_seeklogo-274864.png?ex=6a3dabc6&is=6a3c5a46&hm=2afecf95603b9a25d128ccfb6eb4ebf5154a1bc7be90aed730bb48c96a3c1746&=&format=webp&quality=lossless&width=400&height=400"
         };
 
         function getTeamLogo(tName) {
-            if (SPECIAL_LOGOS[tName]) return SPECIAL_LOGOS[tName];
-            const initials = tName ? tName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase() : 'FC';
+            if (!tName) return `https://via.placeholder.com/150/${currentLeague === 'editor' ? '0f172a' : '040d06'}/${currentLeague === 'editor' ? '38bdf8' : '22c55e'}?text=FC`;
+            const cleanName = tName.trim().toUpperCase();
+            if (SPECIAL_LOGOS[cleanName]) return SPECIAL_LOGOS[cleanName];
+            
+            const initials = tName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase();
             const bg = currentLeague === 'editor' ? '0f172a' : '040d06';
             const textClr = currentLeague === 'editor' ? '38bdf8' : '22c55e';
             return `https://via.placeholder.com/150/${bg}/${textClr}?text=${initials}`;
@@ -901,7 +910,7 @@
             }
 
             document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="10" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
-            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLEMESİ BAŞLATILIYOR...</div>`;
+            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLESESİ BAŞLATILIYOR...</div>`;
             document.getElementById('teamDetailPanel').style.display = "none";
 
             await loadDashboardData();
