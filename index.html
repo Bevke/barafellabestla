@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor League | Hub</title>
 
-    <!-- Discord Web Embed (Meta Tag) Ayarları -->
     <meta property="og:title" content="⚡ Editor League | Resmi Hub ve Canlı İstatistikler" />
     <meta property="og:description" content="Editor League heyecanı burada! Puan durumu, gol/asist krallıkları, fütüristik oyuncu kıyaslama motoru ve takım logoları ile canlı hub sistemi." />
     <meta property="og:url" content="https://bevke.github.io/editorleague/" />
-    <!-- BURASI DÜZELTİLDİ: Artık kurbağalı logo değil, senin gönderdiğin lig logosu var baba -->
     <meta property="og:image" content="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930" /> 
     <meta name="theme-color" content="#38bdf8" />
     
-    <!-- Site Faviconu -->
     <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -832,6 +829,8 @@
         let activeLeagueTeams = [];
 
         const SPECIAL_LOGOS = {
+            "TOKATSPOR": "https://media.discordapp.net/attachments/1285998157552947231/1519783428948758538/tokatspor-logo-png_seeklogo-431965-removebg-preview.png?ex=6a3ed01d&is=6a3d7e9d&hm=3a54245a5ad1ce02e16446a9035105e7ad65eebbdc0d65e63ff7769ce0ab0ff3&=&format=webp&quality=lossless&width=625&height=625",
+            "LATERAL FC": "https://media.discordapp.net/attachments/1285998157552947231/1519786685221699634/image.png?ex=6a3ed326&is=6a3d81a6&hm=1b97951dbe7dba8b79ecfc17614e1abf706d4549430a56eaea3126373c25d41a&=&format=webp&quality=lossless&width=845&height=461",
             "MADEUS FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
             "OOG": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
@@ -1266,7 +1265,7 @@
             document.getElementById('playerModal').classList.add('open');
         }
 
-        function closeProfile() { document.getElementById('playerModal').classList.remove('open'); }
+        function closeProfile() { document.getElementById('playerModal').classList.remove('remove'); document.getElementById('playerModal').classList.remove('open'); }
 
         window.onclick = function(event) {
             const modal = document.getElementById('playerModal');
