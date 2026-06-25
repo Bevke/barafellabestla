@@ -9,6 +9,7 @@
     <meta property="og:title" content="⚡ Editor League | Resmi Hub ve Canlı İstatistikler" />
     <meta property="og:description" content="Editor League heyecanı burada! Puan durumu, gol/asist krallıkları, fütüristik oyuncu kıyaslama motoru ve takım logoları ile canlı hub sistemi." />
     <meta property="og:url" content="https://bevke.github.io/editorleague/" />
+    <!-- BURASI DÜZELTİLDİ: Artık kurbağalı logo değil, senin gönderdiğin lig logosu var baba -->
     <meta property="og:image" content="https://media.discordapp.net/attachments/1340735808319131678/1516924176714436618/lig_pp.png?ex=6a3da3ba&is=6a3c523a&hm=fac6b7113d1a06ffbc76e177b3c61406f75c17e562bc52acbcdfa535c527ced6&=&format=webp&quality=lossless&width=930&height=930" /> 
     <meta name="theme-color" content="#38bdf8" />
     
@@ -55,11 +56,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            /* Seçimi Engelleme CSS */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
 
         body {
@@ -822,43 +818,6 @@
         </div>
     </div>
 
-    <!-- İNCELEME ENGELLEME SCRIPT SİSTEMİ -->
-    <script>
-        // 1. Sağ Tık Engelleme
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // 2. Kısayol Tuşlarını Engelleme (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U vb.)
-        document.addEventListener('keydown', function(e) {
-            // F12 Engelleme
-            if (e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+Shift+I (İncele)
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+Shift+J (Konsol)
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+U (Kaynak Kodu)
-            if (e.ctrlKey && e.keyCode === 85) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+S (Kaydetme)
-            if (e.ctrlKey && e.keyCode === 83) {
-                e.preventDefault();
-                return false;
-            }
-        });
-    </script>
-
     <script>
         let currentLeague = 'editor';
         
@@ -876,7 +835,7 @@
             "MADEUS FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
             "OOG": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
-            "TGF JUNIORS": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a3d8667&is=6a3c3577&hm=fb41a1024c18f267e759222d8eb7743e13cc460d035f379c8d19423488cca2da&=&format=webp&quality=lossless&width=625&height=625",
+            "TGF JUNIORS": "https://media.discordapp.net/attachments/1340735808319131678/1516893294800539839/tgf_logo.png?ex=6a3d86f7&is=6a3c3577&hm=fb41a1024c18f267e759222d8eb7743e13cc460d035f379c8d19423488cca2da&=&format=webp&quality=lossless&width=625&height=625",
             "BURSASPOR FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a3d8665&is=6a3c34e5&hm=0211a2e346668393e859b72e5f0179d00c81403f3657c9b61e3bf4c307138662&=&format=webp&quality=lossless&width=930&height=930",
             "BURSASPOR": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a3d8665&is=6a3c34e5&hm=0211a2e346668393e859b72e5f0179d00c81403f3657c9b61e3bf4c307138662&=&format=webp&quality=lossless&width=930&height=930",
             "METOSPOR": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a3d866d&is=6a3c34ed&hm=eaa34e69860b4b8c70fff2d78a95aec160b7a4427462ce99aa021c26cf3c71ac&=&format=webp&width=919&height=894",
@@ -1006,7 +965,7 @@
                 
                 const evGol = parseInt(skorParcalari[0].trim());
                 const depGol = parseInt(skorParcalari[1].trim());
-                if(isNaN(evGol) || iNaN(depGol)) return;
+                if(isNaN(evGol) || isNaN(depGol)) return;
 
                 stats[evTakim].om += 1;
                 stats[depTakim].om += 1;
