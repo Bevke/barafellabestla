@@ -830,7 +830,7 @@
 
         const SPECIAL_LOGOS = {
             "TOKATSPOR": "https://media.discordapp.net/attachments/1285998157552947231/1519783428948758538/tokatspor-logo-png_seeklogo-431965-removebg-preview.png?ex=6a3ed01d&is=6a3d7e9d&hm=3a54245a5ad1ce02e16446a9035105e7ad65eebbdc0d65e63ff7769ce0ab0ff3&=&format=webp&quality=lossless&width=625&height=625",
-            "LATERAL FC": "https://media.discordapp.net/attachments/1285998157552947231/1519786685221699634/image.png?ex=6a3ed326&is=6a3d81a6&hm=1b97951dbe7dba8b79ecfc17614e1abf706d4549430a56eaea3126373c25d41a&=&format=webp&quality=lossless&width=845&height=461",
+            "LATERAL FC": "https://i.hizliresim.com/2ct4tmn.png",
             "MADEUS FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892697091375124/madeus_fc-Photoroom_1.png?ex=6a3d8669&is=6a3c34e9&hm=3ab4f088cea73293b0ed0e733ea8901eeff39d849ee85ec8d7ebb77782b3c13f&=&format=webp&quality=lossless&width=930&height=930",
             "OOG FC": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
             "OOG": "https://media.discordapp.net/attachments/1340735808319131678/1516893883722760292/oog_fc_logo.gif?ex=6a3d8784&is=6a3c3604&hm=663df0071257610d210553e4bf31ff949c2bbcca23cf2a2cdf1812bd7cf90ddf&=&width=930&height=930",
@@ -838,7 +838,6 @@
             "BURSASPOR FC": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a3d8665&is=6a3c34e5&hm=0211a2e346668393e859b72e5f0179d00c81403f3657c9b61e3bf4c307138662&=&format=webp&quality=lossless&width=930&height=930",
             "BURSASPOR": "https://media.discordapp.net/attachments/1340735808319131678/1516892680485867571/Gemini_Generated_Image_inf4beinf4beinf4-Photoroom.png?ex=6a3d8665&is=6a3c34e5&hm=0211a2e346668393e859b72e5f0179d00c81403f3657c9b61e3bf4c307138662&=&format=webp&quality=lossless&width=930&height=930",
             "METOSPOR": "https://media.discordapp.net/attachments/1340735808319131678/1516892712190873702/metospor_logo.jpg?ex=6a3d866d&is=6a3c34ed&hm=eaa34e69860b4b8c70fff2d78a95aec160b7a4427462ce99aa021c26cf3c71ac&=&format=webp&width=919&height=894",
-            "ANAOKULU FC": "https://media.discordapp.net/attachments/1340735808319131678/1516894865781162097/orosbucocuklarnn_logosu.png?ex=6a344dee&is=6a32fc6e&hm=152885978521a7e386b5ef85afce67be73d9b39cbd94928054233492c9c098e1&=&format=webp&quality=lossless&width=846&height=461",
             "BAMBAMSPOR": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
             "BAMBAMSPOR FC": "https://media.discordapp.net/attachments/1285998157552947231/1518305278141923348/image.png?ex=6a3d63fb&is=6a3c127b&hm=5601961601fbc7248fcb07181bc541f759faeb33b6bc13678370c9b736b2a9b6&=&format=webp&quality=lossless&width=930&height=930",
             "VANPARIS": "https://media.discordapp.net/attachments/1271488924899868765/1519470508138172507/ChatGPT_Image_25_Haz_2026_01_31_35-Photoroom.png?ex=6a3dacaf&is=6a3c5b2f&hm=f9b5a06b7aa88e7c1828de4a992c54113c12455fbddefcb8e8d6f0d4d7d5ba5d&=&format=webp&quality=lossless&width=930&height=930",
@@ -910,19 +909,33 @@
                     data.maclar.forEach(m => {
                         let evTakim = m.ev_sahibi || m.ev || "";
                         let depTakim = m.deplasman || m.dep || "";
+                        
+                        if(evTakim.trim().toUpperCase() === "MADEUS FC") evTakim = "Madeus FC";
+                        if(depTakim.trim().toUpperCase() === "MADEUS FC") depTakim = "Madeus FC";
+
                         m.ev = evTakim; m.ev_sahibi = evTakim;
                         m.dep = depTakim; m.deplasman = depTakim;
                     });
                 }
 
+                if (data.oyuncular) {
+                    Object.values(data.oyuncular).forEach(o => {
+                        if(o.takim && o.takim.trim().toUpperCase() === "MADEUS FC") {
+                            o.takim = "Madeus FC";
+                        }
+                    });
+                }
+
                 const allTeams = new Set();
                 if (data.oyuncular) {
-                    Object.values(data.oyuncular).forEach(o => { if(o.takim && o.takim !== 'Serbest') allTeams.add(o.takim); });
+                    Object.values(data.oyuncular).forEach(o => { 
+                        if(o.takim && o.takim !== 'Serbest' && o.takim.trim().toUpperCase() !== "ANAOKULU FC") allTeams.add(o.takim); 
+                    });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        if(m.ev) allTeams.add(m.ev);
-                        if(m.dep) allTeams.add(m.dep);
+                        if(m.ev && m.ev.trim().toUpperCase() !== "ANAOKULU FC") allTeams.add(m.ev);
+                        if(m.dep && m.dep.trim().toUpperCase() !== "ANAOKULU FC") allTeams.add(m.dep);
                     });
                 }
                 activeLeagueTeams = Array.from(allTeams).filter(t => t && t.trim() !== "");
@@ -936,8 +949,11 @@
         }
 
         function refreshDashboardView() {
-            cachedPlayersList = Object.values(globalData.oyuncular || {});
-            const activeMatches = globalData.maclar || [];
+            cachedPlayersList = Object.values(globalData.oyuncular || {}).filter(o => !o.takim || o.takim.trim().toUpperCase() !== "ANAOKULU FC");
+            const activeMatches = (globalData.maclar || []).filter(m => 
+                (m.ev && m.ev.trim().toUpperCase() !== "ANAOKULU FC") && 
+                (m.dep && m.dep.trim().toUpperCase() !== "ANAOKULU FC")
+            );
 
             renderStandings(activeMatches);
             renderPlayers(cachedPlayersList);
