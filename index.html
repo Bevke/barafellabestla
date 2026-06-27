@@ -17,6 +17,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Ekran görüntüsünü kopyalamak için html2canvas kütüphanesini ekledik -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-dark: #050814;
@@ -541,6 +543,35 @@
             border-color: transparent;
         }
 
+        /* Fotoğraf Kopyalama Buton Stili */
+        .vs-copy-zone {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        .cyber-copy-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(56, 189, 248, 0.3));
+            border: 1px solid var(--border-glow);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
+        }
+        .cyber-copy-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+        .cyber-copy-btn:active {
+            transform: translateY(1px);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -663,7 +694,8 @@
 
         <div id="players" class="tab-content">
             <div class="totw-banner" id="totwZone">
-                <div class="totw-title">⭐ HAFTANIN SİBER YILDIZLARI</div>
+                <!-- İstek Üzerine "SİBER YILDIZLARI" -> "YILDIZLARI" olarak güncellendi -->
+                <div class="totw-title">⭐ HAFTANIN YILDIZLARI</div>
                 <div class="totw-player">🔥 <span id="totwScorer" style="font-weight: bold;">Yükleniyor...</span> <span style="font-size:0.75rem; color:var(--text-muted);">Golcü</span></div>
                 <div class="totw-player">🎯 <span id="totwAssistant" style="font-weight: bold;">Yükleniyor...</span> <span style="font-size:0.75rem; color:var(--text-muted);">Asistçi</span></div>
             </div>
@@ -775,94 +807,104 @@
             </div>
 
             <div class="glass-panel" id="vsPlayerPanel">
-                <div class="panel-title">⚔️ OYUNCU GÜÇ KARŞILAŞTIRMASI</div>
-                <div class="vs-container">
-                    <div class="vs-player-box left-side">
-                        <label style="color: var(--neon-blue); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">1. OYUNCU</label>
-                        <select id="vsSelectLeft" class="vs-select" onchange="updateVersusStats()"></select>
-                        <div class="avatar-frame">
-                            <div class="avatar-glow" style="background: var(--neon-blue)"></div>
-                            <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarLeft" class="player-avatar">
+                <div id="capturePlayerArea">
+                    <div class="panel-title">⚔️ OYUNCU GÜÇ KARŞILAŞTIRMASI</div>
+                    <div class="vs-container">
+                        <div class="vs-player-box left-side">
+                            <label style="color: var(--neon-blue); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">1. OYUNCU</label>
+                            <select id="vsSelectLeft" class="vs-select" onchange="updateVersusStats()"></select>
+                            <div class="avatar-frame">
+                                <div class="avatar-glow" style="background: var(--neon-blue)"></div>
+                                <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarLeft" class="player-avatar">
+                            </div>
+                            <h3 id="vsNameLeft" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                            <p id="vsTeamLeft" style="color: var(--neon-blue); font-size: 0.85rem;">Serbest</p>
                         </div>
-                        <h3 id="vsNameLeft" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
-                        <p id="vsTeamLeft" style="color: var(--neon-blue); font-size: 0.85rem;">Serbest</p>
+
+                        <div class="vs-center-chart">
+                            <div class="vs-title-text">VS</div>
+                            <div style="width: 100%; max-width: 300px; height: 300px;">
+                                <canvas id="versusRadarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="vs-player-box right-side">
+                            <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. OYUNCU</label>
+                            <select id="vsSelectRight" class="vs-select" onchange="updateVersusStats()"></select>
+                            <div class="avatar-frame">
+                                <div class="avatar-glow" style="background: var(--neon-gold)"></div>
+                                <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarRight" class="player-avatar">
+                            </div>
+                            <h3 id="vsNameRight" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                            <p id="vsTeamRight" style="color: var(--neon-gold); font-size: 0.85rem;">Serbest</p>
+                        </div>
                     </div>
 
-                    <div class="vs-center-chart">
-                        <div class="vs-title-text">VS</div>
-                        <div style="width: 100%; max-width: 300px; height: 300px;">
-                            <canvas id="versusRadarChart"></canvas>
-                        </div>
-                    </div>
+                    <div style="max-width: 800px; margin: 40px auto 0 auto; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px;">
+                        <div class="vs-bar-row"><div class="vs-val left" id="valLeftMaç">0</div><div class="vs-bar-label">MAÇ</div><div class="vs-val right" id="valRightMaç">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftMaç"></div><div class="vs-bar-fill right" id="barRightMaç"></div></div>
 
-                    <div class="vs-player-box right-side">
-                        <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. OYUNCU</label>
-                        <select id="vsSelectRight" class="vs-select" onchange="updateVersusStats()"></select>
-                        <div class="avatar-frame">
-                            <div class="avatar-glow" style="background: var(--neon-gold)"></div>
-                            <img src="https://via.placeholder.com/150/0f172a/fff?text=EL" id="vsAvatarRight" class="player-avatar">
-                        </div>
-                        <h3 id="vsNameRight" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
-                        <p id="vsTeamRight" style="color: var(--neon-gold); font-size: 0.85rem;">Serbest</p>
+                        <div class="vs-bar-row"><div class="vs-val left" id="valLeftGol">0</div><div class="vs-bar-label">GOL</div><div class="vs-val right" id="valRightGol">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftGol"></div><div class="vs-bar-fill right" id="barRightGol"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="valLeftAsist">0</div><div class="vs-bar-label">ASİST</div><div class="vs-val right" id="valRightAsist">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftAsist"></div><div class="vs-bar-fill right" id="barRightAsist"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="valLeftInt">0</div><div class="vs-bar-label">INTERCEPT</div><div class="vs-val right" id="valRightInt">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftInt"></div><div class="vs-bar-fill right" id="barRightInt"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="valLeftSave">0</div><div class="vs-bar-label">GK SAVE</div><div class="vs-val right" id="valRightSave">0</div></div>
+                        <div class="vs-bar-container"><div class="vs-bar-fill left" id="barLeftSave"></div><div class="vs-bar-fill right" id="barRightSave"></div></div>
                     </div>
                 </div>
-
-                <div style="max-width: 800px; margin: 40px auto 0 auto; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px;">
-                    <div class="vs-bar-row"><div class="vs-val left" id="valLeftMaç">0</div><div class="vs-bar-label">MAÇ</div><div class="vs-val right" id="valRightMaç">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftMaç"></div><div class="vs-bar-fill right" id="barRightMaç"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="valLeftGol">0</div><div class="vs-bar-label">GOL</div><div class="vs-val right" id="valRightGol">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftGol"></div><div class="vs-bar-fill right" id="barRightGol"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="valLeftAsist">0</div><div class="vs-bar-label">ASİST</div><div class="vs-val right" id="valRightAsist">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftAsist"></div><div class="vs-bar-fill right" id="barRightAsist"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="valLeftInt">0</div><div class="vs-bar-label">INTERCEPT</div><div class="vs-val right" id="valRightInt">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barLeftInt"></div><div class="vs-bar-fill right" id="barRightInt"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="valLeftSave">0</div><div class="vs-bar-label">GK SAVE</div><div class="vs-val right" id="valRightSave">0</div></div>
-                    <div class="vs-bar-container"><div class="vs-bar-fill left" id="barLeftSave"></div><div class="vs-bar-fill right" id="barRightSave"></div></div>
+                <div class="vs-copy-zone">
+                    <button class="cyber-copy-btn" onclick="copyVsToClipboard('capturePlayerArea')">📸 OYUNCU KIYASLAMASINI KOPYALA</button>
                 </div>
             </div>
 
             <div class="glass-panel" id="vsTeamPanel" style="display:none;">
-                <div class="panel-title">⚔️ KULÜP ARENA KARŞILAŞTIRMASI</div>
-                <div class="vs-container">
-                    <div class="vs-player-box left-side">
-                        <label style="color: var(--neon-blue); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">1. KULÜP</label>
-                        <select id="vsTeamLeftSelect" class="vs-select" onchange="calculateTeamVersus()"></select>
-                        <div class="avatar-frame">
-                            <div class="avatar-glow" style="background: var(--neon-blue)"></div>
-                            <img src="" id="vsTeamLeftImg" class="team-logo-img">
+                <div id="captureTeamArea">
+                    <div class="panel-title">⚔️ KULÜP ARENA KARŞILAŞTIRMASI</div>
+                    <div class="vs-container">
+                        <div class="vs-player-box left-side">
+                            <label style="color: var(--neon-blue); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">1. KULÜP</label>
+                            <select id="vsTeamLeftSelect" class="vs-select" onchange="calculateTeamVersus()"></select>
+                            <div class="avatar-frame">
+                                <div class="avatar-glow" style="background: var(--neon-blue)"></div>
+                                <img src="" id="vsTeamLeftImg" class="team-logo-img">
+                            </div>
+                            <h3 id="vsTeamLeftName" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
                         </div>
-                        <h3 id="vsTeamLeftName" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
-                    </div>
-                    <div class="vs-center-chart">
-                        <div class="vs-title-text" style="color:var(--neon-gold);">AI TAHMİNİ</div>
-                        <div id="aiPredictionResult" style="font-family:'Orbitron'; font-weight:bold; font-size:0.85rem; text-align:center; color:#fff; background:rgba(0,0,0,0.3); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glow);">Hesaplanıyor...</div>
-                    </div>
-                    <div class="vs-player-box right-side">
-                        <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. KULÜP</label>
-                        <select id="vsTeamRightSelect" class="vs-select" onchange="calculateTeamVersus()"></select>
-                        <div class="avatar-frame">
-                            <div class="avatar-glow" style="background: var(--neon-gold)"></div>
-                            <img src="" id="vsTeamRightImg" class="team-logo-img">
+                        <div class="vs-center-chart">
+                            <div class="vs-title-text" style="color:var(--neon-gold);">AI TAHMİNİ</div>
+                            <div id="aiPredictionResult" style="font-family:'Orbitron'; font-weight:bold; font-size:0.85rem; text-align:center; color:#fff; background:rgba(0,0,0,0.3); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glow);">Hesaplanıyor...</div>
                         </div>
-                        <h3 id="vsTeamRightName" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                        <div class="vs-player-box right-side">
+                            <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. KULÜP</label>
+                            <select id="vsTeamRightSelect" class="vs-select" onchange="calculateTeamVersus()"></select>
+                            <div class="avatar-frame">
+                                <div class="avatar-glow" style="background: var(--neon-gold)"></div>
+                                <img src="" id="vsTeamRightImg" class="team-logo-img">
+                            </div>
+                            <h3 id="vsTeamRightName" style="font-family:'Orbitron'; font-size: 1.4rem; color: #fff; margin-top: 10px;">-</h3>
+                        </div>
+                    </div>
+                    <div style="max-width: 800px; margin: 40px auto 0 auto; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px;">
+                        <div class="vs-bar-row"><div class="vs-val left" id="teamLeftP">0</div><div class="vs-bar-label">TOPLAM PUAN</div><div class="vs-val right" id="teamRightP">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftP"></div><div class="vs-bar-fill right" id="barTeamRightP"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="teamLeftAg">0</div><div class="vs-bar-label">MAÇ BAŞI GOL</div><div class="vs-val right" id="teamRightAg">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftAg"></div><div class="vs-bar-fill right" id="barTeamRightAg"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="teamLeftYg">0</div><div class="vs-bar-label">MAÇ BAŞI YENEN</div><div class="vs-val right" id="teamRightYg">0</div></div>
+                        <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftYg"></div><div class="vs-bar-fill right" id="barTeamRightYg"></div></div>
+
+                        <div class="vs-bar-row"><div class="vs-val left" id="teamLeftWin">0%</div><div class="vs-bar-label">GALİBİYET ORANI</div><div class="vs-val right" id="teamRightWin">0%</div></div>
+                        <div class="vs-bar-container"><div class="vs-bar-fill left" id="barTeamLeftWin"></div><div class="vs-bar-fill right" id="barTeamRightWin"></div></div>
                     </div>
                 </div>
-                <div style="max-width: 800px; margin: 40px auto 0 auto; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px;">
-                    <div class="vs-bar-row"><div class="vs-val left" id="teamLeftP">0</div><div class="vs-bar-label">TOPLAM PUAN</div><div class="vs-val right" id="teamRightP">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftP"></div><div class="vs-bar-fill right" id="barTeamRightP"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="teamLeftAg">0</div><div class="vs-bar-label">MAÇ BAŞI GOL</div><div class="vs-val right" id="teamRightAg">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftAg"></div><div class="vs-bar-fill right" id="barTeamRightAg"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="teamLeftYg">0</div><div class="vs-bar-label">MAÇ BAŞI YENEN</div><div class="vs-val right" id="teamRightYg">0</div></div>
-                    <div class="vs-bar-container" style="margin-bottom: 20px;"><div class="vs-bar-fill left" id="barTeamLeftYg"></div><div class="vs-bar-fill right" id="barTeamRightYg"></div></div>
-
-                    <div class="vs-bar-row"><div class="vs-val left" id="teamLeftWin">0%</div><div class="vs-bar-label">GALİBİYET ORANI</div><div class="vs-val right" id="teamRightWin">0%</div></div>
-                    <div class="vs-bar-container"><div class="vs-bar-fill left" id="barTeamLeftWin"></div><div class="vs-bar-fill right" id="barTeamRightWin"></div></div>
+                <div class="vs-copy-zone">
+                    <button class="cyber-copy-btn" onclick="copyVsToClipboard('captureTeamArea')">📸 TAKIM KIYASLAMASINI KOPYALA</button>
                 </div>
             </div>
         </div>
@@ -1491,6 +1533,54 @@
         function closeProfile() { 
             document.getElementById('playerModal').classList.remove('open'); 
             resetChameleonTheme();
+        }
+
+        /* Ekran Görüntüsünü Alıp Panoya Resim Olarak Kopyalayan Dinamik Fonksiyon */
+        function copyVsToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const btn = window.event ? window.event.currentTarget : null;
+            
+            if(btn) {
+                btn.innerText = "⏳ GÖRSEL HAZIRLANIYOR...";
+                btn.style.opacity = "0.7";
+            }
+
+            // Çıktının güzel ve net olması için arka plan rengini sabitleyerek canvas üretiyoruz
+            html2canvas(element, {
+                backgroundColor: "#060a17",
+                useCORS: true, // Farklı sunuculardaki oyuncu avatarlarının yüklenmesini sağlar
+                scale: 2 // Çözünürlüğü iki katına çıkartarak netleştirir
+            }).then(canvas => {
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        alert("Görsel oluşturulamadı moruk!");
+                        if(btn) btn.innerText = "📸 KIYASLAMAYI KOPYALA";
+                        return;
+                    }
+                    
+                    // Clipboard API kullanarak resmi direkt panoya kopyalıyoruz
+                    navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                    ]).then(() => {
+                        if(btn) {
+                            btn.innerText = "✅ PANOCUYA KOPYALANDI!";
+                            btn.style.background = "linear-gradient(135deg, rgba(34, 197, 94, 0.4), rgba(56, 189, 248, 0.4))";
+                            setTimeout(() => {
+                                btn.innerText = btn.id === "captureTeamArea" ? "📸 TAKIM KIYASLAMASINI KOPYALA" : "📸 OYUNCU KIYASLAMASINI KOPYALA";
+                                btn.style.background = "";
+                                btn.style.opacity = "1";
+                            }, 2500);
+                        }
+                    }).catch(err => {
+                        console.error("Kopyalama Hatası:", err);
+                        alert("Tarayıcın kopyalamaya izin vermedi veya HTTP koruması var. Resmi sağ tıklayıp kaydetmeyi deneyebilirsin.");
+                        if(btn) btn.innerText = "📸 KIYASLAMAYI KOPYALA";
+                    });
+                }, 'image/png');
+            }).catch(error => {
+                console.error("Canvas Hatası:", error);
+                if(btn) btn.innerText = "📸 KIYASLAMAYI KOPYALA";
+            });
         }
 
         window.onclick = function(event) {
