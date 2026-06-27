@@ -304,12 +304,12 @@
             border-radius: 15px;
         }
 
-        /* Krallık tabloları için kayma önleyici güncellemeler yapıldı */
+        /* GENEL STANDART TABLO (Puan durumu, Fikstür vb artık özgürce yayılabilir) */
         .futuristic-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            table-layout: fixed; /* Genişlikleri kesin olarak sabitlemesini söyler */
+            table-layout: auto;
         }
 
         .futuristic-table th {
@@ -321,20 +321,28 @@
             text-transform: uppercase;
         }
 
-        /* Tablo sütun oranları kesinleştirildi */
-        .futuristic-table th:nth-child(1), .futuristic-table td:nth-child(1) { width: 12%; } /* Sıra */
-        .futuristic-table th:nth-child(2), .futuristic-table td:nth-child(2) { width: 43%; } /* Oyuncu */
-        .futuristic-table th:nth-child(3), .futuristic-table td:nth-child(3) { width: 30%; } /* Takım */
-        .futuristic-table th:nth-child(4), .futuristic-table td:nth-child(4) { width: 15%; } /* İstatistik (Gol/Asist) */
-
         .futuristic-table td {
             padding: 12px 10px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             font-size: 0.85rem;
             vertical-align: middle;
-            white-space: nowrap;      /* Yazının alt satıra geçmesini engeller */
-            overflow: hidden;         /* Taşan kısmı gizler */
-            text-overflow: ellipsis;  /* Taşan ismin sonuna otomatik ... koyar */
+        }
+
+        /* SADECE KRALLIKLARDA ÇALIŞACAK ÖZEL SIKIŞTIRMA VE KAYMA ÖNLEYİCİ MANTIK */
+        .krallik-table {
+            table-layout: fixed !important;
+        }
+        
+        /* Krallık tablosunun genişlik oranları kesinleştirildi */
+        .krallik-table th:nth-child(1), .krallik-table td:nth-child(1) { width: 12%; } /* Sıra */
+        .krallik-table th:nth-child(2), .krallik-table td:nth-child(2) { width: 43%; } /* Oyuncu */
+        .krallik-table th:nth-child(3), .krallik-table td:nth-child(3) { width: 30%; } /* Takım */
+        .krallik-table th:nth-child(4), .krallik-table td:nth-child(4) { width: 15%; } /* İstatistik */
+
+        .krallik-table td {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
 
         .relegation-row {
@@ -715,7 +723,6 @@
 
         <div id="players" class="tab-content">
             <div class="totw-banner" id="totwZone">
-                <!-- İstek Üzerine "SİBER YILDIZLARI" -> "YILDIZLARI" olarak güncellendi -->
                 <div class="totw-title">⭐ HAFTANIN YILDIZLARI</div>
                 <div class="totw-player">🔥 <span id="totwScorer" style="font-weight: bold;">Yükleniyor...</span> <span style="font-size:0.75rem; color:var(--text-muted);">Golcü</span></div>
                 <div class="totw-player">🎯 <span id="totwAssistant" style="font-weight: bold;">Yükleniyor...</span> <span style="font-size:0.75rem; color:var(--text-muted);">Asistçi</span></div>
@@ -732,7 +739,8 @@
             <div class="krallik-wrapper">
                 <div class="glass-panel">
                     <div class="panel-title">👑 GOL KRALLIĞI</div>
-                    <table class="futuristic-table">
+                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
+                    <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
                                 <th>Sıra</th>
@@ -749,7 +757,8 @@
 
                 <div class="glass-panel">
                     <div class="panel-title">🎯 ASİST KRALLIĞI</div>
-                    <table class="futuristic-table">
+                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
+                    <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
                                 <th>Sıra</th>
@@ -766,7 +775,8 @@
 
                 <div class="glass-panel">
                     <div class="panel-title">🛡️ KURTARIŞ KRALLIĞI</div>
-                    <table class="futuristic-table">
+                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
+                    <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
                                 <th>Sıra</th>
@@ -1284,7 +1294,7 @@
             document.getElementById('golTableBody').innerHTML = golSirali.length ? golSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
-                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
                 </tr>
@@ -1294,7 +1304,7 @@
             document.getElementById('asistTableBody').innerHTML = asistSirali.length ? asistSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
-                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
                 </tr>
@@ -1304,7 +1314,7 @@
             document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.length ? kurtarisSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
-                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
                     <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
                 </tr>
@@ -1556,7 +1566,6 @@
             resetChameleonTheme();
         }
 
-        /* Ekran Görüntüsünü Alıp Panonya Resim Olarak Kopyalayan Dinamik Fonksiyon */
         function copyVsToClipboard(elementId) {
             const element = document.getElementById(elementId);
             const btn = window.event ? window.event.currentTarget : null;
@@ -1566,11 +1575,10 @@
                 btn.style.opacity = "0.7";
             }
 
-            // Çıktının güzel ve net olması için arka plan rengini sabitleyerek canvas üretiyoruz
             html2canvas(element, {
                 backgroundColor: "#060a17",
-                useCORS: true, // Farklı sunuculardaki oyuncu avatarlarının yüklenmesini sağlar
-                scale: 2 // Çözünürlüğü iki katına çıkartarak netleştirir
+                useCORS: true, 
+                scale: 2 
             }).then(canvas => {
                 canvas.toBlob(blob => {
                     if (!blob) {
@@ -1579,7 +1587,6 @@
                         return;
                     }
                     
-                    // Clipboard API kullanarak resmi direkt panoya kopyalıyoruz
                     navigator.clipboard.write([
                         new ClipboardItem({ 'image/png': blob })
                     ]).then(() => {
