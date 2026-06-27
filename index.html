@@ -304,10 +304,12 @@
             border-radius: 15px;
         }
 
+        /* Krallık tabloları için kayma önleyici güncellemeler yapıldı */
         .futuristic-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            table-layout: fixed; /* Genişlikleri kesin olarak sabitlemesini söyler */
         }
 
         .futuristic-table th {
@@ -319,11 +321,20 @@
             text-transform: uppercase;
         }
 
+        /* Tablo sütun oranları kesinleştirildi */
+        .futuristic-table th:nth-child(1), .futuristic-table td:nth-child(1) { width: 12%; } /* Sıra */
+        .futuristic-table th:nth-child(2), .futuristic-table td:nth-child(2) { width: 43%; } /* Oyuncu */
+        .futuristic-table th:nth-child(3), .futuristic-table td:nth-child(3) { width: 30%; } /* Takım */
+        .futuristic-table th:nth-child(4), .futuristic-table td:nth-child(4) { width: 15%; } /* İstatistik (Gol/Asist) */
+
         .futuristic-table td {
             padding: 12px 10px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             font-size: 0.85rem;
             vertical-align: middle;
+            white-space: nowrap;      /* Yazının alt satıra geçmesini engeller */
+            overflow: hidden;         /* Taşan kısmı gizler */
+            text-overflow: ellipsis;  /* Taşan ismin sonuna otomatik ... koyar */
         }
 
         .relegation-row {
@@ -345,11 +356,21 @@
             margin-right: 8px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: var(--bg-dark);
+            flex-shrink: 0; /* Logonun ezilmesini önler */
         }
 
         .team-inline {
             display: flex;
             align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .team-inline span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .futuristic-table tr:hover td {
@@ -1263,8 +1284,8 @@
             document.getElementById('golTableBody').innerHTML = golSirali.length ? golSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-blue);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
+                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-green);">${o.G || 0}</td>
                 </tr>
             `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
@@ -1273,8 +1294,8 @@
             document.getElementById('asistTableBody').innerHTML = asistSirali.length ? asistSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-purple);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
+                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-blue);">${o.A || 0}</td>
                 </tr>
             `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
@@ -1283,8 +1304,8 @@
             document.getElementById('kurtarisTableBody').innerHTML = kurtarisSirali.length ? kurtarisSirali.map((o, i) => `
                 <tr onmouseenter="applyChameleonTheme('${o.takim}')" onmouseleave="resetChameleonTheme()">
                     <td style="font-weight:bold; color:var(--neon-gold);">#${i+1}</td>
-                    <td style="font-weight:600;">${o.futbolcu_ismi}</td>
-                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span style="color:var(--text-muted); font-size:0.85rem;">${o.takim || 'Serbest'}</span></div></td>
+                    <td style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${o.futbolcu_ismi}</td>
+                    <td><div class="team-inline">${getLogoHtml(o.takim)}<span>${o.takim || 'Serbest'}</span></div></td>
                     <td style="text-align:right; font-weight:bold; color:var(--neon-purple);">${o.K || 0}</td>
                 </tr>
             `).join('') : `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Veri yok</td></tr>`;
@@ -1437,7 +1458,7 @@
             document.getElementById('barTeamRightWin').style.width = (winPctRight / totalWin * 100) + '%';
 
             let scoreLeft = (tLeft.p * 2) + (parseFloat(avgAgLeft) * 10) - (parseFloat(avgYgLeft) * 5);
-            let scoreRight = (tRight.p * 2) + (parseFloat(avgAgRight) * 10) - (parseFloat(avgYgRight) * 5);
+            let scoreRight = (tRight.p * 2) + (parseFloat(avgAgRight) * 10) - (parseFloat(avgYgLeft) * 5);
             
             if(scoreLeft === scoreRight) {
                 document.getElementById('aiPredictionResult').innerHTML = `⚖️ BERABERLİK İHTİMALİ YÜKSEK (%50)`;
@@ -1535,7 +1556,7 @@
             resetChameleonTheme();
         }
 
-        /* Ekran Görüntüsünü Alıp Panoya Resim Olarak Kopyalayan Dinamik Fonksiyon */
+        /* Ekran Görüntüsünü Alıp Panonya Resim Olarak Kopyalayan Dinamik Fonksiyon */
         function copyVsToClipboard(elementId) {
             const element = document.getElementById(elementId);
             const btn = window.event ? window.event.currentTarget : null;
