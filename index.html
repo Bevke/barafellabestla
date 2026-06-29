@@ -17,7 +17,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Ekran görüntüsünü kopyalamak için html2canvas kütüphanesini ekledik -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -304,7 +303,7 @@
             border-radius: 15px;
         }
 
-        /* GENEL STANDART TABLO (Puan durumu, Fikstür vb artık özgürce yayılabilir) */
+        /* GENEL STANDART TABLO */
         .futuristic-table {
             width: 100%;
             border-collapse: collapse;
@@ -333,11 +332,10 @@
             table-layout: fixed !important;
         }
         
-        /* Krallık tablosunun genişlik oranları kesinleştirildi */
-        .krallik-table th:nth-child(1), .krallik-table td:nth-child(1) { width: 12%; } /* Sıra */
-        .krallik-table th:nth-child(2), .krallik-table td:nth-child(2) { width: 43%; } /* Oyuncu */
-        .krallik-table th:nth-child(3), .krallik-table td:nth-child(3) { width: 30%; } /* Takım */
-        .krallik-table th:nth-child(4), .krallik-table td:nth-child(4) { width: 15%; } /* İstatistik */
+        .krallik-table th:nth-child(1), .krallik-table td:nth-child(1) { width: 12%; }
+        .krallik-table th:nth-child(2), .krallik-table td:nth-child(2) { width: 43%; }
+        .krallik-table th:nth-child(3), .krallik-table td:nth-child(3) { width: 30%; }
+        .krallik-table th:nth-child(4), .krallik-table td:nth-child(4) { width: 15%; }
 
         .krallik-table td {
             white-space: nowrap !important;
@@ -364,7 +362,7 @@
             margin-right: 8px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: var(--bg-dark);
-            flex-shrink: 0; /* Logonun ezilmesini önler */
+            flex-shrink: 0;
         }
 
         .team-inline {
@@ -572,7 +570,6 @@
             border-color: transparent;
         }
 
-        /* Fotoğraf Kopyalama Buton Stili */
         .vs-copy-zone {
             display: flex;
             justify-content: center;
@@ -680,8 +677,8 @@
 
     <header>
         <div class="league-selector-zone">
-            <button id="btnEl" class="league-toggle-btn active-el" onclick="changeLeague('editor')">⚡ 1. Editor League</button>
-            <button id="btnNl" class="league-toggle-btn" onclick="changeLeague('normal')">⚽ Editor League</button>
+            <button id="btnEl" class="league-toggle-btn active-el" onclick="changeLeague('editor')">⚡ Editor League (Alt Lig)</button>
+            <button id="btnNl" class="league-toggle-btn" onclick="changeLeague('normal')">⚽ Editor League (Ana Lig)</button>
         </div>
     </header>
 
@@ -697,7 +694,7 @@
 
         <div id="puan-durumu" class="tab-content active">
             <div class="glass-panel">
-                <div id="standingsTitle" class="panel-title">📊 1. EDITOR LEAGUE PUAN DURUMU</div>
+                <div id="standingsTitle" class="panel-title">📊 EDITOR LEAGUE (ALT LİG) PUAN DURUMU</div>
                 <table class="futuristic-table">
                     <thead>
                         <tr>
@@ -739,7 +736,6 @@
             <div class="krallik-wrapper">
                 <div class="glass-panel">
                     <div class="panel-title">👑 GOL KRALLIĞI</div>
-                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
                     <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
@@ -757,7 +753,6 @@
 
                 <div class="glass-panel">
                     <div class="panel-title">🎯 ASİST KRALLIĞI</div>
-                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
                     <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
@@ -775,7 +770,6 @@
 
                 <div class="glass-panel">
                     <div class="panel-title">🛡️ KURTARIŞ KRALLIĞI</div>
-                    <!-- Sadece Krallık tablolarına özel .krallik-table sınıfı uygulandı -->
                     <table class="futuristic-table krallik-table">
                         <thead>
                             <tr>
@@ -908,7 +902,7 @@
                         </div>
                         <div class="vs-center-chart">
                             <div class="vs-title-text" style="color:var(--neon-gold);">AI TAHMİNİ</div>
-                            <div id="aiPredictionResult" style="font-family:'Orbitron'; font-weight:bold; font-size:0.85rem; text-align:center; color:#fff; background:rgba(0,0,0,0.3); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glow);">Hesaplanıyor...</div>
+                            <div id="aiPredictionResult" style="font-family:'Orbitron'; font-weight:bold; font-size:0.85rem; text-align:center; color:#fff; background:rgba(0,0,0,0.3); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glow);">Hesapanıyor...</div>
                         </div>
                         <div class="vs-player-box right-side">
                             <label style="color: var(--neon-gold); font-weight: bold; font-size: 0.8rem; display: block; margin-bottom: 8px;">2. KULÜP</label>
@@ -965,8 +959,8 @@
         let currentLeague = 'editor';
         
         const API_URLS = {
-            'editor': 'https://yepfella.onrender.com/api/puan-durumu', 
-            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  
+            'editor': 'https://yepfella.onrender.com/api/puan-durumu', // ALT LİG
+            'normal': 'https://bot-lhr2.onrender.com/api/puan-durumu'  // ANA LİG
         };
         
         let globalData = {};
@@ -975,7 +969,7 @@
         let activeLeagueTeams = [];
         let teamCalculatedStats = {};
 
-        // Sadece senin istediğin 6 takımın isim listesi (Büyük harf uyumluluğu için dinamik kontrol edilecek)
+        // Sadece alt ligdeyken (yepfella) geçerli olacak 6 takımlık liste
         const ALLOWED_TEAMS = ["MADEUS  FC", "MADEUS FC", "OOG FC", "OOG", "TOKATSPOR", "BAMBAMSPOR FC", "BAMBAMSPOR", "KONYASPOR", "METOSPOR"];
 
         const SPECIAL_LOGOS = {
@@ -1045,17 +1039,17 @@
                 body.classList.remove('normal-league-active');
                 btnEl.className = "league-toggle-btn active-el";
                 btnNl.className = "league-toggle-btn";
-                standingsTitle.innerText = "📊 1. EDITOR LEAGUE PUAN DURUMU";
+                standingsTitle.innerText = "📊 EDITOR LEAGUE (ALT LİG) PUAN DURUMU";
             } else {
                 body.classList.add('normal-league-active');
                 btnEl.className = "league-toggle-btn";
                 btnNl.className = "league-toggle-btn active-nl";
-                standingsTitle.innerText = "📊 EDITOR LEAGUE PUAN DURUMU";
+                standingsTitle.innerText = "📊 EDITOR LEAGUE (ANA LİG) PUAN DURUMU";
             }
 
             resetChameleonTheme();
             document.getElementById('puanDurumuTableBody').innerHTML = `<tr><td colspan="11" class="loading-pulse">Veri Ambarından Lig Verileri Çekiliyor...</td></tr>`;
-            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLESESİ BAŞLATILIYOR...</div>`;
+            document.getElementById('playerGrid').innerHTML = `<div class="loading-pulse">OYUNCU MODELLEMESİ BAŞLATILIYOR...</div>`;
             document.getElementById('teamDetailPanel').style.display = "none";
 
             await loadDashboardData();
@@ -1100,37 +1094,46 @@
                 const data = await response.json();
                 globalData = data;
 
-                // API'den gelen verilerdeki Tgf Juniors kayıtlarını Konyaspor olarak dinamik güncelliyoruz
-                if (data.maclar) {
-                    data.maclar.forEach(m => {
-                        let evTakim = m.ev_sahibi || m.ev || "";
-                        let depTakim = m.deplasman || m.dep || "";
-                        if(evTakim.trim().toUpperCase() === "MADEUS FC") evTakim = "Madeus FC";
-                        if(depTakim.trim().toUpperCase() === "MADEUS FC") depTakim = "Madeus FC";
-                        if(evTakim.trim().toUpperCase() === "TGF JUNIORS") evTakim = "Konyaspor";
-                        if(depTakim.trim().toUpperCase() === "TGF JUNIORS") depTakim = "Konyaspor";
-                        m.ev = evTakim; m.ev_sahibi = evTakim;
-                        m.dep = depTakim; m.deplasman = depTakim;
-                    });
-                }
+                // Sadece Alt Lig seçiliyken TGF JUNIORS ismini Konyaspor yapıyoruz
+                if (currentLeague === 'editor') {
+                    if (data.maclar) {
+                        data.maclar.forEach(m => {
+                            let evTakim = m.ev_sahibi || m.ev || "";
+                            let depTakim = m.deplasman || m.dep || "";
+                            if(evTakim.trim().toUpperCase() === "MADEUS FC") evTakim = "Madeus FC";
+                            if(depTakim.trim().toUpperCase() === "MADEUS FC") depTakim = "Madeus FC";
+                            if(evTakim.trim().toUpperCase() === "TGF JUNIORS") evTakim = "Konyaspor";
+                            if(depTakim.trim().toUpperCase() === "TGF JUNIORS") depTakim = "Konyaspor";
+                            m.ev = evTakim; m.ev_sahibi = evTakim;
+                            m.dep = depTakim; m.deplasman = depTakim;
+                        });
+                    }
 
-                if (data.oyuncular) {
-                    Object.values(data.oyuncular).forEach(o => {
-                        if(o.takim && o.takim.trim().toUpperCase() === "MADEUS FC") o.takim = "Madeus FC";
-                        if(o.takim && o.takim.trim().toUpperCase() === "TGF JUNIORS") o.takim = "Konyaspor";
-                    });
+                    if (data.oyuncular) {
+                        Object.values(data.oyuncular).forEach(o => {
+                            if(o.takim && o.takim.trim().toUpperCase() === "MADEUS FC") o.takim = "Madeus FC";
+                            if(o.takim && o.takim.trim().toUpperCase() === "TGF JUNIORS") o.takim = "Konyaspor";
+                        });
+                    }
                 }
 
                 const allTeams = new Set();
                 if (data.oyuncular) {
                     Object.values(data.oyuncular).forEach(o => { 
-                        if(o.takim && o.takim !== 'Serbest' && ALLOWED_TEAMS.includes(o.takim.trim().toUpperCase())) allTeams.add(o.takim); 
+                        if(o.takim && o.takim !== 'Serbest') {
+                            // Alt ligdeyse filtre uygula, ana ligdeyse (normal) her şeyi ekle
+                            if(currentLeague !== 'editor' || ALLOWED_TEAMS.includes(o.takim.trim().toUpperCase())) {
+                                allTeams.add(o.takim); 
+                            }
+                        }
                     });
                 }
                 if (data.maclar) {
                     data.maclar.forEach(m => {
-                        if(m.ev && ALLOWED_TEAMS.includes(m.ev.trim().toUpperCase())) allTeams.add(m.ev);
-                        if(m.dep && ALLOWED_TEAMS.includes(m.dep.trim().toUpperCase())) allTeams.add(m.dep);
+                        const evT = m.ev_sahibi || m.ev;
+                        const depT = m.deplasman || m.dep;
+                        if(evT && (currentLeague !== 'editor' || ALLOWED_TEAMS.includes(evT.trim().toUpperCase()))) allTeams.add(evT);
+                        if(depT && (currentLeague !== 'editor' || ALLOWED_TEAMS.includes(depT.trim().toUpperCase()))) allTeams.add(depT);
                     });
                 }
                 activeLeagueTeams = Array.from(allTeams).filter(t => t && t.trim() !== "");
@@ -1144,24 +1147,41 @@
         }
 
         function refreshDashboardView() {
-            // Sadece izin verilen 6 takıma ait oyuncuları listeliyoruz
-            cachedPlayersList = Object.values(globalData.oyuncular || {}).filter(o => o.takim && ALLOWED_TEAMS.includes(o.takim.trim().toUpperCase()));
-            
-            // Sadece izin verilen 6 takıma ait maçları listeliyoruz
-            const activeMatches = (globalData.maclar || []).filter(m => 
-                m.ev && ALLOWED_TEAMS.includes(m.ev.trim().toUpperCase()) && 
-                m.dep && ALLOWED_TEAMS.includes(m.dep.trim().toUpperCase())
-            );
-
-            calculateAllTeamData(activeMatches);
-            renderStandings();
-            renderPlayers(cachedPlayersList);
-            renderLeaderboards(cachedPlayersList);
-            initVersusSelectors(cachedPlayersList);
-            renderTeams();
-            renderFixtures(activeMatches);
-            renderTotw(cachedPlayersList);
-            initTeamVsSelectors();
+            // Alt ligdeyse 6 takım filtresini uygula, Ana ligdeyse (normal) her şeyi getir
+            if(currentLeague === 'editor') {
+                cachedPlayersList = Object.values(globalData.oyuncular || {}).filter(o => o.takim && ALLOWED_TEAMS.includes(o.takim.trim().toUpperCase()));
+                
+                const activeMatches = (globalData.maclar || []).filter(m => {
+                    const evT = m.ev_sahibi || m.ev;
+                    const depT = m.deplasman || m.dep;
+                    return evT && ALLOWED_TEAMS.includes(evT.trim().toUpperCase()) && 
+                           depT && ALLOWED_TEAMS.includes(depT.trim().toUpperCase());
+                });
+                
+                calculateAllTeamData(activeMatches);
+                renderStandings();
+                renderPlayers(cachedPlayersList);
+                renderLeaderboards(cachedPlayersList);
+                initVersusSelectors(cachedPlayersList);
+                renderTeams();
+                renderFixtures(activeMatches);
+                renderTotw(cachedPlayersList);
+                initTeamVsSelectors();
+            } else {
+                // ANA LİG MODU: Filtresiz her şeyi basıyoruz
+                cachedPlayersList = Object.values(globalData.oyuncular || {});
+                const activeMatches = globalData.maclar || [];
+                
+                calculateAllTeamData(activeMatches);
+                renderStandings();
+                renderPlayers(cachedPlayersList);
+                renderLeaderboards(cachedPlayersList);
+                initVersusSelectors(cachedPlayersList);
+                renderTeams();
+                renderFixtures(activeMatches);
+                renderTotw(cachedPlayersList);
+                initTeamVsSelectors();
+            }
         }
 
         function calculateAllTeamData(maclar) {
